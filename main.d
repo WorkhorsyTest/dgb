@@ -12,24 +12,61 @@ import sdl;
 import types;
 
 
-string file_name = null;
+string g_file_name = null;
 
 public class Screen {
-	static immutable int x = 240;
-	static immutable int y = 160;
-	static immutable int width = 240;
-	static immutable int height = 160;
+	static immutable int x = 160;
+	static immutable int y = 144;
+	static immutable int width = 160;
+	static immutable int height = 144;
 }
 
+// https://en.wikipedia.org/wiki/Game_Boy
+// http://marc.rawer.de/Gameboy/Docs/GBCPUman.pdf # 2.3. Game Boy Specs
 class CPU {
-	static immutable string make = "";
-	static immutable string model = "";
+	static immutable string make = "Sharp";
+	static immutable string model = "LR35902";
 	static immutable u8 bits = 8;
-	static immutable u32 clock_speed = 1_678_000;
+	static immutable u32 clock_speed = 4_194_304;
 
 	bool _is_running = false;
+	u8 _a;
+	u8 _b;
+	u8 _c;
+	u8 _d;
+	u8 _e;
+	u8 _f;
+	u8 _h;
+	u8 _l;
+	u16 _sp;
+	u16 _pc;
+
+	u16 _af() { return (_a << 8) | _f; }
+	u16 _cb() { return (_c << 8) | _b; }
+	u16 _de() { return (_d << 8) | _e; }
+	u16 _hl() { return (_h << 8) | _l; }
+
+	bool is_flag_zero() {
+		return (_f & (1 << 7)) > 0;
+	}
+
+	bool is_flag_subtract() {
+		return (_f & (1 << 6)) > 0;
+	}
+
+	bool is_flag_half_carry() {
+		return (_f & (1 << 5)) > 0;
+	}
+
+	bool is_flag_carry() {
+		return (_f & (1 << 4)) > 0;
+	}
 
 	public this() {
+		// http://marc.rawer.de/Gameboy/Docs/GBCPUman.pdf # 3.2.3. Program Counter
+		_pc = 0x100;
+		// http://marc.rawer.de/Gameboy/Docs/GBCPUman.pdf # 3.2.4. Stack Pointer
+		_sp = 0xFFFE;
 		_is_running = true;
 	}
 
@@ -44,7 +81,7 @@ immutable u32 HEADER_SIZE = 16;
 
 public void load_cart() {
 	// Read the file into an array
-	auto f = std.stdio.File(file_name, "r");
+	auto f = std.stdio.File(g_file_name, "r");
 	char[HEADER_SIZE] header;
 	f.rawRead(header);
 	writefln("header size: %dB", header.length);
@@ -70,7 +107,7 @@ int main(string[] args) {
 		stderr.writeln("Usage: ./main example.gb");
 		return -1;
 	}
-	file_name = args[1];
+	g_file_name = args[1];
 
 	// Initialize SDL, exit if there is an error
 	if (SDL_Init(SDL_INIT_VIDEO) < 0) {
