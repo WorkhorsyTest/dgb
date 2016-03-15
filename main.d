@@ -30,6 +30,7 @@ class CPU {
 	static immutable u32 clock_speed = 4_194_304;
 
 	bool _is_running = false;
+	u8[0xFFFF] _memory;
 	u8 _a;
 	u8 _b;
 	u8 _c;
@@ -77,417 +78,559 @@ class CPU {
 		u8 opcode = _memory[_pc++];
 
 		// http://marc.rawer.de/Gameboy/Docs/GBCPUman.pdf # 3.3. Commands
-		switch (opcode) {
-			// LD nn, n
-			case 0x06: break;
-			case 0x0E: break;
-			case 0x16: break;
-			case 0x1E: break;
-			case 0x26: break;
-			case 0x2E: break;
-			// LD r1, r2
-			case 0x7F: break;
-			case 0x78: break;
-			case 0x79: break;
-			case 0x7A: break;
-			case 0x7B: break;
-			case 0x7C: break;
-			case 0x7D: break;
-			case 0x7E: break;
-			case 0x40: break;
-			case 0x41: break;
-			case 0x42: break;
-			case 0x43: break;
-			case 0x44: break;
-			case 0x45: break;
-			case 0x46: break;
-			case 0x48: break;
-			case 0x49: break;
-			case 0x4A: break;
-			case 0x4B: break;
-			case 0x4C: break;
-			case 0x4D: break;
-			case 0x4E: break;
-			case 0x50: break;
-			case 0x51: break;
-			case 0x52: break;
-			case 0x53: break;
-			case 0x54: break;
-			case 0x55: break;
-			case 0x56: break;
-			case 0x58: break;
-			case 0x59: break;
-			case 0x5A: break;
-			case 0x5B: break;
-			case 0x5C: break;
-			case 0x5D: break;
-			case 0x5E: break;
-			case 0x60: break;
-			case 0x61: break;
-			case 0x62: break;
-			case 0x63: break;
-			case 0x64: break;
-			case 0x65: break;
-			case 0x66: break;
-			case 0x68: break;
-			case 0x69: break;
-			case 0x6A: break;
-			case 0x6B: break;
-			case 0x6C: break;
-			case 0x6D: break;
-			case 0x6E: break;
-			case 0x70: break;
-			case 0x71: break;
-			case 0x72: break;
-			case 0x73: break;
-			case 0x74: break;
-			case 0x75: break;
-			case 0x36: break;
-			// LD A, n
-			case 0x7F: break;
-			case 0x78: break;
-			case 0x79: break;
-			case 0x7A: break;
-			case 0x7B: break;
-			case 0x7C: break;
-			case 0x7D: break;
-			case 0x0A: break;
-			case 0x1A: break;
-			case 0x7E: break;
-			case 0xFA: break;
-			case 0x3F: break;
-			// LD n, A
-			case 0x7F: break;
-			case 0x47: break;
-			case 0x4F: break;
-			case 0x57: break;
-			case 0x5F: break;
-			case 0x67: break;
-			case 0x6F: break;
-			case 0x02: break;
-			case 0x12: break;
-			case 0x77: break;
-			case 0xEA: break;
-			// LD A, (C)
-			case 0xF2: break;
-			// LD (C), A
-			case 0xE2: break;
-			// LDD A, (HL)
-			case 0x3A: break;
-			// LDD (HL), A
-			case 0x32: break;
-			// LDI A, (HL)
-			case 0x2A: break;
-			// LDI (HL), A
-			case 0x22: break;
-			// LDH (n), A
-			case 0xE0: break;
-			// LDH A, (n)
-			case 0xF0: break;
-			// LD n, nn
-			case 0x01: break;
-			case 0x11: break;
-			case 0x21: break;
-			case 0x31: break;
-			// LD SP, HL
-			case 0xF9: break;
-			// LDHL SP, n
-			case 0xF8: break;
-			// LD (nn), SP
-			case 0x08: break;
-			// PUSH nn
-			case 0xF5: break;
-			case 0xC5: break;
-			case 0xD5: break;
-			case 0xE5: break;
-			// POP nn
-			case 0xF1: break;
-			case 0xC1: break;
-			case 0xD1: break;
-			case 0xE1: break;
-			// ADD A, n
-			case 0x87: break;
-			case 0x80: break;
-			case 0x81: break;
-			case 0x82: break;
-			case 0x83: break;
-			case 0x84: break;
-			case 0x85: break;
-			case 0x86: break;
-			case 0xC6: break;
-			// ADC A, n
-			case 0x8F: break;
-			case 0x88: break;
-			case 0x89: break;
-			case 0x8A: break;
-			case 0x8B: break;
-			case 0x8C: break;
-			case 0x8D: break;
-			case 0x8E: break;
-			case 0xCE: break;
-			// SUB n
-			case 0x97: break;
-			case 0x90: break;
-			case 0x91: break;
-			case 0x92: break;
-			case 0x93: break;
-			case 0x94: break;
-			case 0x95: break;
-			case 0x96: break;
-			case 0xD6: break;
-			// SBC A, n
-			case 0x9F: break;
-			case 0x98: break;
-			case 0x99: break;
-			case 0x9A: break;
-			case 0x9B: break;
-			case 0x9C: break;
-			case 0x9D: break;
-			case 0x9E: break;
-			//case ??: break; // SBC A, #
-			// AND n
-			case 0xA7: break;
-			case 0xA0: break;
-			case 0xA1: break;
-			case 0xA2: break;
-			case 0xA3: break;
-			case 0xA4: break;
-			case 0xA5: break;
-			case 0xA6: break;
-			case 0xE6: break;
-			// OR n
-			case 0xB7: break;
-			case 0xB0: break;
-			case 0xB1: break;
-			case 0xB2: break;
-			case 0xB3: break;
-			case 0xB4: break;
-			case 0xB5: break;
-			case 0xB6: break;
-			case 0xF6: break;
-			// XOR n
-			case 0xAF: break;
-			case 0xA8: break;
-			case 0xA9: break;
-			case 0xAA: break;
-			case 0xAB: break;
-			case 0xAC: break;
-			case 0xAD: break;
-			case 0xAE: break;
-			case 0xEE: break;
-			// CP n
-			case 0xBF: break;
-			case 0xB8: break;
-			case 0xB9: break;
-			case 0xBA: break;
-			case 0xBB: break;
-			case 0xBC: break;
-			case 0xBD: break;
-			case 0xBE: break;
-			case 0xFE: break;
-			// INC n
-			case 0x3C: break;
-			case 0x04: break;
-			case 0x0C: break;
-			case 0x14: break;
-			case 0x1C: break;
-			case 0x24: break;
-			case 0x2C: break;
-			case 0x34: break;
-			// DEC n
-			case 0x3D: break;
-			case 0x05: break;
-			case 0x0D: break;
-			case 0x15: break;
-			case 0x1D: break;
-			case 0x25: break;
-			case 0x2D: break;
-			case 0x35: break;
-			// ADD HL, n
-			case 0x09: break;
-			case 0x19: break;
-			case 0x29: break;
-			case 0x39: break;
-			// ADD SP, n
-			case 0xE8: break;
-			// INC nn
-			case 0x03: break;
-			case 0x13: break;
-			case 0x23: break;
-			case 0x33: break;
-			// DEC nn
-			case 0x0B: break;
-			case 0x1B: break;
-			case 0x2B: break;
-			case 0x3B: break;
-			// SWAP n
-			case 0x37: break;
-			case 0x30: break;
-			case 0x31: break;
-			case 0x32: break;
-			case 0x33: break;
-			case 0x34: break;
-			case 0x35: break;
-			case 0x36: break;
-			// DAA
-			case 0x27: break;
-			// CPL
-			case 0x2F: break;
-			// CCF
-			case 0x3F: break;
-			// SCF
-			case 0x37: break;
-			// NOP
-			case 0x00: break;
-			// HALT
-			case 0x76: break;
-			// STOP
-			case 0x10: break;
-			// DI
-			case 0xF3: break;
-			// EI
-			case 0xFB: break;
-			// RLCA
-			case 0x07: break;
-			// RLA
-			case 0x17: break;
-			// RRCA
-			case 0x0F: break;
-			// RRA
-			case 0x1F: break;
-			// RLC n
-			case 0x07: break;
-			case 0x00: break;
-			case 0x01: break;
-			case 0x02: break;
-			case 0x03: break;
-			case 0x04: break;
-			case 0x05: break;
-			case 0x06: break;
-			// RL n
-			case 0x17: break;
-			case 0x10: break;
-			case 0x11: break;
-			case 0x12: break;
-			case 0x13: break;
-			case 0x14: break;
-			case 0x15: break;
-			case 0x16: break;
-			// RRC n
-			case 0x0F: break;
-			case 0x08: break;
-			case 0x09: break;
-			case 0x0A: break;
-			case 0x0B: break;
-			case 0x0C: break;
-			case 0x0D: break;
-			case 0x0E: break;
-			// RR n
-			case 0x1F: break;
-			case 0x18: break;
-			case 0x19: break;
-			case 0x1A: break;
-			case 0x1B: break;
-			case 0x1C: break;
-			case 0x1D: break;
-			case 0x1E: break;
-			// SLA n
-			case 0x27: break;
-			case 0x20: break;
-			case 0x21: break;
-			case 0x22: break;
-			case 0x23: break;
-			case 0x24: break;
-			case 0x25: break;
-			case 0x26: break;
-			// SRA n
-			case 0x2F: break;
-			case 0x28: break;
-			case 0x29: break;
-			case 0x2A: break;
-			case 0x2B: break;
-			case 0x2B: break;
-			case 0x2D: break;
-			case 0x2E: break;
-			// SRL n
-			case 0x3F: break;
-			case 0x38: break;
-			case 0x39: break;
-			case 0x3A: break;
-			case 0x3B: break;
-			case 0x3C: break;
-			case 0x3D: break;
-			case 0x3E: break;
-			// BIT b, r
-			case 0x47: break;
-			case 0x40: break;
-			case 0x41: break;
-			case 0x42: break;
-			case 0x43: break;
-			case 0x44: break;
-			case 0x45: break;
-			case 0x46: break;
-			// SET b, r
-			case 0xC7: break;
-			case 0xC0: break;
-			case 0xC1: break;
-			case 0xC2: break;
-			case 0xC3: break;
-			case 0xC4: break;
-			case 0xC5: break;
-			case 0xC6: break;
-			// RES b, r
-			case 0x87: break;
-			case 0x80: break;
-			case 0x81: break;
-			case 0x82: break;
-			case 0x83: break;
-			case 0x84: break;
-			case 0x85: break;
-			case 0x86: break;
-			// JP nn
-			case 0xC3: break;
-			// JP cc, nn
-			case 0xC2: break;
-			case 0xCA: break;
-			case 0xD2: break;
-			case 0xDA: break;
-			// JP (HL)
-			case 0xE9: break;
-			// JR n
-			case 0x18: break;
-			// JR cc, n
-			case 0x20: break;
-			case 0x28: break;
-			case 0x30: break;
-			case 0x38: break;
-			// CALL nn
-			case 0xCD: break;
-			// CALL cc, nn
-			case 0xC4: break;
-			case 0xCC: break;
-			case 0xD4: break;
-			case 0xDC: break;
-			// RST n
-			case 0xC7: break;
-			case 0xCF: break;
-			case 0xD7: break;
-			case 0xDF: break;
-			case 0xE7: break;
-			case 0xEF: break;
-			case 0xF7: break;
-			case 0xFF: break;
-			// RET
-			case 0xC9: break;
-			// RET cc
-			case 0xC0: break;
-			case 0xC8: break;
-			case 0xD0: break;
-			case 0xD8: break;
-			// RETI
-			case 0xD9: break;
-		}
+		// http://imrannazar.com/Gameboy-Z80-Opcode-Map
+
 	}
+
+// 0
+	void operation_nop() {}
+	void operation_ld_bc_nn() {}
+	void operation_ld_addr_bc_a() {}
+	void operation_inc_bc() {}
+	void operation_inc_b() {}
+	void operation_dec_b() {}
+	void operation_ld_b_n() {}
+	void operation_rlc_a() {}
+	void operation_ld_addr_nn_sp() {}
+	void operation_add_hl_bc() {}
+	void operation_ld_a_addr_bc() {}
+	void operation_dec_bc() {}
+	void operation_inc_c() {}
+	void operation_dec_c() {}
+	void operation_ld_c_n() {}
+	void operation_rrc_a() {}
+	// 1
+	void operation_stop() {}
+	void operation_ld_de_nn() {}
+	void operation_ld_addr_de_a() {}
+	void operation_inc_de() {}
+	void operation_inc_d() {}
+	void operation_dec_d() {}
+	void operation_ld_d_n() {}
+	void operation_rl_a() {}
+	void operation_jr_n() {}
+	void operation_add_hl_de() {}
+	void operation_ld_a_addr_de() {}
+	void operation_dec_de() {}
+	void operation_inc_e() {}
+	void operation_dec_e() {}
+	void operation_ld_e_n() {}
+	void operation_rr_a() {}
+		// 2
+	void operation_jr_nz_n() {}
+	void operation_ld_hl_nn() {}
+	void operation_ldi_addr_hl_a() {}
+	void operation_inc_hl() {}
+	void operation_inc_h() {}
+	void operation_dec_h() {}
+	void operation_ld_h_n() {}
+	void operation_daa() {}
+	void operation_jr_z_n() {}
+	void operation_add_hl_hl() {}
+	void operation_ldi_a_addr_hl() {}
+	void operation_dec_hl() {}
+	void operation_inc_l() {}
+	void operation_dec_l() {}
+	void operation_ld_l_n() {}
+	void operation_cpl() {}
+		// 3
+	void operation_jr_nc_n() {}
+	void operation_ld_sp_nn() {}
+	void operation_ldd_addr_hl_a() {}
+	void operation_inc_sp() {}
+	void operation_inc_addr_hl() {}
+	void operation_dec_addr_hl() {}
+	void operation_ld_addr_hl_n() {}
+	void operation_scf() {}
+	void operation_jr_c_n() {}
+	void operation_add_hl_sp() {}
+	void operation_ldd_a_addr_hl() {}
+	void operation_dec_sp() {}
+	void operation_inc_a() {}
+	void operation_dec_a() {}
+	void operation_ld_a_n() {}
+	void operation_ccf() {}
+	// 4
+	void operation_ld_b_b() {}
+	void operation_ld_b_c() {}
+	void operation_ld_b_d() {}
+	void operation_ld_b_e() {}
+	void operation_ld_b_h() {}
+	void operation_ld_b_l() {}
+	void operation_ld_b_addr_hl() {}
+	void operation_ld_b_a() {}
+	void operation_ld_c_b() {}
+	void operation_ld_c_c() {}
+	void operation_ld_c_d() {}
+	void operation_ld_c_e() {}
+	void operation_ld_c_h() {}
+	void operation_ld_c_l() {}
+	void operation_ld_c_addr_hl() {}
+	void operation_ld_c_a() {}
+		// 5
+	void operation_ld_d_b() {}
+	void operation_ld_d_c() {}
+	void operation_ld_d_d() {}
+	void operation_ld_d_e() {}
+	void operation_ld_d_h() {}
+	void operation_ld_d_l() {}
+	void operation_ld_d_addr_hl() {}
+	void operation_ld_d_a() {}
+	void operation_ld_e_b() {}
+	void operation_ld_e_c() {}
+	void operation_ld_e_d() {}
+	void operation_ld_e_e() {}
+	void operation_ld_e_l() {}
+	void operation_ld_e_h() {}
+	void operation_ld_e_addr_hl() {}
+	void operation_ld_e_a() {}
+	// 6
+	void operation_ld_h_b() {}
+	void operation_ld_h_c() {}
+	void operation_ld_h_d() {}
+	void operation_ld_h_e() {}
+	void operation_ld_h_h() {}
+	void operation_ld_h_l() {}
+	void operation_ld_h_addr_hl() {}
+	void operation_ld_h_a() {}
+	void operation_ld_l_b() {}
+	void operation_ld_l_c() {}
+	void operation_ld_l_d() {}
+	void operation_ld_l_e() {}
+	void operation_ld_l_h() {}
+	void operation_ld_l_l() {}
+	void operation_ld_l_addr_hl() {}
+	void operation_ld_l_a() {}
+		// 7
+	void operation_ld_addr_hl_b() {}
+	void operation_ld_addr_hl_c() {}
+	void operation_ld_addr_hl_d() {}
+	void operation_ld_addr_hl_e() {}
+	void operation_ld_addr_hl_h() {}
+	void operation_ld_addr_hl_l() {}
+	void operation_halt() {}
+	void operation_ld_addr_hl_a() {}
+	void operation_ld_a_b() {}
+	void operation_ld_a_c() {}
+	void operation_ld_a_d() {}
+	void operation_ld_a_e() {}
+	void operation_ld_a_h() {}
+	void operation_ld_a_l() {}
+	void operation_ld_a_addr_hl() {}
+	void operation_ld_a_a() {}
+		// 8
+	void operation_add_a_b() {}
+	void operation_add_a_c() {}
+	void operation_add_a_d() {}
+	void operation_add_a_e() {}
+	void operation_add_a_h() {}
+	void operation_add_a_l() {}
+	void operation_add_a_addr_hl() {}
+	void operation_add_a_a() {}
+	void operation_adc_a_b() {}
+	void operation_adc_a_c() {}
+	void operation_adc_a_d() {}
+	void operation_adc_a_e() {}
+	void operation_adc_a_h() {}
+	void operation_adc_a_l() {}
+	void operation_adc_a_addr_hl() {}
+	void operation_adc_a_a() {}
+	// 9
+	void operation_sub_a_b() {}
+	void operation_sub_a_c() {}
+	void operation_sub_a_d() {}
+	void operation_sub_a_e() {}
+	void operation_sub_a_h() {}
+	void operation_sub_a_l() {}
+	void operation_sub_a_addr_hl() {}
+	void operation_sub_a_a() {}
+	void operation_sbc_a_b() {}
+	void operation_sbc_a_c() {}
+	void operation_sbc_a_d() {}
+	void operation_sbc_a_e() {}
+	void operation_sbc_a_h() {}
+	void operation_sbc_a_l() {}
+	void operation_sbc_a_addr_hl() {}
+	void operation_sbc_a_a() {}
+		// A
+	void operation_and_b() {}
+	void operation_and_c() {}
+	void operation_and_d() {}
+	void operation_and_e() {}
+	void operation_and_h() {}
+	void operation_and_l() {}
+	void operation_and_addr_hl() {}
+	void operation_and_a() {}
+	void operation_xor_b() {}
+	void operation_xor_c() {}
+	void operation_xor_d() {}
+	void operation_xor_e() {}
+	void operation_xor_h() {}
+	void operation_xor_l() {}
+	void operation_xor_addr_hl() {}
+	void operation_xor_a() {}
+	// B
+	void operation_or_b() {}
+	void operation_or_c() {}
+	void operation_or_d() {}
+	void operation_or_e() {}
+	void operation_or_h() {}
+	void operation_or_l() {}
+	void operation_or_addr_hl() {}
+	void operation_or_a() {}
+	void operation_cp_b() {}
+	void operation_cp_c() {}
+	void operation_cp_d() {}
+	void operation_cp_e() {}
+	void operation_cp_h() {}
+	void operation_cp_l() {}
+	void operation_cp_addr_hl() {}
+	void operation_cp_a() {}
+	// C
+	void operation_ret_nz() {}
+	void operation_pop_bc() {}
+	void operation_jp_nz_nn() {}
+	void operation_jp_nn() {}
+	void operation_call_nz_nn() {}
+	void operation_push_bc() {}
+	void operation_add_a_n() {}
+	void operation_rst_0() {}
+	void operation_ret_z() {}
+	void operation_ret() {}
+	void operation_jp_z_nn() {}
+	void operation_ext_ops() {}
+	void operation_call_z_nn() {}
+	void operation_call_nn() {}
+	void operation_adc_a_n() {}
+	void operation_rst_8() {}
+	// D
+	void operation_ret_nc() {}
+	void operation_pop_de() {}
+	void operation_jp_nc_nn() {}
+	void operation_xx() {}
+	void operation_call_nc_nn() {}
+	void operation_push_de() {}
+	void operation_sub_a_n() {}
+	void operation_rst_10() {}
+	void operation_ret_c() {}
+	void operation_reti() {}
+	void operation_jp_c_nn() {}
+	void operation_xx() {}
+	void operation_call_c_nn() {}
+	void operation_xx() {}
+	void operation_sbc_a_n() {}
+	void operation_rst_18() {}
+	// E
+	void operation_ldh_addr_n_a() {}
+	void operation_pop_hl() {}
+	void operation_ldh_addr_c_a() {}
+	void operation_xx() {}
+	void operation_xx() {}
+	void operation_push_hl() {}
+	void operation_and_n() {}
+	void operation_rst_20() {}
+	void operation_add_sp_d() {}
+	void operation_jp_addr_hl() {}
+	void operation_ld_addr_nn_a() {}
+	void operation_xx() {}
+	void operation_xx() {}
+	void operation_xx() {}
+	void operation_xor_n() {}
+	void operation_rst_28() {}
+		// F
+	void operation_ldh_a_addr_n() {}
+	void operation_pop_af() {}
+	void operation_xx() {}
+	void operation_di() {}
+	void operation_xx() {}
+	void operation_push_af() {}
+	void operation_or_n() {}
+	void operation_rst_30() {}
+	void operation_ldhl_sp_d() {}
+	void operation_ld_sp_hl() {}
+	void operation_ld_a_addr_nn() {}
+	void operation_ei() {}
+	void operation_xx() {}
+	void operation_xx() {}
+	void operation_cp_n() {}
+	void operation_rst_38() {}
+
+
+
+
+
+		// 0
+	void operation_rlc_b() {}
+	void operation_rlc_c() {}
+	void operation_rlc_d() {}
+	void operation_rlc_e() {}
+	void operation_rlc_h() {}
+	void operation_rlc_l() {}
+	void operation_rlc_hl() {}
+	void operation_rlc_a() {}
+	void operation_rrc_b() {}
+	void operation_rrc_c() {}
+	void operation_rrc_d() {}
+	void operation_rrc_e() {}
+	void operation_rrc_h() {}
+	void operation_rrc_l() {}
+	void operation_rrc_hl() {}
+	void operation_rrc_a() {}
+		// 1
+	void operation_rl_b() {}
+	void operation_rl_c() {}
+	void operation_rl_d() {}
+	void operation_rl_e() {}
+	void operation_rl_h() {}
+	void operation_rl_l() {}
+	void operation_rl_hl() {}
+	void operation_rl_a() {}
+	void operation_rr_b() {}
+	void operation_rr_c() {}
+	void operation_rr_d() {}
+	void operation_rr_e() {}
+	void operation_rr_h() {}
+	void operation_rr_l() {}
+	void operation_rr_hl() {}
+	void operation_rr_a() {}
+		// 2
+	void operation_sla_b() {}
+	void operation_sla_c() {}
+	void operation_sla_d() {}
+	void operation_sla_e() {}
+	void operation_sla_h() {}
+	void operation_sla_l() {}
+	void operation_sla_hl() {}
+	void operation_sla_a() {}
+	void operation_sra_b() {}
+	void operation_sra_c() {}
+	void operation_sra_d() {}
+	void operation_sra_e() {}
+	void operation_sra_h() {}
+	void operation_sra_l() {}
+	void operation_sra_hl() {}
+	void operation_sra_a() {}
+		// 3
+	void operation_swap_b() {}
+	void operation_swap_c() {}
+	void operation_swap_d() {}
+	void operation_swap_e() {}
+	void operation_swap_h() {}
+	void operation_swap_l() {}
+	void operation_swap_hl() {}
+	void operation_swap_a() {}
+	void operation_srl_b() {}
+	void operation_srl_c() {}
+	void operation_srl_d() {}
+	void operation_srl_e() {}
+	void operation_srl_h() {}
+	void operation_srl_l() {}
+	void operation_srl_hl() {}
+	void operation_srl_a() {}
+		// 4
+	void operation_bit_0_b() {}
+	void operation_bit_0_c() {}
+	void operation_bit_0_d() {}
+	void operation_bit_0_e() {}
+	void operation_bit_0_h() {}
+	void operation_bit_0_l() {}
+	void operation_bit_0_hl() {}
+	void operation_bit_0_a() {}
+	void operation_bit_1_b() {}
+	void operation_bit_1_c() {}
+	void operation_bit_1_d() {}
+	void operation_bit_1_e() {}
+	void operation_bit_1_h() {}
+	void operation_bit_1_l() {}
+	void operation_bit_1_hl() {}
+	void operation_bit_1_a() {}
+		// 5
+	void operation_bit_2_b() {}
+	void operation_bit_2_c() {}
+	void operation_bit_2_d() {}
+	void operation_bit_2_e() {}
+	void operation_bit_2_h() {}
+	void operation_bit_2_l() {}
+	void operation_bit_2_hl() {}
+	void operation_bit_2_a() {}
+	void operation_bit_3_b() {}
+	void operation_bit_3_c() {}
+	void operation_bit_3_d() {}
+	void operation_bit_3_e() {}
+	void operation_bit_3_h() {}
+	void operation_bit_3_l() {}
+	void operation_bit_3_hl() {}
+	void operation_bit_3_a() {}
+		// 6
+	void operation_bit_4_b() {}
+	void operation_bit_4_c() {}
+	void operation_bit_4_d() {}
+	void operation_bit_4_e() {}
+	void operation_bit_4_h() {}
+	void operation_bit_4_l() {}
+	void operation_bit_4_hl() {}
+	void operation_bit_4_a() {}
+	void operation_bit_5_b() {}
+	void operation_bit_5_c() {}
+	void operation_bit_5_d() {}
+	void operation_bit_5_e() {}
+	void operation_bit_5_h() {}
+	void operation_bit_5_l() {}
+	void operation_bit_5_hl() {}
+	void operation_bit_5_a() {}
+		// 7
+	void operation_bit_6_b() {}
+	void operation_bit_6_c() {}
+	void operation_bit_6_d() {}
+	void operation_bit_6_e() {}
+	void operation_bit_6_h() {}
+	void operation_bit_6_l() {}
+	void operation_bit_6_hl() {}
+	void operation_bit_6_a() {}
+	void operation_bit_7_b() {}
+	void operation_bit_7_c() {}
+	void operation_bit_7_d() {}
+	void operation_bit_7_e() {}
+	void operation_bit_7_h() {}
+	void operation_bit_7_l() {}
+	void operation_bit_7_hl() {}
+	void operation_bit_7_a() {}
+		// 8
+	void operation_res_0_b() {}
+	void operation_res_0_c() {}
+	void operation_res_0_d() {}
+	void operation_res_0_e() {}
+	void operation_res_0_h() {}
+	void operation_res_0_l() {}
+	void operation_res_0_hl() {}
+	void operation_res_0_a() {}
+	void operation_res_1_b() {}
+	void operation_res_1_c() {}
+	void operation_res_1_d() {}
+	void operation_res_1_e() {}
+	void operation_res_1_h() {}
+	void operation_res_1_l() {}
+	void operation_res_1_hl() {}
+	void operation_res_1_a() {}
+		// 9
+	void operation_res_2_b() {}
+	void operation_res_2_c() {}
+	void operation_res_2_d() {}
+	void operation_res_2_e() {}
+	void operation_res_2_h() {}
+	void operation_res_2_l() {}
+	void operation_res_2_hl() {}
+	void operation_res_2_a() {}
+	void operation_res_3_b() {}
+	void operation_res_3_c() {}
+	void operation_res_3_d() {}
+	void operation_res_3_e() {}
+	void operation_res_3_h() {}
+	void operation_res_3_l() {}
+	void operation_res_3_hl() {}
+	void operation_res_3_a() {}
+		// a
+	void operation_res_4_b() {}
+	void operation_res_4_c() {}
+	void operation_res_4_d() {}
+	void operation_res_4_e() {}
+	void operation_res_4_h() {}
+	void operation_res_4_l() {}
+	void operation_res_4_hl() {}
+	void operation_res_4_a() {}
+	void operation_res_5_b() {}
+	void operation_res_5_c() {}
+	void operation_res_5_d() {}
+	void operation_res_5_e() {}
+	void operation_res_5_h() {}
+	void operation_res_5_l() {}
+	void operation_res_5_hl() {}
+	void operation_res_5_a() {}
+		// b
+	void operation_res_6_b() {}
+	void operation_res_6_c() {}
+	void operation_res_6_d() {}
+	void operation_res_6_e() {}
+	void operation_res_6_h() {}
+	void operation_res_6_l() {}
+	void operation_res_6_hl() {}
+	void operation_res_6_a() {}
+	void operation_res_7_b() {}
+	void operation_res_7_c() {}
+	void operation_res_7_d() {}
+	void operation_res_7_e() {}
+	void operation_res_7_h() {}
+	void operation_res_7_l() {}
+	void operation_res_7_hl() {}
+	void operation_res_7_a() {}
+		// c
+	void operation_set_0_b() {}
+	void operation_set_0_c() {}
+	void operation_set_0_d() {}
+	void operation_set_0_e() {}
+	void operation_set_0_h() {}
+	void operation_set_0_l() {}
+	void operation_set_0_hl() {}
+	void operation_set_0_a() {}
+	void operation_set_1_b() {}
+	void operation_set_1_c() {}
+	void operation_set_1_d() {}
+	void operation_set_1_e() {}
+	void operation_set_1_h() {}
+	void operation_set_1_l() {}
+	void operation_set_1_hl() {}
+	void operation_set_1_a() {}
+// d
+	void operation_set_2_b() {}
+	void operation_set_2_c() {}
+	void operation_set_2_d() {}
+	void operation_set_2_e() {}
+	void operation_set_2_h() {}
+	void operation_set_2_l() {}
+	void operation_set_2_hl() {}
+	void operation_set_2_a() {}
+	void operation_set_3_b() {}
+	void operation_set_3_c() {}
+	void operation_set_3_d() {}
+	void operation_set_3_e() {}
+	void operation_set_3_h() {}
+	void operation_set_3_l() {}
+	void operation_set_3_hl() {}
+	void operation_set_3_a() {}
+		// e
+	void operation_set_4_b() {}
+	void operation_set_4_c() {}
+	void operation_set_4_d() {}
+	void operation_set_4_e() {}
+	void operation_set_4_h() {}
+	void operation_set_4_l() {}
+	void operation_set_4_hl() {}
+	void operation_set_4_a() {}
+	void operation_set_5_b() {}
+	void operation_set_5_c() {}
+	void operation_set_5_d() {}
+	void operation_set_5_e() {}
+	void operation_set_5_h() {}
+	void operation_set_5_l() {}
+	void operation_set_5_hl() {}
+	void operation_set_5_a() {}
+	// F
+	void operation_set_6_b() {}
+	void operation_set_6_c() {}
+	void operation_set_6_d() {}
+	void operation_set_6_e() {}
+	void operation_set_6_h() {}
+	void operation_set_6_l() {}
+	void operation_set_6_hl() {}
+	void operation_set_6_a() {}
+	void operation_set_7_b() {}
+	void operation_set_7_c() {}
+	void operation_set_7_d() {}
+	void operation_set_7_e() {}
+	void operation_set_7_h() {}
+	void operation_set_7_l() {}
+	void operation_set_7_hl() {}
+	void operation_set_7_a() {}
 }
 
 immutable u32 HEADER_SIZE = 16;
