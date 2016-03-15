@@ -63,12 +63,326 @@ class CPU {
 		return (_f & (1 << 4)) > 0;
 	}
 
+	void delegate()[] ops;
+	void delegate()[] opcbs;
+
 	public this() {
 		// http://marc.rawer.de/Gameboy/Docs/GBCPUman.pdf # 3.2.3. Program Counter
 		_pc = 0x100;
 		// http://marc.rawer.de/Gameboy/Docs/GBCPUman.pdf # 3.2.4. Stack Pointer
 		_sp = 0xFFFE;
 		_is_running = true;
+
+		opcbs = [
+			// 1
+			&opcb_rlc_b, &opcb_rlc_c, &opcb_rlc_d, &opcb_rlc_e,
+			&opcb_rlc_h, &opcb_rlc_l, &opcb_rlc_hl, &opcb_rlc_a,
+			&opcb_rrc_b, &opcb_rrc_c, &opcb_rrc_d, &opcb_rrc_e,
+			&opcb_rrc_h, &opcb_rrc_l, &opcb_rrc_hl, &opcb_rrc_a,
+				// 1
+			&opcb_rl_b, &opcb_rl_c, &opcb_rl_d, &opcb_rl_e,
+			&opcb_rl_h, &opcb_rl_l, &opcb_rl_hl, &opcb_rl_a,
+			&opcb_rr_b, &opcb_rr_c, &opcb_rr_d, &opcb_rr_e,
+			&opcb_rr_h, &opcb_rr_l, &opcb_rr_hl, &opcb_rr_a,
+				// 2
+			&opcb_sla_b, &opcb_sla_c, &opcb_sla_d, &opcb_sla_e,
+			&opcb_sla_h, &opcb_sla_l, &opcb_sla_hl, &opcb_sla_a,
+			&opcb_sra_b, &opcb_sra_c, &opcb_sra_d, &opcb_sra_e,
+			&opcb_sra_h, &opcb_sra_l, &opcb_sra_hl, &opcb_sra_a,
+				// 3
+			&opcb_swap_b, &opcb_swap_c, &opcb_swap_d, &opcb_swap_e,
+			&opcb_swap_h, &opcb_swap_l, &opcb_swap_hl, &opcb_swap_a,
+			&opcb_srl_b, &opcb_srl_c, &opcb_srl_d, &opcb_srl_e,
+			&opcb_srl_h, &opcb_srl_l, &opcb_srl_hl, &opcb_srl_a,
+				// 4
+			&opcb_bit_0_b,
+			&opcb_bit_0_c,
+			&opcb_bit_0_d,
+			&opcb_bit_0_e,
+			&opcb_bit_0_h,
+			&opcb_bit_0_l,
+			&opcb_bit_0_hl,
+			&opcb_bit_0_a,
+			&opcb_bit_1_b,
+			&opcb_bit_1_c,
+			&opcb_bit_1_d,
+			&opcb_bit_1_e,
+			&opcb_bit_1_h,
+			&opcb_bit_1_l,
+			&opcb_bit_1_hl,
+			&opcb_bit_1_a,
+				// 5
+			&opcb_bit_2_b,
+			&opcb_bit_2_c,
+			&opcb_bit_2_d,
+			&opcb_bit_2_e,
+			&opcb_bit_2_h,
+			&opcb_bit_2_l,
+			&opcb_bit_2_hl,
+			&opcb_bit_2_a,
+			&opcb_bit_3_b,
+			&opcb_bit_3_c,
+			&opcb_bit_3_d,
+			&opcb_bit_3_e,
+			&opcb_bit_3_h,
+			&opcb_bit_3_l,
+			&opcb_bit_3_hl,
+			&opcb_bit_3_a,
+				// 6
+			&opcb_bit_4_b,
+			&opcb_bit_4_c,
+			&opcb_bit_4_d,
+			&opcb_bit_4_e,
+			&opcb_bit_4_h,
+			&opcb_bit_4_l,
+			&opcb_bit_4_hl,
+			&opcb_bit_4_a,
+			&opcb_bit_5_b,
+			&opcb_bit_5_c,
+			&opcb_bit_5_d,
+			&opcb_bit_5_e,
+			&opcb_bit_5_h,
+			&opcb_bit_5_l,
+			&opcb_bit_5_hl,
+			&opcb_bit_5_a,
+				// 7
+			&opcb_bit_6_b,
+			&opcb_bit_6_c,
+			&opcb_bit_6_d,
+			&opcb_bit_6_e,
+			&opcb_bit_6_h,
+			&opcb_bit_6_l,
+			&opcb_bit_6_hl,
+			&opcb_bit_6_a,
+			&opcb_bit_7_b,
+			&opcb_bit_7_c,
+			&opcb_bit_7_d,
+			&opcb_bit_7_e,
+			&opcb_bit_7_h,
+			&opcb_bit_7_l,
+			&opcb_bit_7_hl,
+			&opcb_bit_7_a,
+				// 8
+			&opcb_res_0_b,
+			&opcb_res_0_c,
+			&opcb_res_0_d,
+			&opcb_res_0_e,
+			&opcb_res_0_h,
+			&opcb_res_0_l,
+			&opcb_res_0_hl,
+			&opcb_res_0_a,
+			&opcb_res_1_b,
+			&opcb_res_1_c,
+			&opcb_res_1_d,
+			&opcb_res_1_e,
+			&opcb_res_1_h,
+			&opcb_res_1_l,
+			&opcb_res_1_hl,
+			&opcb_res_1_a,
+				// 9
+			&opcb_res_2_b,
+			&opcb_res_2_c,
+			&opcb_res_2_d,
+			&opcb_res_2_e,
+			&opcb_res_2_h,
+			&opcb_res_2_l,
+			&opcb_res_2_hl,
+			&opcb_res_2_a,
+			&opcb_res_3_b,
+			&opcb_res_3_c,
+			&opcb_res_3_d,
+			&opcb_res_3_e,
+			&opcb_res_3_h,
+			&opcb_res_3_l,
+			&opcb_res_3_hl,
+			&opcb_res_3_a,
+				// a
+			&opcb_res_4_b,
+			&opcb_res_4_c,
+			&opcb_res_4_d,
+			&opcb_res_4_e,
+			&opcb_res_4_h,
+			&opcb_res_4_l,
+			&opcb_res_4_hl,
+			&opcb_res_4_a,
+			&opcb_res_5_b,
+			&opcb_res_5_c,
+			&opcb_res_5_d,
+			&opcb_res_5_e,
+			&opcb_res_5_h,
+			&opcb_res_5_l,
+			&opcb_res_5_hl,
+			&opcb_res_5_a,
+				// b
+			&opcb_res_6_b,
+			&opcb_res_6_c,
+			&opcb_res_6_d,
+			&opcb_res_6_e,
+			&opcb_res_6_h,
+			&opcb_res_6_l,
+			&opcb_res_6_hl,
+			&opcb_res_6_a,
+			&opcb_res_7_b,
+			&opcb_res_7_c,
+			&opcb_res_7_d,
+			&opcb_res_7_e,
+			&opcb_res_7_h,
+			&opcb_res_7_l,
+			&opcb_res_7_hl,
+			&opcb_res_7_a,
+				// c
+			&opcb_set_0_b,
+			&opcb_set_0_c,
+			&opcb_set_0_d,
+			&opcb_set_0_e,
+			&opcb_set_0_h,
+			&opcb_set_0_l,
+			&opcb_set_0_hl,
+			&opcb_set_0_a,
+			&opcb_set_1_b,
+			&opcb_set_1_c,
+			&opcb_set_1_d,
+			&opcb_set_1_e,
+			&opcb_set_1_h,
+			&opcb_set_1_l,
+			&opcb_set_1_hl,
+			&opcb_set_1_a,
+		// d
+			&opcb_set_2_b,
+			&opcb_set_2_c,
+			&opcb_set_2_d,
+			&opcb_set_2_e,
+			&opcb_set_2_h,
+			&opcb_set_2_l,
+			&opcb_set_2_hl,
+			&opcb_set_2_a,
+			&opcb_set_3_b,
+			&opcb_set_3_c,
+			&opcb_set_3_d,
+			&opcb_set_3_e,
+			&opcb_set_3_h,
+			&opcb_set_3_l,
+			&opcb_set_3_hl,
+			&opcb_set_3_a,
+				// e
+			&opcb_set_4_b,
+			&opcb_set_4_c,
+			&opcb_set_4_d,
+			&opcb_set_4_e,
+			&opcb_set_4_h,
+			&opcb_set_4_l,
+			&opcb_set_4_hl,
+			&opcb_set_4_a,
+			&opcb_set_5_b,
+			&opcb_set_5_c,
+			&opcb_set_5_d,
+			&opcb_set_5_e,
+			&opcb_set_5_h,
+			&opcb_set_5_l,
+			&opcb_set_5_hl,
+			&opcb_set_5_a,
+			// F
+			&opcb_set_6_b,
+			&opcb_set_6_c,
+			&opcb_set_6_d,
+			&opcb_set_6_e,
+			&opcb_set_6_h,
+			&opcb_set_6_l,
+			&opcb_set_6_hl,
+			&opcb_set_6_a,
+			&opcb_set_7_b,
+			&opcb_set_7_c,
+			&opcb_set_7_d,
+			&opcb_set_7_e,
+			&opcb_set_7_h,
+			&opcb_set_7_l,
+			&opcb_set_7_hl,
+			&opcb_set_7_a
+		];
+
+		ops = [
+			// 0
+			&op_nop, &op_ld_bc_nn, &op_ld_addr_bc_a, &op_inc_bc,
+			&op_inc_b, &op_dec_b, &op_ld_b_n, &op_rlc_a,
+			&op_ld_addr_nn_sp, &op_add_hl_bc, &op_ld_a_addr_bc,
+			&op_dec_bc, &op_inc_c, &op_dec_c, &op_ld_c_n, &op_rrc_a,
+			// 1
+			&op_stop, &op_ld_de_nn, &op_ld_addr_de_a, &op_inc_de,
+			&op_inc_d, &op_dec_d, &op_ld_d_n, &op_rl_a,
+			&op_jr_n, &op_add_hl_de, &op_ld_a_addr_de, &op_dec_de,
+			&op_inc_e, &op_dec_e, &op_ld_e_n, &op_rr_a,
+			// 2
+			&op_jr_nz_n, &op_ld_hl_nn, &op_ldi_addr_hl_a, &op_inc_hl,
+			&op_inc_h, &op_dec_h, &op_ld_h_n, &op_daa,
+			&op_jr_z_n, &op_add_hl_hl, &op_ldi_a_addr_hl, &op_dec_hl,
+			&op_inc_l, &op_dec_l, &op_ld_l_n, &op_cpl,
+			// 3
+			&op_jr_nc_n, &op_ld_sp_nn, &op_ldd_addr_hl_a, &op_inc_sp,
+			&op_inc_addr_hl, &op_dec_addr_hl, &op_ld_addr_hl_n, &op_scf,
+			&op_jr_c_n, &op_add_hl_sp, &op_ldd_a_addr_hl, &op_dec_sp,
+			&op_inc_a, &op_dec_a, &op_ld_a_n, &op_ccf,
+			// 4
+			&op_ld_b_b, &op_ld_b_c, &op_ld_b_d, &op_ld_b_e,
+			&op_ld_b_h, &op_ld_b_l, &op_ld_b_addr_hl, &op_ld_b_a,
+			&op_ld_c_b, &op_ld_c_c, &op_ld_c_d, &op_ld_c_e,
+			&op_ld_c_h, &op_ld_c_l, &op_ld_c_addr_hl, &op_ld_c_a,
+			// 5
+			&op_ld_d_b, &op_ld_d_c, &op_ld_d_d, &op_ld_d_e,
+			&op_ld_d_h, &op_ld_d_l, &op_ld_d_addr_hl, &op_ld_d_a,
+			&op_ld_e_b, &op_ld_e_c, &op_ld_e_d, &op_ld_e_e,
+			&op_ld_e_l, &op_ld_e_h, &op_ld_e_addr_hl, &op_ld_e_a,
+			// 6
+			&op_ld_h_b, &op_ld_h_c, &op_ld_h_d, &op_ld_h_e,
+			&op_ld_h_h, &op_ld_h_l, &op_ld_h_addr_hl, &op_ld_h_a,
+			&op_ld_l_b, &op_ld_l_c, &op_ld_l_d, &op_ld_l_e,
+			&op_ld_l_h, &op_ld_l_l, &op_ld_l_addr_hl, &op_ld_l_a,
+			// 7
+			&op_ld_addr_hl_b, &op_ld_addr_hl_c, &op_ld_addr_hl_d, &op_ld_addr_hl_e,
+			&op_ld_addr_hl_h, &op_ld_addr_hl_l, &op_halt, &op_ld_addr_hl_a,
+			&op_ld_a_b, &op_ld_a_c, &op_ld_a_d, &op_ld_a_e,
+			&op_ld_a_h, &op_ld_a_l, &op_ld_a_addr_hl, &op_ld_a_a,
+			// 8
+			&op_add_a_b, &op_add_a_c, &op_add_a_d, &op_add_a_e,
+			&op_add_a_h, &op_add_a_l, &op_add_a_addr_hl, &op_add_a_a,
+			&op_adc_a_b, &op_adc_a_c, &op_adc_a_d, &op_adc_a_e,
+			&op_adc_a_h, &op_adc_a_l, &op_adc_a_addr_hl, &op_adc_a_a,
+			// 9
+			&op_sub_a_b, &op_sub_a_c, &op_sub_a_d, &op_sub_a_e,
+			&op_sub_a_h, &op_sub_a_l, &op_sub_a_addr_hl, &op_sub_a_a,
+			&op_sbc_a_b, &op_sbc_a_c, &op_sbc_a_d, &op_sbc_a_e,
+			&op_sbc_a_h, &op_sbc_a_l, &op_sbc_a_addr_hl, &op_sbc_a_a,
+			// A
+			&op_and_b, &op_and_c, &op_and_d, &op_and_e,
+			&op_and_h, &op_and_l, &op_and_addr_hl, &op_and_a,
+			&op_xor_b, &op_xor_c, &op_xor_d, &op_xor_e,
+			&op_xor_h, &op_xor_l, &op_xor_addr_hl, &op_xor_a,
+			// B
+			&op_or_b, &op_or_c, &op_or_d, &op_or_e,
+			&op_or_h, &op_or_l, &op_or_addr_hl, &op_or_a,
+			&op_cp_b, &op_cp_c, &op_cp_d, &op_cp_e,
+			&op_cp_h, &op_cp_l, &op_cp_addr_hl, &op_cp_a,
+
+			// C
+			&op_ret_nz, &op_pop_bc, &op_jp_nz_nn, &op_jp_nn,
+			&op_call_nz_nn, &op_push_bc, &op_add_a_n, &op_rst_0,
+			&op_ret_z, &op_ret, &op_jp_z_nn, &op_ext_ops,
+			&op_call_z_nn, &op_call_nn, &op_adc_a_n, &op_rst_8,
+			// D
+			&op_ret_nc, &op_pop_de, &op_jp_nc_nn, &op_xx,
+			&op_call_nc_nn, &op_push_de, &op_sub_a_n, &op_rst_10,
+			&op_ret_c, &op_reti, &op_jp_c_nn, &op_xx,
+			&op_call_c_nn, &op_xx, &op_sbc_a_n, &op_rst_18,
+			// E
+			&op_ldh_addr_n_a, &op_pop_hl, &op_ldh_addr_c_a, &op_xx,
+			&op_xx, &op_push_hl, &op_and_n, &op_rst_20,
+			&op_add_sp_d, &op_jp_addr_hl, &op_ld_addr_nn_a, &op_xx,
+			&op_xx, &op_xx, &op_xor_n, &op_rst_28,
+			// F
+			&op_ldh_a_addr_n, &op_pop_af, &op_xx, &op_di,
+			&op_xx, &op_push_af, &op_or_n, &op_rst_30,
+			&op_ldhl_sp_d, &op_ld_sp_hl, &op_ld_a_addr_nn, &op_ei,
+			&op_xx, &op_xx, &op_cp_n, &op_rst_38
+		];
 	}
 
 	void reset() {
@@ -83,554 +397,554 @@ class CPU {
 	}
 
 // 0
-	void operation_nop() {}
-	void operation_ld_bc_nn() {}
-	void operation_ld_addr_bc_a() {}
-	void operation_inc_bc() {}
-	void operation_inc_b() {}
-	void operation_dec_b() {}
-	void operation_ld_b_n() {}
-	void operation_rlc_a() {}
-	void operation_ld_addr_nn_sp() {}
-	void operation_add_hl_bc() {}
-	void operation_ld_a_addr_bc() {}
-	void operation_dec_bc() {}
-	void operation_inc_c() {}
-	void operation_dec_c() {}
-	void operation_ld_c_n() {}
-	void operation_rrc_a() {}
+	void op_nop() {}
+	void op_ld_bc_nn() {}
+	void op_ld_addr_bc_a() {}
+	void op_inc_bc() {}
+	void op_inc_b() {}
+	void op_dec_b() {}
+	void op_ld_b_n() {}
+	void op_rlc_a() {}
+	void op_ld_addr_nn_sp() {}
+	void op_add_hl_bc() {}
+	void op_ld_a_addr_bc() {}
+	void op_dec_bc() {}
+	void op_inc_c() {}
+	void op_dec_c() {}
+	void op_ld_c_n() {}
+	void op_rrc_a() {}
 	// 1
-	void operation_stop() {}
-	void operation_ld_de_nn() {}
-	void operation_ld_addr_de_a() {}
-	void operation_inc_de() {}
-	void operation_inc_d() {}
-	void operation_dec_d() {}
-	void operation_ld_d_n() {}
-	void operation_rl_a() {}
-	void operation_jr_n() {}
-	void operation_add_hl_de() {}
-	void operation_ld_a_addr_de() {}
-	void operation_dec_de() {}
-	void operation_inc_e() {}
-	void operation_dec_e() {}
-	void operation_ld_e_n() {}
-	void operation_rr_a() {}
+	void op_stop() {}
+	void op_ld_de_nn() {}
+	void op_ld_addr_de_a() {}
+	void op_inc_de() {}
+	void op_inc_d() {}
+	void op_dec_d() {}
+	void op_ld_d_n() {}
+	void op_rl_a() {}
+	void op_jr_n() {}
+	void op_add_hl_de() {}
+	void op_ld_a_addr_de() {}
+	void op_dec_de() {}
+	void op_inc_e() {}
+	void op_dec_e() {}
+	void op_ld_e_n() {}
+	void op_rr_a() {}
 		// 2
-	void operation_jr_nz_n() {}
-	void operation_ld_hl_nn() {}
-	void operation_ldi_addr_hl_a() {}
-	void operation_inc_hl() {}
-	void operation_inc_h() {}
-	void operation_dec_h() {}
-	void operation_ld_h_n() {}
-	void operation_daa() {}
-	void operation_jr_z_n() {}
-	void operation_add_hl_hl() {}
-	void operation_ldi_a_addr_hl() {}
-	void operation_dec_hl() {}
-	void operation_inc_l() {}
-	void operation_dec_l() {}
-	void operation_ld_l_n() {}
-	void operation_cpl() {}
+	void op_jr_nz_n() {}
+	void op_ld_hl_nn() {}
+	void op_ldi_addr_hl_a() {}
+	void op_inc_hl() {}
+	void op_inc_h() {}
+	void op_dec_h() {}
+	void op_ld_h_n() {}
+	void op_daa() {}
+	void op_jr_z_n() {}
+	void op_add_hl_hl() {}
+	void op_ldi_a_addr_hl() {}
+	void op_dec_hl() {}
+	void op_inc_l() {}
+	void op_dec_l() {}
+	void op_ld_l_n() {}
+	void op_cpl() {}
 		// 3
-	void operation_jr_nc_n() {}
-	void operation_ld_sp_nn() {}
-	void operation_ldd_addr_hl_a() {}
-	void operation_inc_sp() {}
-	void operation_inc_addr_hl() {}
-	void operation_dec_addr_hl() {}
-	void operation_ld_addr_hl_n() {}
-	void operation_scf() {}
-	void operation_jr_c_n() {}
-	void operation_add_hl_sp() {}
-	void operation_ldd_a_addr_hl() {}
-	void operation_dec_sp() {}
-	void operation_inc_a() {}
-	void operation_dec_a() {}
-	void operation_ld_a_n() {}
-	void operation_ccf() {}
+	void op_jr_nc_n() {}
+	void op_ld_sp_nn() {}
+	void op_ldd_addr_hl_a() {}
+	void op_inc_sp() {}
+	void op_inc_addr_hl() {}
+	void op_dec_addr_hl() {}
+	void op_ld_addr_hl_n() {}
+	void op_scf() {}
+	void op_jr_c_n() {}
+	void op_add_hl_sp() {}
+	void op_ldd_a_addr_hl() {}
+	void op_dec_sp() {}
+	void op_inc_a() {}
+	void op_dec_a() {}
+	void op_ld_a_n() {}
+	void op_ccf() {}
 	// 4
-	void operation_ld_b_b() {}
-	void operation_ld_b_c() {}
-	void operation_ld_b_d() {}
-	void operation_ld_b_e() {}
-	void operation_ld_b_h() {}
-	void operation_ld_b_l() {}
-	void operation_ld_b_addr_hl() {}
-	void operation_ld_b_a() {}
-	void operation_ld_c_b() {}
-	void operation_ld_c_c() {}
-	void operation_ld_c_d() {}
-	void operation_ld_c_e() {}
-	void operation_ld_c_h() {}
-	void operation_ld_c_l() {}
-	void operation_ld_c_addr_hl() {}
-	void operation_ld_c_a() {}
+	void op_ld_b_b() {}
+	void op_ld_b_c() {}
+	void op_ld_b_d() {}
+	void op_ld_b_e() {}
+	void op_ld_b_h() {}
+	void op_ld_b_l() {}
+	void op_ld_b_addr_hl() {}
+	void op_ld_b_a() {}
+	void op_ld_c_b() {}
+	void op_ld_c_c() {}
+	void op_ld_c_d() {}
+	void op_ld_c_e() {}
+	void op_ld_c_h() {}
+	void op_ld_c_l() {}
+	void op_ld_c_addr_hl() {}
+	void op_ld_c_a() {}
 		// 5
-	void operation_ld_d_b() {}
-	void operation_ld_d_c() {}
-	void operation_ld_d_d() {}
-	void operation_ld_d_e() {}
-	void operation_ld_d_h() {}
-	void operation_ld_d_l() {}
-	void operation_ld_d_addr_hl() {}
-	void operation_ld_d_a() {}
-	void operation_ld_e_b() {}
-	void operation_ld_e_c() {}
-	void operation_ld_e_d() {}
-	void operation_ld_e_e() {}
-	void operation_ld_e_l() {}
-	void operation_ld_e_h() {}
-	void operation_ld_e_addr_hl() {}
-	void operation_ld_e_a() {}
+	void op_ld_d_b() {}
+	void op_ld_d_c() {}
+	void op_ld_d_d() {}
+	void op_ld_d_e() {}
+	void op_ld_d_h() {}
+	void op_ld_d_l() {}
+	void op_ld_d_addr_hl() {}
+	void op_ld_d_a() {}
+	void op_ld_e_b() {}
+	void op_ld_e_c() {}
+	void op_ld_e_d() {}
+	void op_ld_e_e() {}
+	void op_ld_e_l() {}
+	void op_ld_e_h() {}
+	void op_ld_e_addr_hl() {}
+	void op_ld_e_a() {}
 	// 6
-	void operation_ld_h_b() {}
-	void operation_ld_h_c() {}
-	void operation_ld_h_d() {}
-	void operation_ld_h_e() {}
-	void operation_ld_h_h() {}
-	void operation_ld_h_l() {}
-	void operation_ld_h_addr_hl() {}
-	void operation_ld_h_a() {}
-	void operation_ld_l_b() {}
-	void operation_ld_l_c() {}
-	void operation_ld_l_d() {}
-	void operation_ld_l_e() {}
-	void operation_ld_l_h() {}
-	void operation_ld_l_l() {}
-	void operation_ld_l_addr_hl() {}
-	void operation_ld_l_a() {}
+	void op_ld_h_b() {}
+	void op_ld_h_c() {}
+	void op_ld_h_d() {}
+	void op_ld_h_e() {}
+	void op_ld_h_h() {}
+	void op_ld_h_l() {}
+	void op_ld_h_addr_hl() {}
+	void op_ld_h_a() {}
+	void op_ld_l_b() {}
+	void op_ld_l_c() {}
+	void op_ld_l_d() {}
+	void op_ld_l_e() {}
+	void op_ld_l_h() {}
+	void op_ld_l_l() {}
+	void op_ld_l_addr_hl() {}
+	void op_ld_l_a() {}
 		// 7
-	void operation_ld_addr_hl_b() {}
-	void operation_ld_addr_hl_c() {}
-	void operation_ld_addr_hl_d() {}
-	void operation_ld_addr_hl_e() {}
-	void operation_ld_addr_hl_h() {}
-	void operation_ld_addr_hl_l() {}
-	void operation_halt() {}
-	void operation_ld_addr_hl_a() {}
-	void operation_ld_a_b() {}
-	void operation_ld_a_c() {}
-	void operation_ld_a_d() {}
-	void operation_ld_a_e() {}
-	void operation_ld_a_h() {}
-	void operation_ld_a_l() {}
-	void operation_ld_a_addr_hl() {}
-	void operation_ld_a_a() {}
+	void op_ld_addr_hl_b() {}
+	void op_ld_addr_hl_c() {}
+	void op_ld_addr_hl_d() {}
+	void op_ld_addr_hl_e() {}
+	void op_ld_addr_hl_h() {}
+	void op_ld_addr_hl_l() {}
+	void op_halt() {}
+	void op_ld_addr_hl_a() {}
+	void op_ld_a_b() {}
+	void op_ld_a_c() {}
+	void op_ld_a_d() {}
+	void op_ld_a_e() {}
+	void op_ld_a_h() {}
+	void op_ld_a_l() {}
+	void op_ld_a_addr_hl() {}
+	void op_ld_a_a() {}
 		// 8
-	void operation_add_a_b() {}
-	void operation_add_a_c() {}
-	void operation_add_a_d() {}
-	void operation_add_a_e() {}
-	void operation_add_a_h() {}
-	void operation_add_a_l() {}
-	void operation_add_a_addr_hl() {}
-	void operation_add_a_a() {}
-	void operation_adc_a_b() {}
-	void operation_adc_a_c() {}
-	void operation_adc_a_d() {}
-	void operation_adc_a_e() {}
-	void operation_adc_a_h() {}
-	void operation_adc_a_l() {}
-	void operation_adc_a_addr_hl() {}
-	void operation_adc_a_a() {}
+	void op_add_a_b() {}
+	void op_add_a_c() {}
+	void op_add_a_d() {}
+	void op_add_a_e() {}
+	void op_add_a_h() {}
+	void op_add_a_l() {}
+	void op_add_a_addr_hl() {}
+	void op_add_a_a() {}
+	void op_adc_a_b() {}
+	void op_adc_a_c() {}
+	void op_adc_a_d() {}
+	void op_adc_a_e() {}
+	void op_adc_a_h() {}
+	void op_adc_a_l() {}
+	void op_adc_a_addr_hl() {}
+	void op_adc_a_a() {}
 	// 9
-	void operation_sub_a_b() {}
-	void operation_sub_a_c() {}
-	void operation_sub_a_d() {}
-	void operation_sub_a_e() {}
-	void operation_sub_a_h() {}
-	void operation_sub_a_l() {}
-	void operation_sub_a_addr_hl() {}
-	void operation_sub_a_a() {}
-	void operation_sbc_a_b() {}
-	void operation_sbc_a_c() {}
-	void operation_sbc_a_d() {}
-	void operation_sbc_a_e() {}
-	void operation_sbc_a_h() {}
-	void operation_sbc_a_l() {}
-	void operation_sbc_a_addr_hl() {}
-	void operation_sbc_a_a() {}
+	void op_sub_a_b() {}
+	void op_sub_a_c() {}
+	void op_sub_a_d() {}
+	void op_sub_a_e() {}
+	void op_sub_a_h() {}
+	void op_sub_a_l() {}
+	void op_sub_a_addr_hl() {}
+	void op_sub_a_a() {}
+	void op_sbc_a_b() {}
+	void op_sbc_a_c() {}
+	void op_sbc_a_d() {}
+	void op_sbc_a_e() {}
+	void op_sbc_a_h() {}
+	void op_sbc_a_l() {}
+	void op_sbc_a_addr_hl() {}
+	void op_sbc_a_a() {}
 		// A
-	void operation_and_b() {}
-	void operation_and_c() {}
-	void operation_and_d() {}
-	void operation_and_e() {}
-	void operation_and_h() {}
-	void operation_and_l() {}
-	void operation_and_addr_hl() {}
-	void operation_and_a() {}
-	void operation_xor_b() {}
-	void operation_xor_c() {}
-	void operation_xor_d() {}
-	void operation_xor_e() {}
-	void operation_xor_h() {}
-	void operation_xor_l() {}
-	void operation_xor_addr_hl() {}
-	void operation_xor_a() {}
+	void op_and_b() {}
+	void op_and_c() {}
+	void op_and_d() {}
+	void op_and_e() {}
+	void op_and_h() {}
+	void op_and_l() {}
+	void op_and_addr_hl() {}
+	void op_and_a() {}
+	void op_xor_b() {}
+	void op_xor_c() {}
+	void op_xor_d() {}
+	void op_xor_e() {}
+	void op_xor_h() {}
+	void op_xor_l() {}
+	void op_xor_addr_hl() {}
+	void op_xor_a() {}
 	// B
-	void operation_or_b() {}
-	void operation_or_c() {}
-	void operation_or_d() {}
-	void operation_or_e() {}
-	void operation_or_h() {}
-	void operation_or_l() {}
-	void operation_or_addr_hl() {}
-	void operation_or_a() {}
-	void operation_cp_b() {}
-	void operation_cp_c() {}
-	void operation_cp_d() {}
-	void operation_cp_e() {}
-	void operation_cp_h() {}
-	void operation_cp_l() {}
-	void operation_cp_addr_hl() {}
-	void operation_cp_a() {}
+	void op_or_b() {}
+	void op_or_c() {}
+	void op_or_d() {}
+	void op_or_e() {}
+	void op_or_h() {}
+	void op_or_l() {}
+	void op_or_addr_hl() {}
+	void op_or_a() {}
+	void op_cp_b() {}
+	void op_cp_c() {}
+	void op_cp_d() {}
+	void op_cp_e() {}
+	void op_cp_h() {}
+	void op_cp_l() {}
+	void op_cp_addr_hl() {}
+	void op_cp_a() {}
 	// C
-	void operation_ret_nz() {}
-	void operation_pop_bc() {}
-	void operation_jp_nz_nn() {}
-	void operation_jp_nn() {}
-	void operation_call_nz_nn() {}
-	void operation_push_bc() {}
-	void operation_add_a_n() {}
-	void operation_rst_0() {}
-	void operation_ret_z() {}
-	void operation_ret() {}
-	void operation_jp_z_nn() {}
-	void operation_ext_ops() {}
-	void operation_call_z_nn() {}
-	void operation_call_nn() {}
-	void operation_adc_a_n() {}
-	void operation_rst_8() {}
+	void op_ret_nz() {}
+	void op_pop_bc() {}
+	void op_jp_nz_nn() {}
+	void op_jp_nn() {}
+	void op_call_nz_nn() {}
+	void op_push_bc() {}
+	void op_add_a_n() {}
+	void op_rst_0() {}
+	void op_ret_z() {}
+	void op_ret() {}
+	void op_jp_z_nn() {}
+	void op_ext_ops() {}
+	void op_call_z_nn() {}
+	void op_call_nn() {}
+	void op_adc_a_n() {}
+	void op_rst_8() {}
 	// D
-	void operation_ret_nc() {}
-	void operation_pop_de() {}
-	void operation_jp_nc_nn() {}
-	void operation_xx() {}
-	void operation_call_nc_nn() {}
-	void operation_push_de() {}
-	void operation_sub_a_n() {}
-	void operation_rst_10() {}
-	void operation_ret_c() {}
-	void operation_reti() {}
-	void operation_jp_c_nn() {}
-	void operation_xx() {}
-	void operation_call_c_nn() {}
-	void operation_xx() {}
-	void operation_sbc_a_n() {}
-	void operation_rst_18() {}
+	void op_ret_nc() {}
+	void op_pop_de() {}
+	void op_jp_nc_nn() {}
+	void op_xx() {}
+	void op_call_nc_nn() {}
+	void op_push_de() {}
+	void op_sub_a_n() {}
+	void op_rst_10() {}
+	void op_ret_c() {}
+	void op_reti() {}
+	void op_jp_c_nn() {}
+	//void op_xx() {}
+	void op_call_c_nn() {}
+	//void op_xx() {}
+	void op_sbc_a_n() {}
+	void op_rst_18() {}
 	// E
-	void operation_ldh_addr_n_a() {}
-	void operation_pop_hl() {}
-	void operation_ldh_addr_c_a() {}
-	void operation_xx() {}
-	void operation_xx() {}
-	void operation_push_hl() {}
-	void operation_and_n() {}
-	void operation_rst_20() {}
-	void operation_add_sp_d() {}
-	void operation_jp_addr_hl() {}
-	void operation_ld_addr_nn_a() {}
-	void operation_xx() {}
-	void operation_xx() {}
-	void operation_xx() {}
-	void operation_xor_n() {}
-	void operation_rst_28() {}
+	void op_ldh_addr_n_a() {}
+	void op_pop_hl() {}
+	void op_ldh_addr_c_a() {}
+	//void op_xx() {}
+	//void op_xx() {}
+	void op_push_hl() {}
+	void op_and_n() {}
+	void op_rst_20() {}
+	void op_add_sp_d() {}
+	void op_jp_addr_hl() {}
+	void op_ld_addr_nn_a() {}
+	//void op_xx() {}
+	//void op_xx() {}
+	//void op_xx() {}
+	void op_xor_n() {}
+	void op_rst_28() {}
 		// F
-	void operation_ldh_a_addr_n() {}
-	void operation_pop_af() {}
-	void operation_xx() {}
-	void operation_di() {}
-	void operation_xx() {}
-	void operation_push_af() {}
-	void operation_or_n() {}
-	void operation_rst_30() {}
-	void operation_ldhl_sp_d() {}
-	void operation_ld_sp_hl() {}
-	void operation_ld_a_addr_nn() {}
-	void operation_ei() {}
-	void operation_xx() {}
-	void operation_xx() {}
-	void operation_cp_n() {}
-	void operation_rst_38() {}
+	void op_ldh_a_addr_n() {}
+	void op_pop_af() {}
+	//void op_xx() {}
+	void op_di() {}
+	//void op_xx() {}
+	void op_push_af() {}
+	void op_or_n() {}
+	void op_rst_30() {}
+	void op_ldhl_sp_d() {}
+	void op_ld_sp_hl() {}
+	void op_ld_a_addr_nn() {}
+	void op_ei() {}
+	//void op_xx() {}
+	//void op_xx() {}
+	void op_cp_n() {}
+	void op_rst_38() {}
 
 
 
 
 
 		// 0
-	void operation_rlc_b() {}
-	void operation_rlc_c() {}
-	void operation_rlc_d() {}
-	void operation_rlc_e() {}
-	void operation_rlc_h() {}
-	void operation_rlc_l() {}
-	void operation_rlc_hl() {}
-	void operation_rlc_a() {}
-	void operation_rrc_b() {}
-	void operation_rrc_c() {}
-	void operation_rrc_d() {}
-	void operation_rrc_e() {}
-	void operation_rrc_h() {}
-	void operation_rrc_l() {}
-	void operation_rrc_hl() {}
-	void operation_rrc_a() {}
+	void opcb_rlc_b() {}
+	void opcb_rlc_c() {}
+	void opcb_rlc_d() {}
+	void opcb_rlc_e() {}
+	void opcb_rlc_h() {}
+	void opcb_rlc_l() {}
+	void opcb_rlc_hl() {}
+	void opcb_rlc_a() {}
+	void opcb_rrc_b() {}
+	void opcb_rrc_c() {}
+	void opcb_rrc_d() {}
+	void opcb_rrc_e() {}
+	void opcb_rrc_h() {}
+	void opcb_rrc_l() {}
+	void opcb_rrc_hl() {}
+	void opcb_rrc_a() {}
 		// 1
-	void operation_rl_b() {}
-	void operation_rl_c() {}
-	void operation_rl_d() {}
-	void operation_rl_e() {}
-	void operation_rl_h() {}
-	void operation_rl_l() {}
-	void operation_rl_hl() {}
-	void operation_rl_a() {}
-	void operation_rr_b() {}
-	void operation_rr_c() {}
-	void operation_rr_d() {}
-	void operation_rr_e() {}
-	void operation_rr_h() {}
-	void operation_rr_l() {}
-	void operation_rr_hl() {}
-	void operation_rr_a() {}
+	void opcb_rl_b() {}
+	void opcb_rl_c() {}
+	void opcb_rl_d() {}
+	void opcb_rl_e() {}
+	void opcb_rl_h() {}
+	void opcb_rl_l() {}
+	void opcb_rl_hl() {}
+	void opcb_rl_a() {}
+	void opcb_rr_b() {}
+	void opcb_rr_c() {}
+	void opcb_rr_d() {}
+	void opcb_rr_e() {}
+	void opcb_rr_h() {}
+	void opcb_rr_l() {}
+	void opcb_rr_hl() {}
+	void opcb_rr_a() {}
 		// 2
-	void operation_sla_b() {}
-	void operation_sla_c() {}
-	void operation_sla_d() {}
-	void operation_sla_e() {}
-	void operation_sla_h() {}
-	void operation_sla_l() {}
-	void operation_sla_hl() {}
-	void operation_sla_a() {}
-	void operation_sra_b() {}
-	void operation_sra_c() {}
-	void operation_sra_d() {}
-	void operation_sra_e() {}
-	void operation_sra_h() {}
-	void operation_sra_l() {}
-	void operation_sra_hl() {}
-	void operation_sra_a() {}
+	void opcb_sla_b() {}
+	void opcb_sla_c() {}
+	void opcb_sla_d() {}
+	void opcb_sla_e() {}
+	void opcb_sla_h() {}
+	void opcb_sla_l() {}
+	void opcb_sla_hl() {}
+	void opcb_sla_a() {}
+	void opcb_sra_b() {}
+	void opcb_sra_c() {}
+	void opcb_sra_d() {}
+	void opcb_sra_e() {}
+	void opcb_sra_h() {}
+	void opcb_sra_l() {}
+	void opcb_sra_hl() {}
+	void opcb_sra_a() {}
 		// 3
-	void operation_swap_b() {}
-	void operation_swap_c() {}
-	void operation_swap_d() {}
-	void operation_swap_e() {}
-	void operation_swap_h() {}
-	void operation_swap_l() {}
-	void operation_swap_hl() {}
-	void operation_swap_a() {}
-	void operation_srl_b() {}
-	void operation_srl_c() {}
-	void operation_srl_d() {}
-	void operation_srl_e() {}
-	void operation_srl_h() {}
-	void operation_srl_l() {}
-	void operation_srl_hl() {}
-	void operation_srl_a() {}
+	void opcb_swap_b() {}
+	void opcb_swap_c() {}
+	void opcb_swap_d() {}
+	void opcb_swap_e() {}
+	void opcb_swap_h() {}
+	void opcb_swap_l() {}
+	void opcb_swap_hl() {}
+	void opcb_swap_a() {}
+	void opcb_srl_b() {}
+	void opcb_srl_c() {}
+	void opcb_srl_d() {}
+	void opcb_srl_e() {}
+	void opcb_srl_h() {}
+	void opcb_srl_l() {}
+	void opcb_srl_hl() {}
+	void opcb_srl_a() {}
 		// 4
-	void operation_bit_0_b() {}
-	void operation_bit_0_c() {}
-	void operation_bit_0_d() {}
-	void operation_bit_0_e() {}
-	void operation_bit_0_h() {}
-	void operation_bit_0_l() {}
-	void operation_bit_0_hl() {}
-	void operation_bit_0_a() {}
-	void operation_bit_1_b() {}
-	void operation_bit_1_c() {}
-	void operation_bit_1_d() {}
-	void operation_bit_1_e() {}
-	void operation_bit_1_h() {}
-	void operation_bit_1_l() {}
-	void operation_bit_1_hl() {}
-	void operation_bit_1_a() {}
+	void opcb_bit_0_b() {}
+	void opcb_bit_0_c() {}
+	void opcb_bit_0_d() {}
+	void opcb_bit_0_e() {}
+	void opcb_bit_0_h() {}
+	void opcb_bit_0_l() {}
+	void opcb_bit_0_hl() {}
+	void opcb_bit_0_a() {}
+	void opcb_bit_1_b() {}
+	void opcb_bit_1_c() {}
+	void opcb_bit_1_d() {}
+	void opcb_bit_1_e() {}
+	void opcb_bit_1_h() {}
+	void opcb_bit_1_l() {}
+	void opcb_bit_1_hl() {}
+	void opcb_bit_1_a() {}
 		// 5
-	void operation_bit_2_b() {}
-	void operation_bit_2_c() {}
-	void operation_bit_2_d() {}
-	void operation_bit_2_e() {}
-	void operation_bit_2_h() {}
-	void operation_bit_2_l() {}
-	void operation_bit_2_hl() {}
-	void operation_bit_2_a() {}
-	void operation_bit_3_b() {}
-	void operation_bit_3_c() {}
-	void operation_bit_3_d() {}
-	void operation_bit_3_e() {}
-	void operation_bit_3_h() {}
-	void operation_bit_3_l() {}
-	void operation_bit_3_hl() {}
-	void operation_bit_3_a() {}
+	void opcb_bit_2_b() {}
+	void opcb_bit_2_c() {}
+	void opcb_bit_2_d() {}
+	void opcb_bit_2_e() {}
+	void opcb_bit_2_h() {}
+	void opcb_bit_2_l() {}
+	void opcb_bit_2_hl() {}
+	void opcb_bit_2_a() {}
+	void opcb_bit_3_b() {}
+	void opcb_bit_3_c() {}
+	void opcb_bit_3_d() {}
+	void opcb_bit_3_e() {}
+	void opcb_bit_3_h() {}
+	void opcb_bit_3_l() {}
+	void opcb_bit_3_hl() {}
+	void opcb_bit_3_a() {}
 		// 6
-	void operation_bit_4_b() {}
-	void operation_bit_4_c() {}
-	void operation_bit_4_d() {}
-	void operation_bit_4_e() {}
-	void operation_bit_4_h() {}
-	void operation_bit_4_l() {}
-	void operation_bit_4_hl() {}
-	void operation_bit_4_a() {}
-	void operation_bit_5_b() {}
-	void operation_bit_5_c() {}
-	void operation_bit_5_d() {}
-	void operation_bit_5_e() {}
-	void operation_bit_5_h() {}
-	void operation_bit_5_l() {}
-	void operation_bit_5_hl() {}
-	void operation_bit_5_a() {}
+	void opcb_bit_4_b() {}
+	void opcb_bit_4_c() {}
+	void opcb_bit_4_d() {}
+	void opcb_bit_4_e() {}
+	void opcb_bit_4_h() {}
+	void opcb_bit_4_l() {}
+	void opcb_bit_4_hl() {}
+	void opcb_bit_4_a() {}
+	void opcb_bit_5_b() {}
+	void opcb_bit_5_c() {}
+	void opcb_bit_5_d() {}
+	void opcb_bit_5_e() {}
+	void opcb_bit_5_h() {}
+	void opcb_bit_5_l() {}
+	void opcb_bit_5_hl() {}
+	void opcb_bit_5_a() {}
 		// 7
-	void operation_bit_6_b() {}
-	void operation_bit_6_c() {}
-	void operation_bit_6_d() {}
-	void operation_bit_6_e() {}
-	void operation_bit_6_h() {}
-	void operation_bit_6_l() {}
-	void operation_bit_6_hl() {}
-	void operation_bit_6_a() {}
-	void operation_bit_7_b() {}
-	void operation_bit_7_c() {}
-	void operation_bit_7_d() {}
-	void operation_bit_7_e() {}
-	void operation_bit_7_h() {}
-	void operation_bit_7_l() {}
-	void operation_bit_7_hl() {}
-	void operation_bit_7_a() {}
+	void opcb_bit_6_b() {}
+	void opcb_bit_6_c() {}
+	void opcb_bit_6_d() {}
+	void opcb_bit_6_e() {}
+	void opcb_bit_6_h() {}
+	void opcb_bit_6_l() {}
+	void opcb_bit_6_hl() {}
+	void opcb_bit_6_a() {}
+	void opcb_bit_7_b() {}
+	void opcb_bit_7_c() {}
+	void opcb_bit_7_d() {}
+	void opcb_bit_7_e() {}
+	void opcb_bit_7_h() {}
+	void opcb_bit_7_l() {}
+	void opcb_bit_7_hl() {}
+	void opcb_bit_7_a() {}
 		// 8
-	void operation_res_0_b() {}
-	void operation_res_0_c() {}
-	void operation_res_0_d() {}
-	void operation_res_0_e() {}
-	void operation_res_0_h() {}
-	void operation_res_0_l() {}
-	void operation_res_0_hl() {}
-	void operation_res_0_a() {}
-	void operation_res_1_b() {}
-	void operation_res_1_c() {}
-	void operation_res_1_d() {}
-	void operation_res_1_e() {}
-	void operation_res_1_h() {}
-	void operation_res_1_l() {}
-	void operation_res_1_hl() {}
-	void operation_res_1_a() {}
+	void opcb_res_0_b() {}
+	void opcb_res_0_c() {}
+	void opcb_res_0_d() {}
+	void opcb_res_0_e() {}
+	void opcb_res_0_h() {}
+	void opcb_res_0_l() {}
+	void opcb_res_0_hl() {}
+	void opcb_res_0_a() {}
+	void opcb_res_1_b() {}
+	void opcb_res_1_c() {}
+	void opcb_res_1_d() {}
+	void opcb_res_1_e() {}
+	void opcb_res_1_h() {}
+	void opcb_res_1_l() {}
+	void opcb_res_1_hl() {}
+	void opcb_res_1_a() {}
 		// 9
-	void operation_res_2_b() {}
-	void operation_res_2_c() {}
-	void operation_res_2_d() {}
-	void operation_res_2_e() {}
-	void operation_res_2_h() {}
-	void operation_res_2_l() {}
-	void operation_res_2_hl() {}
-	void operation_res_2_a() {}
-	void operation_res_3_b() {}
-	void operation_res_3_c() {}
-	void operation_res_3_d() {}
-	void operation_res_3_e() {}
-	void operation_res_3_h() {}
-	void operation_res_3_l() {}
-	void operation_res_3_hl() {}
-	void operation_res_3_a() {}
+	void opcb_res_2_b() {}
+	void opcb_res_2_c() {}
+	void opcb_res_2_d() {}
+	void opcb_res_2_e() {}
+	void opcb_res_2_h() {}
+	void opcb_res_2_l() {}
+	void opcb_res_2_hl() {}
+	void opcb_res_2_a() {}
+	void opcb_res_3_b() {}
+	void opcb_res_3_c() {}
+	void opcb_res_3_d() {}
+	void opcb_res_3_e() {}
+	void opcb_res_3_h() {}
+	void opcb_res_3_l() {}
+	void opcb_res_3_hl() {}
+	void opcb_res_3_a() {}
 		// a
-	void operation_res_4_b() {}
-	void operation_res_4_c() {}
-	void operation_res_4_d() {}
-	void operation_res_4_e() {}
-	void operation_res_4_h() {}
-	void operation_res_4_l() {}
-	void operation_res_4_hl() {}
-	void operation_res_4_a() {}
-	void operation_res_5_b() {}
-	void operation_res_5_c() {}
-	void operation_res_5_d() {}
-	void operation_res_5_e() {}
-	void operation_res_5_h() {}
-	void operation_res_5_l() {}
-	void operation_res_5_hl() {}
-	void operation_res_5_a() {}
+	void opcb_res_4_b() {}
+	void opcb_res_4_c() {}
+	void opcb_res_4_d() {}
+	void opcb_res_4_e() {}
+	void opcb_res_4_h() {}
+	void opcb_res_4_l() {}
+	void opcb_res_4_hl() {}
+	void opcb_res_4_a() {}
+	void opcb_res_5_b() {}
+	void opcb_res_5_c() {}
+	void opcb_res_5_d() {}
+	void opcb_res_5_e() {}
+	void opcb_res_5_h() {}
+	void opcb_res_5_l() {}
+	void opcb_res_5_hl() {}
+	void opcb_res_5_a() {}
 		// b
-	void operation_res_6_b() {}
-	void operation_res_6_c() {}
-	void operation_res_6_d() {}
-	void operation_res_6_e() {}
-	void operation_res_6_h() {}
-	void operation_res_6_l() {}
-	void operation_res_6_hl() {}
-	void operation_res_6_a() {}
-	void operation_res_7_b() {}
-	void operation_res_7_c() {}
-	void operation_res_7_d() {}
-	void operation_res_7_e() {}
-	void operation_res_7_h() {}
-	void operation_res_7_l() {}
-	void operation_res_7_hl() {}
-	void operation_res_7_a() {}
+	void opcb_res_6_b() {}
+	void opcb_res_6_c() {}
+	void opcb_res_6_d() {}
+	void opcb_res_6_e() {}
+	void opcb_res_6_h() {}
+	void opcb_res_6_l() {}
+	void opcb_res_6_hl() {}
+	void opcb_res_6_a() {}
+	void opcb_res_7_b() {}
+	void opcb_res_7_c() {}
+	void opcb_res_7_d() {}
+	void opcb_res_7_e() {}
+	void opcb_res_7_h() {}
+	void opcb_res_7_l() {}
+	void opcb_res_7_hl() {}
+	void opcb_res_7_a() {}
 		// c
-	void operation_set_0_b() {}
-	void operation_set_0_c() {}
-	void operation_set_0_d() {}
-	void operation_set_0_e() {}
-	void operation_set_0_h() {}
-	void operation_set_0_l() {}
-	void operation_set_0_hl() {}
-	void operation_set_0_a() {}
-	void operation_set_1_b() {}
-	void operation_set_1_c() {}
-	void operation_set_1_d() {}
-	void operation_set_1_e() {}
-	void operation_set_1_h() {}
-	void operation_set_1_l() {}
-	void operation_set_1_hl() {}
-	void operation_set_1_a() {}
+	void opcb_set_0_b() {}
+	void opcb_set_0_c() {}
+	void opcb_set_0_d() {}
+	void opcb_set_0_e() {}
+	void opcb_set_0_h() {}
+	void opcb_set_0_l() {}
+	void opcb_set_0_hl() {}
+	void opcb_set_0_a() {}
+	void opcb_set_1_b() {}
+	void opcb_set_1_c() {}
+	void opcb_set_1_d() {}
+	void opcb_set_1_e() {}
+	void opcb_set_1_h() {}
+	void opcb_set_1_l() {}
+	void opcb_set_1_hl() {}
+	void opcb_set_1_a() {}
 // d
-	void operation_set_2_b() {}
-	void operation_set_2_c() {}
-	void operation_set_2_d() {}
-	void operation_set_2_e() {}
-	void operation_set_2_h() {}
-	void operation_set_2_l() {}
-	void operation_set_2_hl() {}
-	void operation_set_2_a() {}
-	void operation_set_3_b() {}
-	void operation_set_3_c() {}
-	void operation_set_3_d() {}
-	void operation_set_3_e() {}
-	void operation_set_3_h() {}
-	void operation_set_3_l() {}
-	void operation_set_3_hl() {}
-	void operation_set_3_a() {}
+	void opcb_set_2_b() {}
+	void opcb_set_2_c() {}
+	void opcb_set_2_d() {}
+	void opcb_set_2_e() {}
+	void opcb_set_2_h() {}
+	void opcb_set_2_l() {}
+	void opcb_set_2_hl() {}
+	void opcb_set_2_a() {}
+	void opcb_set_3_b() {}
+	void opcb_set_3_c() {}
+	void opcb_set_3_d() {}
+	void opcb_set_3_e() {}
+	void opcb_set_3_h() {}
+	void opcb_set_3_l() {}
+	void opcb_set_3_hl() {}
+	void opcb_set_3_a() {}
 		// e
-	void operation_set_4_b() {}
-	void operation_set_4_c() {}
-	void operation_set_4_d() {}
-	void operation_set_4_e() {}
-	void operation_set_4_h() {}
-	void operation_set_4_l() {}
-	void operation_set_4_hl() {}
-	void operation_set_4_a() {}
-	void operation_set_5_b() {}
-	void operation_set_5_c() {}
-	void operation_set_5_d() {}
-	void operation_set_5_e() {}
-	void operation_set_5_h() {}
-	void operation_set_5_l() {}
-	void operation_set_5_hl() {}
-	void operation_set_5_a() {}
+	void opcb_set_4_b() {}
+	void opcb_set_4_c() {}
+	void opcb_set_4_d() {}
+	void opcb_set_4_e() {}
+	void opcb_set_4_h() {}
+	void opcb_set_4_l() {}
+	void opcb_set_4_hl() {}
+	void opcb_set_4_a() {}
+	void opcb_set_5_b() {}
+	void opcb_set_5_c() {}
+	void opcb_set_5_d() {}
+	void opcb_set_5_e() {}
+	void opcb_set_5_h() {}
+	void opcb_set_5_l() {}
+	void opcb_set_5_hl() {}
+	void opcb_set_5_a() {}
 	// F
-	void operation_set_6_b() {}
-	void operation_set_6_c() {}
-	void operation_set_6_d() {}
-	void operation_set_6_e() {}
-	void operation_set_6_h() {}
-	void operation_set_6_l() {}
-	void operation_set_6_hl() {}
-	void operation_set_6_a() {}
-	void operation_set_7_b() {}
-	void operation_set_7_c() {}
-	void operation_set_7_d() {}
-	void operation_set_7_e() {}
-	void operation_set_7_h() {}
-	void operation_set_7_l() {}
-	void operation_set_7_hl() {}
-	void operation_set_7_a() {}
+	void opcb_set_6_b() {}
+	void opcb_set_6_c() {}
+	void opcb_set_6_d() {}
+	void opcb_set_6_e() {}
+	void opcb_set_6_h() {}
+	void opcb_set_6_l() {}
+	void opcb_set_6_hl() {}
+	void opcb_set_6_a() {}
+	void opcb_set_7_b() {}
+	void opcb_set_7_c() {}
+	void opcb_set_7_d() {}
+	void opcb_set_7_e() {}
+	void opcb_set_7_h() {}
+	void opcb_set_7_l() {}
+	void opcb_set_7_hl() {}
+	void opcb_set_7_a() {}
 }
 
 immutable u32 HEADER_SIZE = 16;
