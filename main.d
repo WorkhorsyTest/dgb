@@ -41,9 +41,10 @@ class CPU {
 	u8 _l;
 	u16 _sp;
 	u16 _pc;
+	u16 _ticks;
 
 	u16 _af() { return (_a << 8) | _f; }
-	u16 _cb() { return (_c << 8) | _b; }
+	u16 _bc() { return (_b << 8) | _c; }
 	u16 _de() { return (_d << 8) | _e; }
 	u16 _hl() { return (_h << 8) | _l; }
 
@@ -396,14 +397,135 @@ class CPU {
 
 	}
 
+	void op_nop() { _ticks += 4; }
+	void op_stop() {}
+	void op_halt() {}
+
+	// LD r1, r2
+	void op_ld_a_a() { _a = _a; _ticks += 4; }
+	void op_ld_a_b() { _a = _b; _ticks += 4; }
+	void op_ld_a_c() { _a = _c; _ticks += 4; }
+	void op_ld_a_d() { _a = _d; _ticks += 4; }
+	void op_ld_a_e() { _a = _e; _ticks += 4; }
+	void op_ld_a_h() { _a = _h; _ticks += 4; }
+	void op_ld_a_l() { _a = _l; _ticks += 4; }
+	void op_ld_a_addr_hl() { _a = _memory[_hl]; _ticks += 8; }
+	void op_ld_b_a() { _b = _a; _ticks += 4; }
+	void op_ld_b_b() { _b = _b; _ticks += 4; }
+	void op_ld_b_c() { _b = _c; _ticks += 4; }
+	void op_ld_b_d() { _b = _d; _ticks += 4; }
+	void op_ld_b_e() { _b = _e; _ticks += 4; }
+	void op_ld_b_h() { _b = _h; _ticks += 4; }
+	void op_ld_b_l() { _b = _l; _ticks += 4; }
+	void op_ld_b_addr_hl() { _b = _memory[_hl]; _ticks += 8; }
+	void op_ld_c_a() { _c = _a; _ticks += 4; }
+	void op_ld_c_b() { _c = _b; _ticks += 4; }
+	void op_ld_c_c() { _c = _c; _ticks += 4; }
+	void op_ld_c_d() { _c = _d; _ticks += 4; }
+	void op_ld_c_e() { _c = _e; _ticks += 4; }
+	void op_ld_c_h() { _c = _h; _ticks += 4; }
+	void op_ld_c_l() { _c = _l; _ticks += 4; }
+	void op_ld_c_addr_hl() { _c = _memory[_hl]; _ticks += 8; }
+	void op_ld_d_a() { _d = _a; _ticks += 4; }
+	void op_ld_d_b() { _d = _b; _ticks += 4; }
+	void op_ld_d_c() { _d = _c; _ticks += 4; }
+	void op_ld_d_d() { _d = _d; _ticks += 4; }
+	void op_ld_d_e() { _d = _e; _ticks += 4; }
+	void op_ld_d_h() { _d = _h; _ticks += 4; }
+	void op_ld_d_l() { _d = _l; _ticks += 4; }
+	void op_ld_d_addr_hl() { _d = _memory[_hl]; _ticks += 8; }
+	void op_ld_e_a() { _e = _a; _ticks += 4; }
+	void op_ld_e_b() { _e = _b; _ticks += 4; }
+	void op_ld_e_c() { _e = _c; _ticks += 4; }
+	void op_ld_e_d() { _e = _d; _ticks += 4; }
+	void op_ld_e_e() { _e = _e; _ticks += 4; }
+	void op_ld_e_h() { _e = _h; _ticks += 4; }
+	void op_ld_e_l() { _e = _l; _ticks += 4; }
+	void op_ld_e_addr_hl() { _e = _memory[_hl]; _ticks += 8; }
+	void op_ld_h_a() { _h = _a; _ticks += 4; }
+	void op_ld_h_b() { _h = _b; _ticks += 4; }
+	void op_ld_h_c() { _h = _c; _ticks += 4; }
+	void op_ld_h_d() { _h = _d; _ticks += 4; }
+	void op_ld_h_e() { _h = _e; _ticks += 4; }
+	void op_ld_h_h() { _h = _h; _ticks += 4; }
+	void op_ld_h_l() { _h = _l; _ticks += 4; }
+	void op_ld_h_addr_hl() { _h = _memory[_hl]; _ticks += 8; }
+	void op_ld_l_a() { _l = _a; _ticks += 4; }
+	void op_ld_l_b() { _l = _b; _ticks += 4; }
+	void op_ld_l_c() { _l = _c; _ticks += 4; }
+	void op_ld_l_d() { _l = _d; _ticks += 4; }
+	void op_ld_l_e() { _l = _e; _ticks += 4; }
+	void op_ld_l_h() { _l = _h; _ticks += 4; }
+	void op_ld_l_l() { _l = _l; _ticks += 4; }
+	void op_ld_l_addr_hl() { _l = _memory[_hl]; _ticks += 8; }
+	void op_ld_addr_hl_a() { _memory[_hl] = _a; _ticks += 8; }
+	void op_ld_addr_hl_b() { _memory[_hl] = _b; _ticks += 8; }
+	void op_ld_addr_hl_c() { _memory[_hl] = _c; _ticks += 8; }
+	void op_ld_addr_hl_d() { _memory[_hl] = _d; _ticks += 8; }
+	void op_ld_addr_hl_e() { _memory[_hl] = _e; _ticks += 8; }
+	void op_ld_addr_hl_h() { _memory[_hl] = _h; _ticks += 8; }
+	void op_ld_addr_hl_l() { _memory[_hl] = _l; _ticks += 8; }
+
+	// LD nn, n
+	void op_ld_a_n() {}
+	void op_ld_b_n() {}
+	void op_ld_c_n() {}
+	void op_ld_d_n() {}
+	void op_ld_e_n() {}
+	void op_ld_h_n() {}
+	void op_ld_l_n() {}
+
+	// PUSH
+	void op_push_af() {
+		_memory[--_sp] = _a;
+		_memory[--_sp] = _f;
+		_ticks += 16;
+	}
+	void op_push_bc() {
+		_memory[--_sp] = _b;
+		_memory[--_sp] = _c;
+		_ticks += 16;
+	}
+	void op_push_de() {
+		_memory[--_sp] = _d;
+		_memory[--_sp] = _e;
+		_ticks += 16;
+	}
+	void op_push_hl() {
+		_memory[--_sp] = _h;
+		_memory[--_sp] = _l;
+		_ticks += 16;
+	}
+
+	// POP
+	void op_pop_af() {
+		_f = _memory[_sp++];
+		_a = _memory[_sp++];
+		_ticks += 12;
+	}
+	void op_pop_bc() {
+		_c = _memory[_sp++];
+		_b = _memory[_sp++];
+		_ticks += 12;
+	}
+	void op_pop_de() {
+		_e = _memory[_sp++];
+		_d = _memory[_sp++];
+		_ticks += 12;
+	}
+	void op_pop_hl() {
+		_l = _memory[_sp++];
+		_h = _memory[_sp++];
+		_ticks += 12;
+	}
+
+
 // 0
-	void op_nop() {}
 	void op_ld_bc_nn() {}
 	void op_ld_addr_bc_a() {}
 	void op_inc_bc() {}
 	void op_inc_b() {}
 	void op_dec_b() {}
-	void op_ld_b_n() {}
 	void op_rlc_a() {}
 	void op_ld_addr_nn_sp() {}
 	void op_add_hl_bc() {}
@@ -411,16 +533,13 @@ class CPU {
 	void op_dec_bc() {}
 	void op_inc_c() {}
 	void op_dec_c() {}
-	void op_ld_c_n() {}
 	void op_rrc_a() {}
 	// 1
-	void op_stop() {}
 	void op_ld_de_nn() {}
 	void op_ld_addr_de_a() {}
 	void op_inc_de() {}
 	void op_inc_d() {}
 	void op_dec_d() {}
-	void op_ld_d_n() {}
 	void op_rl_a() {}
 	void op_jr_n() {}
 	void op_add_hl_de() {}
@@ -428,7 +547,6 @@ class CPU {
 	void op_dec_de() {}
 	void op_inc_e() {}
 	void op_dec_e() {}
-	void op_ld_e_n() {}
 	void op_rr_a() {}
 		// 2
 	void op_jr_nz_n() {}
@@ -437,7 +555,6 @@ class CPU {
 	void op_inc_hl() {}
 	void op_inc_h() {}
 	void op_dec_h() {}
-	void op_ld_h_n() {}
 	void op_daa() {}
 	void op_jr_z_n() {}
 	void op_add_hl_hl() {}
@@ -445,7 +562,6 @@ class CPU {
 	void op_dec_hl() {}
 	void op_inc_l() {}
 	void op_dec_l() {}
-	void op_ld_l_n() {}
 	void op_cpl() {}
 		// 3
 	void op_jr_nc_n() {}
@@ -462,76 +578,10 @@ class CPU {
 	void op_dec_sp() {}
 	void op_inc_a() {}
 	void op_dec_a() {}
-	void op_ld_a_n() {}
 	void op_ccf() {}
-	// 4
-	void op_ld_b_b() {}
-	void op_ld_b_c() {}
-	void op_ld_b_d() {}
-	void op_ld_b_e() {}
-	void op_ld_b_h() {}
-	void op_ld_b_l() {}
-	void op_ld_b_addr_hl() {}
-	void op_ld_b_a() {}
-	void op_ld_c_b() {}
-	void op_ld_c_c() {}
-	void op_ld_c_d() {}
-	void op_ld_c_e() {}
-	void op_ld_c_h() {}
-	void op_ld_c_l() {}
-	void op_ld_c_addr_hl() {}
-	void op_ld_c_a() {}
-		// 5
-	void op_ld_d_b() {}
-	void op_ld_d_c() {}
-	void op_ld_d_d() {}
-	void op_ld_d_e() {}
-	void op_ld_d_h() {}
-	void op_ld_d_l() {}
-	void op_ld_d_addr_hl() {}
-	void op_ld_d_a() {}
-	void op_ld_e_b() {}
-	void op_ld_e_c() {}
-	void op_ld_e_d() {}
-	void op_ld_e_e() {}
-	void op_ld_e_l() {}
-	void op_ld_e_h() {}
-	void op_ld_e_addr_hl() {}
-	void op_ld_e_a() {}
-	// 6
-	void op_ld_h_b() {}
-	void op_ld_h_c() {}
-	void op_ld_h_d() {}
-	void op_ld_h_e() {}
-	void op_ld_h_h() {}
-	void op_ld_h_l() {}
-	void op_ld_h_addr_hl() {}
-	void op_ld_h_a() {}
-	void op_ld_l_b() {}
-	void op_ld_l_c() {}
-	void op_ld_l_d() {}
-	void op_ld_l_e() {}
-	void op_ld_l_h() {}
-	void op_ld_l_l() {}
-	void op_ld_l_addr_hl() {}
-	void op_ld_l_a() {}
+
 		// 7
-	void op_ld_addr_hl_b() {}
-	void op_ld_addr_hl_c() {}
-	void op_ld_addr_hl_d() {}
-	void op_ld_addr_hl_e() {}
-	void op_ld_addr_hl_h() {}
-	void op_ld_addr_hl_l() {}
-	void op_halt() {}
-	void op_ld_addr_hl_a() {}
-	void op_ld_a_b() {}
-	void op_ld_a_c() {}
-	void op_ld_a_d() {}
-	void op_ld_a_e() {}
-	void op_ld_a_h() {}
-	void op_ld_a_l() {}
-	void op_ld_a_addr_hl() {}
-	void op_ld_a_a() {}
+
 		// 8
 	void op_add_a_b() {}
 	void op_add_a_c() {}
@@ -602,11 +652,9 @@ class CPU {
 	void op_cp_a() {}
 	// C
 	void op_ret_nz() {}
-	void op_pop_bc() {}
 	void op_jp_nz_nn() {}
 	void op_jp_nn() {}
 	void op_call_nz_nn() {}
-	void op_push_bc() {}
 	void op_add_a_n() {}
 	void op_rst_0() {}
 	void op_ret_z() {}
@@ -619,11 +667,9 @@ class CPU {
 	void op_rst_8() {}
 	// D
 	void op_ret_nc() {}
-	void op_pop_de() {}
 	void op_jp_nc_nn() {}
 	void op_xx() {}
 	void op_call_nc_nn() {}
-	void op_push_de() {}
 	void op_sub_a_n() {}
 	void op_rst_10() {}
 	void op_ret_c() {}
@@ -636,11 +682,9 @@ class CPU {
 	void op_rst_18() {}
 	// E
 	void op_ldh_addr_n_a() {}
-	void op_pop_hl() {}
 	void op_ldh_addr_c_a() {}
 	//void op_xx() {}
 	//void op_xx() {}
-	void op_push_hl() {}
 	void op_and_n() {}
 	void op_rst_20() {}
 	void op_add_sp_d() {}
@@ -653,11 +697,9 @@ class CPU {
 	void op_rst_28() {}
 		// F
 	void op_ldh_a_addr_n() {}
-	void op_pop_af() {}
 	//void op_xx() {}
 	void op_di() {}
 	//void op_xx() {}
-	void op_push_af() {}
 	void op_or_n() {}
 	void op_rst_30() {}
 	void op_ldhl_sp_d() {}
