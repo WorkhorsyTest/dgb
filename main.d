@@ -10,6 +10,7 @@ import core.thread;
 import std.string;
 import sdl;
 import types;
+import helpers;
 
 
 string g_file_name = null;
@@ -48,20 +49,20 @@ class CPU {
 	u16 _de() { return (_d << 8) | _e; }
 	u16 _hl() { return (_h << 8) | _l; }
 
-	bool is_flag_zero() {
-		return (_f & (1 << 7)) > 0;
-	}
+	bool is_flag_zero() { return is_bit_set(_f, (1 << 7)); }
+	bool is_flag_subtract() { return is_bit_set(_f, (1 << 6)); }
+	bool is_flag_half_carry() { return is_bit_set(_f, (1 << 5)); }
+	bool is_flag_carry() { return is_bit_set(_f, (1 << 4)); }
 
-	bool is_flag_subtract() {
-		return (_f & (1 << 6)) > 0;
+	void is_flag_zero(bool is_set) { set_bit(_f, (1 << 7), is_set); }
+	void is_flag_subtract(bool is_set) { set_bit(_f, (1 << 6), is_set); }
+	void is_flag_half_carry(u8 old_value, u8 new_value) {
+		bool is_set = (old_value <= 15 && new_value > 15);
+		set_bit(_f, (1 << 5), is_set);
 	}
-
-	bool is_flag_half_carry() {
-		return (_f & (1 << 5)) > 0;
-	}
-
-	bool is_flag_carry() {
-		return (_f & (1 << 4)) > 0;
+	void is_flag_carry(u8 old_value, u8 new_value) {
+		bool is_set = old_value + old_value > 255;
+		set_bit(_f, (1 << 4), is_set);
 	}
 
 	void delegate()[] ops;
@@ -301,6 +302,7 @@ class CPU {
 			&opcb_set_7_a
 		];
 
+		// http://imrannazar.com/Gameboy-Z80-Opcode-Map
 		ops = [
 			// 0
 			&op_nop, &op_ld_bc_nn, &op_ld_addr_bc_a, &op_inc_bc,
@@ -391,12 +393,9 @@ class CPU {
 
 	void run_next_operation() {
 		u8 opcode = _memory[_pc++];
-
-		// http://marc.rawer.de/Gameboy/Docs/GBCPUman.pdf # 3.3. Commands
-		// http://imrannazar.com/Gameboy-Z80-Opcode-Map
-
 	}
 
+	// http://marc.rawer.de/Gameboy/Docs/GBCPUman.pdf # 3.3. Commands
 	void op_nop() { _ticks += 4; }
 	void op_stop() {}
 	void op_halt() {}
@@ -519,6 +518,87 @@ class CPU {
 		_ticks += 12;
 	}
 
+	// ADD
+	void op_add_a_a() {
+		u8 old_value = _a;
+		_a += _a;
+		is_flag_zero(_a == 0);
+		is_flag_subtract(false);
+		is_flag_half_carry(old_value, _a);
+		is_flag_carry(old_value, _a);
+		_ticks += 4;
+	}
+	void op_add_a_b() {
+		u8 old_value = _a;
+		_a += _b;
+		is_flag_zero(_a == 0);
+		is_flag_subtract(false);
+		is_flag_half_carry(old_value, _a);
+		is_flag_carry(old_value, _a);
+		_ticks += 4;
+	}
+	void op_add_a_c() {
+		u8 old_value = _a;
+		_a += _c;
+		is_flag_zero(_a == 0);
+		is_flag_subtract(false);
+		is_flag_half_carry(old_value, _a);
+		is_flag_carry(old_value, _a);
+		_ticks += 4;
+	}
+	void op_add_a_d() {
+		u8 old_value = _a;
+		_a += _d;
+		is_flag_zero(_a == 0);
+		is_flag_subtract(false);
+		is_flag_half_carry(old_value, _a);
+		is_flag_carry(old_value, _a);
+		_ticks += 4;
+	}
+	void op_add_a_e() {
+		u8 old_value = _a;
+		_a += _e;
+		is_flag_zero(_a == 0);
+		is_flag_subtract(false);
+		is_flag_half_carry(old_value, _a);
+		is_flag_carry(old_value, _a);
+		_ticks += 4;
+	}
+	void op_add_a_h() {
+		u8 old_value = _a;
+		_a += _h;
+		is_flag_zero(_a == 0);
+		is_flag_subtract(false);
+		is_flag_half_carry(old_value, _a);
+		is_flag_carry(old_value, _a);
+		_ticks += 4;
+	}
+	void op_add_a_l() {
+		u8 old_value = _a;
+		_a += _l;
+		is_flag_zero(_a == 0);
+		is_flag_subtract(false);
+		is_flag_half_carry(old_value, _a);
+		is_flag_carry(old_value, _a);
+		_ticks += 4;
+	}
+	void op_add_a_addr_hl() {
+		u8 old_value = _a;
+		_a += _memory[_hl];
+		is_flag_zero(_a == 0);
+		is_flag_subtract(false);
+		is_flag_half_carry(old_value, _a);
+		is_flag_carry(old_value, _a);
+		_ticks += 4;
+	}
+
+
+	void op_add_a_n() {}
+	void op_add_sp_d() {}
+	void op_add_hl_bc() {}
+	void op_add_hl_de() {}
+	void op_add_hl_hl() {}
+	void op_add_hl_sp() {}
 
 // 0
 	void op_ld_bc_nn() {}
@@ -528,7 +608,6 @@ class CPU {
 	void op_dec_b() {}
 	void op_rlc_a() {}
 	void op_ld_addr_nn_sp() {}
-	void op_add_hl_bc() {}
 	void op_ld_a_addr_bc() {}
 	void op_dec_bc() {}
 	void op_inc_c() {}
@@ -542,7 +621,6 @@ class CPU {
 	void op_dec_d() {}
 	void op_rl_a() {}
 	void op_jr_n() {}
-	void op_add_hl_de() {}
 	void op_ld_a_addr_de() {}
 	void op_dec_de() {}
 	void op_inc_e() {}
@@ -557,7 +635,6 @@ class CPU {
 	void op_dec_h() {}
 	void op_daa() {}
 	void op_jr_z_n() {}
-	void op_add_hl_hl() {}
 	void op_ldi_a_addr_hl() {}
 	void op_dec_hl() {}
 	void op_inc_l() {}
@@ -573,24 +650,13 @@ class CPU {
 	void op_ld_addr_hl_n() {}
 	void op_scf() {}
 	void op_jr_c_n() {}
-	void op_add_hl_sp() {}
 	void op_ldd_a_addr_hl() {}
 	void op_dec_sp() {}
 	void op_inc_a() {}
 	void op_dec_a() {}
 	void op_ccf() {}
-
 		// 7
-
 		// 8
-	void op_add_a_b() {}
-	void op_add_a_c() {}
-	void op_add_a_d() {}
-	void op_add_a_e() {}
-	void op_add_a_h() {}
-	void op_add_a_l() {}
-	void op_add_a_addr_hl() {}
-	void op_add_a_a() {}
 	void op_adc_a_b() {}
 	void op_adc_a_c() {}
 	void op_adc_a_d() {}
@@ -655,7 +721,6 @@ class CPU {
 	void op_jp_nz_nn() {}
 	void op_jp_nn() {}
 	void op_call_nz_nn() {}
-	void op_add_a_n() {}
 	void op_rst_0() {}
 	void op_ret_z() {}
 	void op_ret() {}
@@ -687,7 +752,6 @@ class CPU {
 	//void op_xx() {}
 	void op_and_n() {}
 	void op_rst_20() {}
-	void op_add_sp_d() {}
 	void op_jp_addr_hl() {}
 	void op_ld_addr_nn_a() {}
 	//void op_xx() {}
