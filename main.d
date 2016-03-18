@@ -254,6 +254,7 @@ class CPU {
 	void op_nop() { _ticks += 4; }
 	void op_stop() {}
 	void op_halt() {}
+	void op_xx() {}
 
 	// LD r1, r2
 	void op_ld_a_a() { _a = _a; _ticks += 4; }
@@ -328,6 +329,21 @@ class CPU {
 	void op_ld_e_n() {}
 	void op_ld_h_n() {}
 	void op_ld_l_n() {}
+
+	// LD
+	void op_ld_bc_nn() {}
+	void op_ld_addr_bc_a() {}
+	void op_ld_addr_nn_sp() {}
+	void op_ld_a_addr_bc() {}
+	void op_ld_de_nn() {}
+	void op_ld_addr_de_a() {}
+	void op_ld_a_addr_de() {}
+	void op_ld_hl_nn() {}
+	void op_ld_sp_nn() {}
+	void op_ld_addr_hl_n() {}
+	void op_ld_sp_hl() {}
+	void op_ld_a_addr_nn() {}
+	void op_ld_addr_nn_a() {}
 
 	// PUSH
 	void op_push_af() {
@@ -1015,7 +1031,29 @@ class CPU {
 		_ticks += 8;
 	}
 
-	// CPL
+	// RET
+	void op_ret() {}
+	void op_ret_c() {}
+	void op_ret_z() {}
+	void op_ret_nc() {}
+	void op_ret_nz() {}
+
+	// JP
+	void op_jp_c_nn() {}
+	void op_jp_z_nn() {}
+	void op_jp_nc_nn() {}
+	void op_jp_nz_nn() {}
+	void op_jp_nn() {}
+	void op_jp_addr_hl() {}
+
+	// JR
+	void op_jr_n() {}
+	void op_jr_c_n() {}
+	void op_jr_z_n() {}
+	void op_jr_nc_n() {}
+	void op_jr_nz_n() {}
+
+	// CP
 	void op_cp_a() {}
 	void op_cp_b() {}
 	void op_cp_c() {}
@@ -1025,106 +1063,58 @@ class CPU {
 	void op_cp_l() {}
 	void op_cp_addr_hl() {}
 
+	// CALL
+	void op_call_nz_nn() {}
+	void op_call_z_nn() {}
+	void op_call_nn() {}
+	void op_call_nc_nn() {}
+	void op_call_c_nn() {}
+
+	// RST
+	void op_rst_0() {}
+	void op_rst_8() {}
+	void op_rst_10() {}
+	void op_rst_18() {}
+	void op_rst_20() {}
+	void op_rst_28() {}
+	void op_rst_30() {}
+	void op_rst_38() {}
+
+
 
 	void op_sbc_a_n() {}
 	void op_xor_n() {}
 	void op_or_n() {}
 	void op_and_n() {}
 	void op_add_a_n() {}
+	void op_adc_a_n() {}
 	void op_add_sp_d() {}
 	void op_add_hl_bc() {}
 	void op_add_hl_de() {}
 	void op_add_hl_hl() {}
 	void op_add_hl_sp() {}
 	void op_sub_a_n() {}
-
-// 0
-	void op_ld_bc_nn() {}
-	void op_ld_addr_bc_a() {}
-	void op_rlc_a() {}
-	void op_ld_addr_nn_sp() {}
-	void op_ld_a_addr_bc() {}
-	void op_rrc_a() {}
-	// 1
-	void op_ld_de_nn() {}
-	void op_ld_addr_de_a() {}
 	void op_rl_a() {}
-	void op_jr_n() {}
-	void op_ld_a_addr_de() {}
 	void op_rr_a() {}
-		// 2
-	void op_jr_nz_n() {}
-	void op_ld_hl_nn() {}
+	void op_rlc_a() {}
+	void op_rrc_a() {}
 	void op_ldi_addr_hl_a() {}
 	void op_daa() {}
-	void op_jr_z_n() {}
 	void op_ldi_a_addr_hl() {}
 	void op_cpl() {}
-		// 3
-	void op_jr_nc_n() {}
-	void op_ld_sp_nn() {}
 	void op_ldd_addr_hl_a() {}
-	void op_ld_addr_hl_n() {}
 	void op_scf() {}
-	void op_jr_c_n() {}
 	void op_ldd_a_addr_hl() {}
 	void op_ccf() {}
-		// 7
-		// 8
-	// 9
-		// A
-	// B
-	// C
-	void op_ret_nz() {}
-	void op_jp_nz_nn() {}
-	void op_jp_nn() {}
-	void op_call_nz_nn() {}
-	void op_rst_0() {}
-	void op_ret_z() {}
-	void op_ret() {}
-	void op_jp_z_nn() {}
 	void op_ext_ops() {}
-	void op_call_z_nn() {}
-	void op_call_nn() {}
-	void op_adc_a_n() {}
-	void op_rst_8() {}
-	// D
-	void op_ret_nc() {}
-	void op_jp_nc_nn() {}
-	void op_xx() {}
-	void op_call_nc_nn() {}
-	void op_rst_10() {}
-	void op_ret_c() {}
 	void op_reti() {}
-	void op_jp_c_nn() {}
-	//void op_xx() {}
-	void op_call_c_nn() {}
-	//void op_xx() {}
-	void op_rst_18() {}
-	// E
 	void op_ldh_addr_n_a() {}
 	void op_ldh_addr_c_a() {}
-	//void op_xx() {}
-	//void op_xx() {}
-	void op_rst_20() {}
-	void op_jp_addr_hl() {}
-	void op_ld_addr_nn_a() {}
-	//void op_xx() {}
-	//void op_xx() {}
-	//void op_xx() {}
-	void op_rst_28() {}
-		// F
 	void op_ldh_a_addr_n() {}
-	//void op_xx() {}
 	void op_di() {}
-	//void op_xx() {}
-	void op_rst_30() {}
 	void op_ldhl_sp_d() {}
-	void op_ld_sp_hl() {}
-	void op_ld_a_addr_nn() {}
 	void op_ei() {}
 	void op_cp_n() {}
-	void op_rst_38() {}
 
 
 
