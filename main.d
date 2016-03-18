@@ -49,6 +49,11 @@ class CPU {
 	u16 _de() { return (_d << 8) | _e; }
 	u16 _hl() { return (_h << 8) | _l; }
 
+	void _af(u16 value) { _a = value >> 8; _f = value & 0x00FF; }
+	void _bc(u16 value) { _b = value >> 8; _c = value & 0x00FF; }
+	void _de(u16 value) { _d = value >> 8; _e = value & 0x00FF; }
+	void _hl(u16 value) { _h = value >> 8; _l = value & 0x00FF; }
+
 	bool is_flag_zero() { return is_bit_set(_f, (1 << 7)); }
 	bool is_flag_subtract() { return is_bit_set(_f, (1 << 6)); }
 	bool is_flag_half_carry() { return is_bit_set(_f, (1 << 5)); }
@@ -56,14 +61,8 @@ class CPU {
 
 	void is_flag_zero(bool is_set) { set_bit(_f, (1 << 7), is_set); }
 	void is_flag_subtract(bool is_set) { set_bit(_f, (1 << 6), is_set); }
-	void is_flag_half_carry(u8 old_value, u8 new_value) {
-		bool is_set = (old_value <= 15 && new_value > 15);
-		set_bit(_f, (1 << 5), is_set);
-	}
-	void is_flag_carry(u8 old_value, u8 new_value) {
-		bool is_set = old_value + old_value > 255;
-		set_bit(_f, (1 << 4), is_set);
-	}
+	void is_flag_half_carry(bool is_set) { set_bit(_f, (1 << 5), is_set); }
+	void is_flag_carry(bool is_set) { set_bit(_f, (1 << 4), is_set); }
 
 	void delegate()[] ops;
 	void delegate()[] opcbs;
@@ -380,8 +379,8 @@ class CPU {
 		_a += _a;
 		is_flag_zero(_a == 0);
 		is_flag_subtract(false);
-		is_flag_half_carry(old_value, _a);
-		is_flag_carry(old_value, _a);
+		is_flag_half_carry(old_value <= 15 && _a > 15);
+		is_flag_carry(old_value + old_value > 255);
 		_ticks += 4;
 	}
 	void op_add_a_b() {
@@ -389,8 +388,8 @@ class CPU {
 		_a += _b;
 		is_flag_zero(_a == 0);
 		is_flag_subtract(false);
-		is_flag_half_carry(old_value, _a);
-		is_flag_carry(old_value, _a);
+		is_flag_half_carry(old_value <= 15 && _a > 15);
+		is_flag_carry(old_value + old_value > 255);
 		_ticks += 4;
 	}
 	void op_add_a_c() {
@@ -398,8 +397,8 @@ class CPU {
 		_a += _c;
 		is_flag_zero(_a == 0);
 		is_flag_subtract(false);
-		is_flag_half_carry(old_value, _a);
-		is_flag_carry(old_value, _a);
+		is_flag_half_carry(old_value <= 15 && _a > 15);
+		is_flag_carry(old_value + old_value > 255);
 		_ticks += 4;
 	}
 	void op_add_a_d() {
@@ -407,8 +406,8 @@ class CPU {
 		_a += _d;
 		is_flag_zero(_a == 0);
 		is_flag_subtract(false);
-		is_flag_half_carry(old_value, _a);
-		is_flag_carry(old_value, _a);
+		is_flag_half_carry(old_value <= 15 && _a > 15);
+		is_flag_carry(old_value + old_value > 255);
 		_ticks += 4;
 	}
 	void op_add_a_e() {
@@ -416,8 +415,8 @@ class CPU {
 		_a += _e;
 		is_flag_zero(_a == 0);
 		is_flag_subtract(false);
-		is_flag_half_carry(old_value, _a);
-		is_flag_carry(old_value, _a);
+		is_flag_half_carry(old_value <= 15 && _a > 15);
+		is_flag_carry(old_value + old_value > 255);
 		_ticks += 4;
 	}
 	void op_add_a_h() {
@@ -425,8 +424,8 @@ class CPU {
 		_a += _h;
 		is_flag_zero(_a == 0);
 		is_flag_subtract(false);
-		is_flag_half_carry(old_value, _a);
-		is_flag_carry(old_value, _a);
+		is_flag_half_carry(old_value <= 15 && _a > 15);
+		is_flag_carry(old_value + old_value > 255);
 		_ticks += 4;
 	}
 	void op_add_a_l() {
@@ -434,8 +433,8 @@ class CPU {
 		_a += _l;
 		is_flag_zero(_a == 0);
 		is_flag_subtract(false);
-		is_flag_half_carry(old_value, _a);
-		is_flag_carry(old_value, _a);
+		is_flag_half_carry(old_value <= 15 && _a > 15);
+		is_flag_carry(old_value + old_value > 255);
 		_ticks += 4;
 	}
 	void op_add_a_addr_hl() {
@@ -443,72 +442,411 @@ class CPU {
 		_a += _memory[_hl];
 		is_flag_zero(_a == 0);
 		is_flag_subtract(false);
-		is_flag_half_carry(old_value, _a);
-		is_flag_carry(old_value, _a);
+		is_flag_half_carry(old_value <= 15 && _a > 15);
+		is_flag_carry(old_value + old_value > 255);
 		_ticks += 4;
 	}
 
+	// SUB
+	void op_sub_a_a() {
+		u8 old_value = _a;
+		_a -= _a;
+		is_flag_zero(_a == 0);
+		is_flag_subtract(true);
+		is_flag_half_carry(old_value > 15 && _a <= 15);
+		is_flag_carry(old_value + old_value > 255);
+		_ticks += 4;
+	}
+	void op_sub_a_b() {
+		u8 old_value = _a;
+		_a -= _b;
+		is_flag_zero(_a == 0);
+		is_flag_subtract(true);
+		is_flag_half_carry(old_value > 15 && _a <= 15);
+		is_flag_carry(old_value + old_value > 255);
+		_ticks += 4;
+	}
+	void op_sub_a_c() {
+		u8 old_value = _a;
+		_a -= _c;
+		is_flag_zero(_a == 0);
+		is_flag_subtract(true);
+		is_flag_half_carry(old_value > 15 && _a <= 15);
+		is_flag_carry(old_value + old_value > 255);
+		_ticks += 4;
+	}
+	void op_sub_a_d() {
+		u8 old_value = _a;
+		_a -= _d;
+		is_flag_zero(_a == 0);
+		is_flag_subtract(true);
+		is_flag_half_carry(old_value > 15 && _a <= 15);
+		is_flag_carry(old_value + old_value > 255);
+		_ticks += 4;
+	}
+	void op_sub_a_e() {
+		u8 old_value = _a;
+		_a -= _e;
+		is_flag_zero(_a == 0);
+		is_flag_subtract(true);
+		is_flag_half_carry(old_value > 15 && _a <= 15);
+		is_flag_carry(old_value + old_value > 255);
+		_ticks += 4;
+	}
+	void op_sub_a_h() {
+		u8 old_value = _a;
+		_a -= _h;
+		is_flag_zero(_a == 0);
+		is_flag_subtract(true);
+		is_flag_half_carry(old_value > 15 && _a <= 15);
+		is_flag_carry(old_value + old_value > 255);
+		_ticks += 4;
+	}
+	void op_sub_a_l() {
+		u8 old_value = _a;
+		_a -= _l;
+		is_flag_zero(_a == 0);
+		is_flag_subtract(true);
+		is_flag_half_carry(old_value > 15 && _a <= 15);
+		is_flag_carry(old_value + old_value > 255);
+		_ticks += 4;
+	}
+	void op_sub_a_addr_hl() {
+		u8 old_value = _a;
+		_a -= _memory[_hl];
+		is_flag_zero(_a == 0);
+		is_flag_subtract(true);
+		is_flag_half_carry(old_value > 15 && _a <= 15);
+		is_flag_carry(old_value + old_value > 255);
+		_ticks += 8;
+	}
 
+	// AND
+	void op_and_a() {
+		_a &= _a;
+		is_flag_zero(_a == 0);
+		is_flag_subtract(false);
+		is_flag_half_carry(true);
+		is_flag_carry(false);
+		_ticks += 4;
+	}
+	void op_and_b() {
+		_a &= _b;
+		is_flag_zero(_a == 0);
+		is_flag_subtract(false);
+		is_flag_half_carry(true);
+		is_flag_carry(false);
+		_ticks += 4;
+	}
+	void op_and_c() {
+		_a &= _c;
+		is_flag_zero(_a == 0);
+		is_flag_subtract(false);
+		is_flag_half_carry(true);
+		is_flag_carry(false);
+		_ticks += 4;
+	}
+	void op_and_d() {
+		_a &= _d;
+		is_flag_zero(_a == 0);
+		is_flag_subtract(false);
+		is_flag_half_carry(true);
+		is_flag_carry(false);
+		_ticks += 4;
+	}
+	void op_and_e() {
+		_a &= _e;
+		is_flag_zero(_a == 0);
+		is_flag_subtract(false);
+		is_flag_half_carry(true);
+		is_flag_carry(false);
+		_ticks += 4;
+	}
+	void op_and_h() {
+		_a &= _h;
+		is_flag_zero(_a == 0);
+		is_flag_subtract(false);
+		is_flag_half_carry(true);
+		is_flag_carry(false);
+		_ticks += 4;
+	}
+	void op_and_l() {
+		_a &= _l;
+		is_flag_zero(_a == 0);
+		is_flag_subtract(false);
+		is_flag_half_carry(true);
+		is_flag_carry(false);
+		_ticks += 4;
+	}
+	void op_and_addr_hl() {
+		_a &= _memory[_hl];
+		is_flag_zero(_a == 0);
+		is_flag_subtract(false);
+		is_flag_half_carry(true);
+		is_flag_carry(false);
+		_ticks += 8;
+	}
+
+	// OR
+	void op_or_a() {
+		_a |= _a;
+		is_flag_zero(_a == 0);
+		is_flag_subtract(false);
+		is_flag_half_carry(false);
+		is_flag_carry(false);
+		_ticks += 4;
+	}
+	void op_or_b() {
+		_a |= _b;
+		is_flag_zero(_a == 0);
+		is_flag_subtract(false);
+		is_flag_half_carry(false);
+		is_flag_carry(false);
+		_ticks += 4;
+	}
+	void op_or_c() {
+		_a |= _c;
+		is_flag_zero(_a == 0);
+		is_flag_subtract(false);
+		is_flag_half_carry(false);
+		is_flag_carry(false);
+		_ticks += 4;
+	}
+	void op_or_d() {
+		_a |= _d;
+		is_flag_zero(_a == 0);
+		is_flag_subtract(false);
+		is_flag_half_carry(false);
+		is_flag_carry(false);
+		_ticks += 4;
+	}
+	void op_or_e() {
+		_a |= _e;
+		is_flag_zero(_a == 0);
+		is_flag_subtract(false);
+		is_flag_half_carry(false);
+		is_flag_carry(false);
+		_ticks += 4;
+	}
+	void op_or_h() {
+		_a |= _h;
+		is_flag_zero(_a == 0);
+		is_flag_subtract(false);
+		is_flag_half_carry(false);
+		is_flag_carry(false);
+		_ticks += 4;
+	}
+	void op_or_l() {
+		_a |= _l;
+		is_flag_zero(_a == 0);
+		is_flag_subtract(false);
+		is_flag_half_carry(false);
+		is_flag_carry(false);
+		_ticks += 4;
+	}
+	void op_or_addr_hl() {
+		_a |= _memory[_hl];
+		is_flag_zero(_a == 0);
+		is_flag_subtract(false);
+		is_flag_half_carry(false);
+		is_flag_carry(false);
+		_ticks += 8;
+	}
+
+	// XOR
+	void op_xor_a() {
+		_a ^= _a;
+		is_flag_zero(_a == 0);
+		is_flag_subtract(false);
+		is_flag_half_carry(false);
+		is_flag_carry(false);
+		_ticks += 4;
+	}
+	void op_xor_b() {
+		_a ^= _b;
+		is_flag_zero(_a == 0);
+		is_flag_subtract(false);
+		is_flag_half_carry(false);
+		is_flag_carry(false);
+		_ticks += 4;
+	}
+	void op_xor_c() {
+		_a ^= _c;
+		is_flag_zero(_a == 0);
+		is_flag_subtract(false);
+		is_flag_half_carry(false);
+		is_flag_carry(false);
+		_ticks += 4;
+	}
+	void op_xor_d() {
+		_a ^= _d;
+		is_flag_zero(_a == 0);
+		is_flag_subtract(false);
+		is_flag_half_carry(false);
+		is_flag_carry(false);
+		_ticks += 4;
+	}
+	void op_xor_e() {
+		_a ^= _e;
+		is_flag_zero(_a == 0);
+		is_flag_subtract(false);
+		is_flag_half_carry(false);
+		is_flag_carry(false);
+		_ticks += 4;
+	}
+	void op_xor_h() {
+		_a ^= _h;
+		is_flag_zero(_a == 0);
+		is_flag_subtract(false);
+		is_flag_half_carry(false);
+		is_flag_carry(false);
+		_ticks += 4;
+	}
+	void op_xor_l() {
+		_a ^= _l;
+		is_flag_zero(_a == 0);
+		is_flag_subtract(false);
+		is_flag_half_carry(false);
+		is_flag_carry(false);
+		_ticks += 4;
+	}
+	void op_xor_addr_hl() {
+		_a ^= _memory[_hl];
+		is_flag_zero(_a == 0);
+		is_flag_subtract(false);
+		is_flag_half_carry(false);
+		is_flag_carry(false);
+		_ticks += 8;
+	}
+
+	// INC
+	void op_inc_a() {
+		_a++;
+		is_flag_zero(_a == 0);
+		is_flag_subtract(false);
+		is_flag_half_carry(_a == 16);
+		_ticks += 4;
+	}
+	void op_inc_b() {
+		_b++;
+		is_flag_zero(_b == 0);
+		is_flag_subtract(false);
+		is_flag_half_carry(_b == 16);
+		_ticks += 4;
+	}
+	void op_inc_c() {
+		_c++;
+		is_flag_zero(_c == 0);
+		is_flag_subtract(false);
+		is_flag_half_carry(_c == 16);
+		_ticks += 4;
+	}
+	void op_inc_d() {
+		_d++;
+		is_flag_zero(_d == 0);
+		is_flag_subtract(false);
+		is_flag_half_carry(_d == 16);
+		_ticks += 4;
+	}
+	void op_inc_e() {
+		_e++;
+		is_flag_zero(_e == 0);
+		is_flag_subtract(false);
+		is_flag_half_carry(_e == 16);
+		_ticks += 4;
+	}
+	void op_inc_h() {
+		_h++;
+		is_flag_zero(_h == 0);
+		is_flag_subtract(false);
+		is_flag_half_carry(_h == 16);
+		_ticks += 4;
+	}
+	void op_inc_l() {
+		_l++;
+		is_flag_zero(_l == 0);
+		is_flag_subtract(false);
+		is_flag_half_carry(_l == 16);
+		_ticks += 4;
+	}
+	void op_inc_bc() {
+		_bc = cast(u16)(_bc + 1);
+		_ticks += 8;
+	}
+	void op_inc_de() {
+		_de = cast(u16)(_de + 1);
+		_ticks += 8;
+	}
+	void op_inc_hl() {
+		_hl = cast(u16)(_hl + 1);
+		_ticks += 8;
+	}
+	void op_inc_sp() {
+		_sp = cast(u16)(_sp + 1);
+		_ticks += 8;
+	}
+	void op_inc_addr_hl() {
+		_memory[_hl]++;
+		is_flag_zero(_memory[_hl] == 0);
+		is_flag_subtract(false);
+		is_flag_half_carry(_memory[_hl] == 16);
+		_ticks += 12;
+	}
+
+
+
+	void op_xor_n() {}
+	void op_or_n() {}
+	void op_and_n() {}
 	void op_add_a_n() {}
 	void op_add_sp_d() {}
 	void op_add_hl_bc() {}
 	void op_add_hl_de() {}
 	void op_add_hl_hl() {}
 	void op_add_hl_sp() {}
+	void op_sub_a_n() {}
 
 // 0
 	void op_ld_bc_nn() {}
 	void op_ld_addr_bc_a() {}
-	void op_inc_bc() {}
-	void op_inc_b() {}
 	void op_dec_b() {}
 	void op_rlc_a() {}
 	void op_ld_addr_nn_sp() {}
 	void op_ld_a_addr_bc() {}
 	void op_dec_bc() {}
-	void op_inc_c() {}
 	void op_dec_c() {}
 	void op_rrc_a() {}
 	// 1
 	void op_ld_de_nn() {}
 	void op_ld_addr_de_a() {}
-	void op_inc_de() {}
-	void op_inc_d() {}
 	void op_dec_d() {}
 	void op_rl_a() {}
 	void op_jr_n() {}
 	void op_ld_a_addr_de() {}
 	void op_dec_de() {}
-	void op_inc_e() {}
 	void op_dec_e() {}
 	void op_rr_a() {}
 		// 2
 	void op_jr_nz_n() {}
 	void op_ld_hl_nn() {}
 	void op_ldi_addr_hl_a() {}
-	void op_inc_hl() {}
-	void op_inc_h() {}
 	void op_dec_h() {}
 	void op_daa() {}
 	void op_jr_z_n() {}
 	void op_ldi_a_addr_hl() {}
 	void op_dec_hl() {}
-	void op_inc_l() {}
 	void op_dec_l() {}
 	void op_cpl() {}
 		// 3
 	void op_jr_nc_n() {}
 	void op_ld_sp_nn() {}
 	void op_ldd_addr_hl_a() {}
-	void op_inc_sp() {}
-	void op_inc_addr_hl() {}
 	void op_dec_addr_hl() {}
 	void op_ld_addr_hl_n() {}
 	void op_scf() {}
 	void op_jr_c_n() {}
 	void op_ldd_a_addr_hl() {}
 	void op_dec_sp() {}
-	void op_inc_a() {}
 	void op_dec_a() {}
 	void op_ccf() {}
 		// 7
@@ -522,14 +860,6 @@ class CPU {
 	void op_adc_a_addr_hl() {}
 	void op_adc_a_a() {}
 	// 9
-	void op_sub_a_b() {}
-	void op_sub_a_c() {}
-	void op_sub_a_d() {}
-	void op_sub_a_e() {}
-	void op_sub_a_h() {}
-	void op_sub_a_l() {}
-	void op_sub_a_addr_hl() {}
-	void op_sub_a_a() {}
 	void op_sbc_a_b() {}
 	void op_sbc_a_c() {}
 	void op_sbc_a_d() {}
@@ -539,31 +869,7 @@ class CPU {
 	void op_sbc_a_addr_hl() {}
 	void op_sbc_a_a() {}
 		// A
-	void op_and_b() {}
-	void op_and_c() {}
-	void op_and_d() {}
-	void op_and_e() {}
-	void op_and_h() {}
-	void op_and_l() {}
-	void op_and_addr_hl() {}
-	void op_and_a() {}
-	void op_xor_b() {}
-	void op_xor_c() {}
-	void op_xor_d() {}
-	void op_xor_e() {}
-	void op_xor_h() {}
-	void op_xor_l() {}
-	void op_xor_addr_hl() {}
-	void op_xor_a() {}
 	// B
-	void op_or_b() {}
-	void op_or_c() {}
-	void op_or_d() {}
-	void op_or_e() {}
-	void op_or_h() {}
-	void op_or_l() {}
-	void op_or_addr_hl() {}
-	void op_or_a() {}
 	void op_cp_b() {}
 	void op_cp_c() {}
 	void op_cp_d() {}
@@ -591,7 +897,6 @@ class CPU {
 	void op_jp_nc_nn() {}
 	void op_xx() {}
 	void op_call_nc_nn() {}
-	void op_sub_a_n() {}
 	void op_rst_10() {}
 	void op_ret_c() {}
 	void op_reti() {}
@@ -606,21 +911,18 @@ class CPU {
 	void op_ldh_addr_c_a() {}
 	//void op_xx() {}
 	//void op_xx() {}
-	void op_and_n() {}
 	void op_rst_20() {}
 	void op_jp_addr_hl() {}
 	void op_ld_addr_nn_a() {}
 	//void op_xx() {}
 	//void op_xx() {}
 	//void op_xx() {}
-	void op_xor_n() {}
 	void op_rst_28() {}
 		// F
 	void op_ldh_a_addr_n() {}
 	//void op_xx() {}
 	void op_di() {}
 	//void op_xx() {}
-	void op_or_n() {}
 	void op_rst_30() {}
 	void op_ldhl_sp_d() {}
 	void op_ld_sp_hl() {}
