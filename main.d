@@ -463,6 +463,13 @@ class CPU {
 		_ticks += 8;
 	}
 
+	// ADD
+	void op_add_sp_d() {}
+	void op_add_hl_bc() {}
+	void op_add_hl_de() {}
+	void op_add_hl_hl() {}
+	void op_add_hl_sp() {}
+
 	// ADC
 	void op_adc_a_a() {
 		u8 old_value = _a;
@@ -1031,13 +1038,6 @@ class CPU {
 		_ticks += 8;
 	}
 
-	// RET
-	void op_ret() {}
-	void op_ret_c() {}
-	void op_ret_z() {}
-	void op_ret_nc() {}
-	void op_ret_nz() {}
-
 	// JP
 	void op_jp_c_nn() {}
 	void op_jp_z_nn() {}
@@ -1070,6 +1070,13 @@ class CPU {
 	void op_call_nc_nn() {}
 	void op_call_c_nn() {}
 
+	// RET
+	void op_ret() {}
+	void op_ret_c() {}
+	void op_ret_z() {}
+	void op_ret_nc() {}
+	void op_ret_nz() {}
+
 	// RST
 	void op_rst_0() {}
 	void op_rst_8() {}
@@ -1082,40 +1089,34 @@ class CPU {
 
 
 
-	void op_sbc_a_n() {}
-	void op_xor_n() {}
-	void op_or_n() {}
 	void op_and_n() {}
 	void op_add_a_n() {}
 	void op_adc_a_n() {}
-	void op_add_sp_d() {}
-	void op_add_hl_bc() {}
-	void op_add_hl_de() {}
-	void op_add_hl_hl() {}
-	void op_add_hl_sp() {}
-	void op_sub_a_n() {}
+	void op_ccf() {}
+	void op_cp_n() {}
+	void op_cpl() {}
+	void op_daa() {}
+	void op_di() {}
+	void op_ei() {}
+	void op_ext_ops() {}
+	void op_ldd_a_addr_hl() {}
+	void op_ldd_addr_hl_a() {}
+	void op_ldh_a_addr_n() {}
+	void op_ldh_addr_c_a() {}
+	void op_ldh_addr_n_a() {}
+	void op_ldhl_sp_d() {}
+	void op_ldi_a_addr_hl() {}
+	void op_ldi_addr_hl_a() {}
+	void op_or_n() {}
 	void op_rl_a() {}
 	void op_rr_a() {}
 	void op_rlc_a() {}
 	void op_rrc_a() {}
-	void op_ldi_addr_hl_a() {}
-	void op_daa() {}
-	void op_ldi_a_addr_hl() {}
-	void op_cpl() {}
-	void op_ldd_addr_hl_a() {}
-	void op_scf() {}
-	void op_ldd_a_addr_hl() {}
-	void op_ccf() {}
-	void op_ext_ops() {}
 	void op_reti() {}
-	void op_ldh_addr_n_a() {}
-	void op_ldh_addr_c_a() {}
-	void op_ldh_a_addr_n() {}
-	void op_di() {}
-	void op_ldhl_sp_d() {}
-	void op_ei() {}
-	void op_cp_n() {}
-
+	void op_sbc_a_n() {}
+	void op_scf() {}
+	void op_sub_a_n() {}
+	void op_xor_n() {}
 
 
 
