@@ -162,8 +162,8 @@ class CPU {
 			// 0
 			&op_nop, &op_ld_bc_nn, &op_ld_addr_bc_a, &op_inc_bc,
 			&op_inc_b, &op_dec_b, &op_ld_b_n, &op_rlc_a,
-			&op_ld_addr_nn_sp, &op_add_hl_bc, &op_ld_a_addr_bc,
-			&op_dec_bc, &op_inc_c, &op_dec_c, &op_ld_c_n, &op_rrc_a,
+			&op_ld_addr_nn_sp, &op_add_hl_bc, &op_ld_a_addr_bc, &op_dec_bc,
+			&op_inc_c, &op_dec_c, &op_ld_c_n, &op_rrc_a,
 			// 1
 			&op_stop, &op_ld_de_nn, &op_ld_addr_de_a, &op_inc_de,
 			&op_inc_d, &op_dec_d, &op_ld_d_n, &op_rl_a,
@@ -321,29 +321,40 @@ class CPU {
 	void op_ld_addr_hl_h() { _memory[_hl] = _h; _ticks += 8; }
 	void op_ld_addr_hl_l() { _memory[_hl] = _l; _ticks += 8; }
 
-	// LD nn, n
-	void op_ld_a_n() {}
-	void op_ld_b_n() {}
-	void op_ld_c_n() {}
-	void op_ld_d_n() {}
-	void op_ld_e_n() {}
-	void op_ld_h_n() {}
-	void op_ld_l_n() {}
+	void op_ld_a_addr_bc() { _a = _memory[_bc]; _ticks += 8; }
+	void op_ld_a_addr_de() { _a = _memory[_de]; _ticks += 8; }
 
-	// LD
-	void op_ld_bc_nn() {}
-	void op_ld_addr_bc_a() {}
-	void op_ld_addr_nn_sp() {}
-	void op_ld_a_addr_bc() {}
-	void op_ld_de_nn() {}
-	void op_ld_addr_de_a() {}
-	void op_ld_a_addr_de() {}
-	void op_ld_hl_nn() {}
-	void op_ld_sp_nn() {}
-	void op_ld_addr_hl_n() {}
-	void op_ld_sp_hl() {}
+	// LD nn, n
+	void op_ld_a_n() { _a = _memory[_pc]; _ticks += 8; }
+	void op_ld_b_n() { _b = _memory[_pc]; _ticks += 8; }
+	void op_ld_c_n() { _c = _memory[_pc]; _ticks += 8; }
+	void op_ld_d_n() { _d = _memory[_pc]; _ticks += 8; }
+	void op_ld_e_n() { _e = _memory[_pc]; _ticks += 8; }
+	void op_ld_h_n() { _h = _memory[_pc]; _ticks += 8; }
+	void op_ld_l_n() { _l = _memory[_pc]; _ticks += 8; }
+
+	// LD n, A
+	void op_ld_addr_bc_a() { _memory[_bc] = _a; _ticks += 8; }
+	void op_ld_addr_de_a() { _memory[_de] = _a; _ticks += 8; }
+	void op_ld_addr_hl_n() { _memory[_hl] = _a; _ticks += 8; }
+	void op_ld_addr_nn_a() { _memory[_memory[_pc]] = _a; _ticks += 16; }
 	void op_ld_a_addr_nn() {}
-	void op_ld_addr_nn_a() {}
+
+	// LD SP, HL
+	void op_ld_sp_hl() { _hl = _sp; _ticks += 8; }
+
+	// LD (nn), SP
+	void op_ld_addr_nn_sp() {
+		_memory[_memory[_pc]] = _sp >> 8;
+		_memory[_memory[_pc + 1]] = _sp & 0x00FF;
+		_ticks += 20;
+	}
+
+	// LD n, nn
+	void op_ld_bc_nn() { _bc = _memory[_pc] << 8 | _memory[_pc+1]; _ticks += 12; }
+	void op_ld_de_nn() { _de = _memory[_pc] << 8 | _memory[_pc+1]; _ticks += 12; }
+	void op_ld_hl_nn() { _hl = _memory[_pc] << 8 | _memory[_pc+1]; _ticks += 12; }
+	void op_ld_sp_nn() { _sp = _memory[_pc] << 8 | _memory[_pc+1]; _ticks += 12; }
 
 	// PUSH
 	void op_push_af() {
