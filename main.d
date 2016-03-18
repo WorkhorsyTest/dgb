@@ -595,6 +595,80 @@ class CPU {
 		_ticks += 8;
 	}
 
+	// SBC
+	void op_sbc_a_a() {
+		u8 old_value = _a;
+		_a -= _a + is_flag_zero;
+		is_flag_zero(_a == 0);
+		is_flag_subtract(true);
+		is_flag_half_carry(old_value > 15 && _a <= 15);
+		is_flag_carry(old_value + old_value > 255);
+		_ticks += 4;
+	}
+	void op_sbc_a_b() {
+		u8 old_value = _a;
+		_a -= _b + is_flag_zero;
+		is_flag_zero(_a == 0);
+		is_flag_subtract(true);
+		is_flag_half_carry(old_value > 15 && _a <= 15);
+		is_flag_carry(old_value + old_value > 255);
+		_ticks += 4;
+	}
+	void op_sbc_a_c() {
+		u8 old_value = _a;
+		_a -= _c + is_flag_zero;
+		is_flag_zero(_a == 0);
+		is_flag_subtract(true);
+		is_flag_half_carry(old_value > 15 && _a <= 15);
+		is_flag_carry(old_value + old_value > 255);
+		_ticks += 4;
+	}
+	void op_sbc_a_d() {
+		u8 old_value = _a;
+		_a -= _d + is_flag_zero;
+		is_flag_zero(_a == 0);
+		is_flag_subtract(true);
+		is_flag_half_carry(old_value > 15 && _a <= 15);
+		is_flag_carry(old_value + old_value > 255);
+		_ticks += 4;
+	}
+	void op_sbc_a_e() {
+		u8 old_value = _a;
+		_a -= _e + is_flag_zero;
+		is_flag_zero(_a == 0);
+		is_flag_subtract(true);
+		is_flag_half_carry(old_value > 15 && _a <= 15);
+		is_flag_carry(old_value + old_value > 255);
+		_ticks += 4;
+	}
+	void op_sbc_a_h() {
+		u8 old_value = _a;
+		_a -= _h + is_flag_zero;
+		is_flag_zero(_a == 0);
+		is_flag_subtract(true);
+		is_flag_half_carry(old_value > 15 && _a <= 15);
+		is_flag_carry(old_value + old_value > 255);
+		_ticks += 4;
+	}
+	void op_sbc_a_l() {
+		u8 old_value = _a;
+		_a -= _l + is_flag_zero;
+		is_flag_zero(_a == 0);
+		is_flag_subtract(true);
+		is_flag_half_carry(old_value > 15 && _a <= 15);
+		is_flag_carry(old_value + old_value > 255);
+		_ticks += 4;
+	}
+	void op_sbc_a_addr_hl() {
+		u8 old_value = _a;
+		_a -= _memory[_hl] + is_flag_zero;
+		is_flag_zero(_a == 0);
+		is_flag_subtract(true);
+		is_flag_half_carry(old_value > 15 && _a <= 15);
+		is_flag_carry(old_value + old_value > 255);
+		_ticks += 8;
+	}
+
 	// AND
 	void op_and_a() {
 		_a &= _a;
@@ -952,6 +1026,7 @@ class CPU {
 	void op_cp_addr_hl() {}
 
 
+	void op_sbc_a_n() {}
 	void op_xor_n() {}
 	void op_or_n() {}
 	void op_and_n() {}
@@ -997,14 +1072,6 @@ class CPU {
 		// 7
 		// 8
 	// 9
-	void op_sbc_a_b() {}
-	void op_sbc_a_c() {}
-	void op_sbc_a_d() {}
-	void op_sbc_a_e() {}
-	void op_sbc_a_h() {}
-	void op_sbc_a_l() {}
-	void op_sbc_a_addr_hl() {}
-	void op_sbc_a_a() {}
 		// A
 	// B
 	// C
@@ -1033,7 +1100,6 @@ class CPU {
 	//void op_xx() {}
 	void op_call_c_nn() {}
 	//void op_xx() {}
-	void op_sbc_a_n() {}
 	void op_rst_18() {}
 	// E
 	void op_ldh_addr_n_a() {}
@@ -1057,8 +1123,6 @@ class CPU {
 	void op_ld_sp_hl() {}
 	void op_ld_a_addr_nn() {}
 	void op_ei() {}
-	//void op_xx() {}
-	//void op_xx() {}
 	void op_cp_n() {}
 	void op_rst_38() {}
 
