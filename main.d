@@ -444,7 +444,81 @@ class CPU {
 		is_flag_subtract(false);
 		is_flag_half_carry(old_value <= 15 && _a > 15);
 		is_flag_carry(old_value + old_value > 255);
+		_ticks += 8;
+	}
+
+	// ADC
+	void op_adc_a_a() {
+		u8 old_value = _a;
+		_a += _a + is_flag_zero;
+		is_flag_zero(_a == 0);
+		is_flag_subtract(false);
+		is_flag_half_carry(old_value <= 15 && _a > 15);
+		is_flag_carry(old_value + old_value > 255);
 		_ticks += 4;
+	}
+	void op_adc_a_b() {
+		u8 old_value = _a;
+		_a += _b + is_flag_zero;
+		is_flag_zero(_a == 0);
+		is_flag_subtract(false);
+		is_flag_half_carry(old_value <= 15 && _a > 15);
+		is_flag_carry(old_value + old_value > 255);
+		_ticks += 4;
+	}
+	void op_adc_a_c() {
+		u8 old_value = _a;
+		_a += _c + is_flag_zero;
+		is_flag_zero(_a == 0);
+		is_flag_subtract(false);
+		is_flag_half_carry(old_value <= 15 && _a > 15);
+		is_flag_carry(old_value + old_value > 255);
+		_ticks += 4;
+	}
+	void op_adc_a_d() {
+		u8 old_value = _a;
+		_a += _d + is_flag_zero;
+		is_flag_zero(_a == 0);
+		is_flag_subtract(false);
+		is_flag_half_carry(old_value <= 15 && _a > 15);
+		is_flag_carry(old_value + old_value > 255);
+		_ticks += 4;
+	}
+	void op_adc_a_e() {
+		u8 old_value = _a;
+		_a += _e + is_flag_zero;
+		is_flag_zero(_a == 0);
+		is_flag_subtract(false);
+		is_flag_half_carry(old_value <= 15 && _a > 15);
+		is_flag_carry(old_value + old_value > 255);
+		_ticks += 4;
+	}
+	void op_adc_a_h() {
+		u8 old_value = _a;
+		_a += _h + is_flag_zero;
+		is_flag_zero(_a == 0);
+		is_flag_subtract(false);
+		is_flag_half_carry(old_value <= 15 && _a > 15);
+		is_flag_carry(old_value + old_value > 255);
+		_ticks += 4;
+	}
+	void op_adc_a_l() {
+		u8 old_value = _a;
+		_a += _l + is_flag_zero;
+		is_flag_zero(_a == 0);
+		is_flag_subtract(false);
+		is_flag_half_carry(old_value <= 15 && _a > 15);
+		is_flag_carry(old_value + old_value > 255);
+		_ticks += 4;
+	}
+	void op_adc_a_addr_hl() {
+		u8 old_value = _a;
+		_a += _memory[_hl] + is_flag_zero;
+		is_flag_zero(_a == 0);
+		is_flag_subtract(false);
+		is_flag_half_carry(old_value <= 15 && _a > 15);
+		is_flag_carry(old_value + old_value > 255);
+		_ticks += 8;
 	}
 
 	// SUB
@@ -769,6 +843,13 @@ class CPU {
 		is_flag_half_carry(_l == 16);
 		_ticks += 4;
 	}
+	void op_inc_addr_hl() {
+		_memory[_hl]++;
+		is_flag_zero(_memory[_hl] == 0);
+		is_flag_subtract(false);
+		is_flag_half_carry(_memory[_hl] == 16);
+		_ticks += 12;
+	}
 	void op_inc_bc() {
 		_bc = cast(u16)(_bc + 1);
 		_ticks += 8;
@@ -785,14 +866,90 @@ class CPU {
 		_sp = cast(u16)(_sp + 1);
 		_ticks += 8;
 	}
-	void op_inc_addr_hl() {
+
+	// DEC
+	void op_dec_a() {
+		_a++;
+		is_flag_zero(_a == 0);
+		is_flag_subtract(true);
+		is_flag_half_carry(_a == 15);
+		_ticks += 4;
+	}
+	void op_dec_b() {
+		_b++;
+		is_flag_zero(_b == 0);
+		is_flag_subtract(true);
+		is_flag_half_carry(_b == 15);
+		_ticks += 4;
+	}
+	void op_dec_c() {
+		_c++;
+		is_flag_zero(_c == 0);
+		is_flag_subtract(true);
+		is_flag_half_carry(_c == 15);
+		_ticks += 4;
+	}
+	void op_dec_d() {
+		_d++;
+		is_flag_zero(_d == 0);
+		is_flag_subtract(true);
+		is_flag_half_carry(_d == 15);
+		_ticks += 4;
+	}
+	void op_dec_e() {
+		_e++;
+		is_flag_zero(_e == 0);
+		is_flag_subtract(true);
+		is_flag_half_carry(_e == 15);
+		_ticks += 4;
+	}
+	void op_dec_h() {
+		_h++;
+		is_flag_zero(_h == 0);
+		is_flag_subtract(true);
+		is_flag_half_carry(_h == 15);
+		_ticks += 4;
+	}
+	void op_dec_l() {
+		_l++;
+		is_flag_zero(_l == 0);
+		is_flag_subtract(true);
+		is_flag_half_carry(_l == 15);
+		_ticks += 4;
+	}
+	void op_dec_addr_hl() {
 		_memory[_hl]++;
 		is_flag_zero(_memory[_hl] == 0);
-		is_flag_subtract(false);
-		is_flag_half_carry(_memory[_hl] == 16);
+		is_flag_subtract(true);
+		is_flag_half_carry(_memory[_hl] == 15);
 		_ticks += 12;
 	}
+	void op_dec_bc() {
+		_bc = cast(u16)(_bc - 1);
+		_ticks += 8;
+	}
+	void op_dec_de() {
+		_de = cast(u16)(_de - 1);
+		_ticks += 8;
+	}
+	void op_dec_hl() {
+		_hl = cast(u16)(_hl - 1);
+		_ticks += 8;
+	}
+	void op_dec_sp() {
+		_sp = cast(u16)(_sp - 1);
+		_ticks += 8;
+	}
 
+	// CPL
+	void op_cp_a() {}
+	void op_cp_b() {}
+	void op_cp_c() {}
+	void op_cp_d() {}
+	void op_cp_e() {}
+	void op_cp_h() {}
+	void op_cp_l() {}
+	void op_cp_addr_hl() {}
 
 
 	void op_xor_n() {}
@@ -809,56 +966,36 @@ class CPU {
 // 0
 	void op_ld_bc_nn() {}
 	void op_ld_addr_bc_a() {}
-	void op_dec_b() {}
 	void op_rlc_a() {}
 	void op_ld_addr_nn_sp() {}
 	void op_ld_a_addr_bc() {}
-	void op_dec_bc() {}
-	void op_dec_c() {}
 	void op_rrc_a() {}
 	// 1
 	void op_ld_de_nn() {}
 	void op_ld_addr_de_a() {}
-	void op_dec_d() {}
 	void op_rl_a() {}
 	void op_jr_n() {}
 	void op_ld_a_addr_de() {}
-	void op_dec_de() {}
-	void op_dec_e() {}
 	void op_rr_a() {}
 		// 2
 	void op_jr_nz_n() {}
 	void op_ld_hl_nn() {}
 	void op_ldi_addr_hl_a() {}
-	void op_dec_h() {}
 	void op_daa() {}
 	void op_jr_z_n() {}
 	void op_ldi_a_addr_hl() {}
-	void op_dec_hl() {}
-	void op_dec_l() {}
 	void op_cpl() {}
 		// 3
 	void op_jr_nc_n() {}
 	void op_ld_sp_nn() {}
 	void op_ldd_addr_hl_a() {}
-	void op_dec_addr_hl() {}
 	void op_ld_addr_hl_n() {}
 	void op_scf() {}
 	void op_jr_c_n() {}
 	void op_ldd_a_addr_hl() {}
-	void op_dec_sp() {}
-	void op_dec_a() {}
 	void op_ccf() {}
 		// 7
 		// 8
-	void op_adc_a_b() {}
-	void op_adc_a_c() {}
-	void op_adc_a_d() {}
-	void op_adc_a_e() {}
-	void op_adc_a_h() {}
-	void op_adc_a_l() {}
-	void op_adc_a_addr_hl() {}
-	void op_adc_a_a() {}
 	// 9
 	void op_sbc_a_b() {}
 	void op_sbc_a_c() {}
@@ -870,14 +1007,6 @@ class CPU {
 	void op_sbc_a_a() {}
 		// A
 	// B
-	void op_cp_b() {}
-	void op_cp_c() {}
-	void op_cp_d() {}
-	void op_cp_e() {}
-	void op_cp_h() {}
-	void op_cp_l() {}
-	void op_cp_addr_hl() {}
-	void op_cp_a() {}
 	// C
 	void op_ret_nz() {}
 	void op_jp_nz_nn() {}
