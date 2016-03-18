@@ -32,6 +32,8 @@ class CPU {
 
 	bool _is_running = false;
 	u8[0xFFFF] _memory;
+	u16 _memory16(u16 i) { return u8s_to_u16(_memory[i], _memory[i+1]); }
+
 	u8 _a;
 	u8 _b;
 	u8 _c;
@@ -44,15 +46,15 @@ class CPU {
 	u16 _pc;
 	u16 _ticks;
 
-	u16 _af() { return (_a << 8) | _f; }
-	u16 _bc() { return (_b << 8) | _c; }
-	u16 _de() { return (_d << 8) | _e; }
-	u16 _hl() { return (_h << 8) | _l; }
+	u16 _af() { return u8s_to_u16(_a, _f); }
+	u16 _bc() { return u8s_to_u16(_b, _c); }
+	u16 _de() { return u8s_to_u16(_d, _e); }
+	u16 _hl() { return u8s_to_u16(_h, _l); }
 
-	void _af(u16 value) { _a = value >> 8; _f = value & 0x00FF; }
-	void _bc(u16 value) { _b = value >> 8; _c = value & 0x00FF; }
-	void _de(u16 value) { _d = value >> 8; _e = value & 0x00FF; }
-	void _hl(u16 value) { _h = value >> 8; _l = value & 0x00FF; }
+	void _af(u16 value) { u16_to_u8s(value, _a, _f); }
+	void _bc(u16 value) { u16_to_u8s(value, _b, _c); }
+	void _de(u16 value) { u16_to_u8s(value, _d, _e); }
+	void _hl(u16 value) { u16_to_u8s(value, _h, _l); }
 
 	bool is_flag_zero() { return is_bit_set(_f, (1 << 7)); }
 	bool is_flag_subtract() { return is_bit_set(_f, (1 << 6)); }
@@ -319,7 +321,7 @@ class CPU {
 	void op_ld_a_addr_de() { _a = _memory[_de]; _ticks += 8; }
 
 	// LD n, (##)
-	void op_ld_a_addr_nn() { u16 nn = _memory[_pc] << 8 | _memory[_pc+1]; _a = _memory[nn]; _ticks += 16; }
+	void op_ld_a_addr_nn() { _a = _memory[_memory16(_pc)]; _ticks += 16; }
 
 	// LD nn, nn
 	void op_ld_sp_hl() { _hl = _sp; _ticks += 8; }
@@ -334,10 +336,10 @@ class CPU {
 	void op_ld_l_n() { _l = _memory[_pc]; _ticks += 8; }
 
 	// LD nn, ##
-	void op_ld_bc_nn() { _bc = _memory[_pc] << 8 | _memory[_pc+1]; _ticks += 12; }
-	void op_ld_de_nn() { _de = _memory[_pc] << 8 | _memory[_pc+1]; _ticks += 12; }
-	void op_ld_hl_nn() { _hl = _memory[_pc] << 8 | _memory[_pc+1]; _ticks += 12; }
-	void op_ld_sp_nn() { _sp = _memory[_pc] << 8 | _memory[_pc+1]; _ticks += 12; }
+	void op_ld_bc_nn() { _bc = _memory16(_pc); _ticks += 12; }
+	void op_ld_de_nn() { _de = _memory16(_pc); _ticks += 12; }
+	void op_ld_hl_nn() { _hl = _memory16(_pc); _ticks += 12; }
+	void op_ld_sp_nn() { _sp = _memory16(_pc); _ticks += 12; }
 
 	// LD (nn), n
 	void op_ld_addr_hl_a() { _memory[_hl] = _a; _ticks += 8; }
