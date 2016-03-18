@@ -1039,19 +1039,73 @@ class CPU {
 	}
 
 	// JP
-	void op_jp_c_nn() {}
-	void op_jp_z_nn() {}
-	void op_jp_nc_nn() {}
-	void op_jp_nz_nn() {}
-	void op_jp_nn() {}
-	void op_jp_addr_hl() {}
+	void op_jp_c_nn() {
+		if (is_flag_carry()) {
+			_pc = _memory[_pc];
+		}
+		_ticks += 12;
+	}
+	void op_jp_z_nn() {
+		if (is_flag_zero()) {
+			_pc = _memory[_pc];
+		}
+		_ticks += 12;
+	}
+	void op_jp_nc_nn() {
+		if (! is_flag_carry()) {
+			_pc = _memory[_pc];
+		}
+		_ticks += 12;
+	}
+	void op_jp_nz_nn() {
+		if (! is_flag_zero()) {
+			_pc = _memory[_pc];
+		}
+		_ticks += 12;
+	}
+	void op_jp_nn() {
+		_pc = _memory[_pc];
+		_ticks += 12;
+	}
+	void op_jp_addr_hl() {
+		_pc = _memory[_hl];
+		_ticks += 4;
+	}
 
 	// JR
-	void op_jr_n() {}
-	void op_jr_c_n() {}
-	void op_jr_z_n() {}
-	void op_jr_nc_n() {}
-	void op_jr_nz_n() {}
+	void op_jr_n() {
+		s8 n = _memory[_pc];
+		_pc += n;
+		_ticks += 8;
+	}
+	void op_jr_c_n() {
+		if (is_flag_carry()) {
+			s8 n = _memory[_pc];
+			_pc += n;
+		}
+		_ticks += 8;
+	}
+	void op_jr_z_n() {
+		if (is_flag_zero()) {
+			s8 n = _memory[_pc];
+			_pc += n;
+		}
+		_ticks += 8;
+	}
+	void op_jr_nc_n() {
+		if (! is_flag_carry()) {
+			s8 n = _memory[_pc];
+			_pc += n;
+		}
+		_ticks += 8;
+	}
+	void op_jr_nz_n() {
+		if (! is_flag_zero()) {
+			s8 n = _memory[_pc];
+			_pc += n;
+		}
+		_ticks += 8;
+	}
 
 	// CP
 	void op_cp_a() {}
