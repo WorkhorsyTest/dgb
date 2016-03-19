@@ -506,12 +506,50 @@ class CPU {
 		_ticks += 8;
 	}
 
-	// ADD
-	void op_add_sp_d() {}
-	void op_add_hl_bc() {}
-	void op_add_hl_de() {}
-	void op_add_hl_hl() {}
-	void op_add_hl_sp() {}
+	// ADD nn, #
+	void op_add_sp_d() {
+		u16 old_value = _sp;
+		_sp += cast(s8) read_u8();
+		is_flag_zero(false);
+		is_flag_subtract(false);
+		is_flag_half_carry(old_value <= 15 && _sp > 15);
+		is_flag_carry(old_value + old_value > 255);
+		_ticks += 16;
+	}
+
+	// ADD nn, nn
+	void op_add_hl_bc() {
+		u16 old_value = _hl;
+		_hl = cast(u16) (_hl + _bc);
+		is_flag_subtract(false);
+		is_flag_half_carry(old_value <= 0xFFF && _bc > 0xFFF);
+		is_flag_carry(old_value + _bc > 0xFFFF);
+		_ticks += 8;
+	}
+	void op_add_hl_de() {
+		u16 old_value = _hl;
+		_hl = cast(u16) (_hl + _de);
+		is_flag_subtract(false);
+		is_flag_half_carry(old_value <= 0xFFF && _de > 0xFFF);
+		is_flag_carry(old_value + _de > 0xFFFF);
+		_ticks += 8;
+	}
+	void op_add_hl_hl() {
+		u16 old_value = _hl;
+		_hl = cast(u16) (_hl + _hl);
+		is_flag_subtract(false);
+		is_flag_half_carry(old_value <= 0xFFF && old_value > 0xFFF);
+		is_flag_carry(old_value + old_value > 0xFFFF);
+		_ticks += 8;
+	}
+	void op_add_hl_sp() {
+		u16 old_value = _hl;
+		_hl = cast(u16) (_hl + _sp);
+		is_flag_subtract(false);
+		is_flag_half_carry(old_value <= 0xFFF && _sp > 0xFFF);
+		is_flag_carry(old_value + _sp > 0xFFFF);
+		_ticks += 8;
+	}
 
 	// ADC
 	void op_adc_a_a() {
