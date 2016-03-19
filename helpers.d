@@ -7,7 +7,7 @@ pure u16 u8s_to_u16(immutable u8 left, immutable u8 right) {
 	return (left << 8) | right;
 }
 
-pure void u16_to_u8s(immutable u16 value, ref u8 left, ref u8 right) {
+pure void u16_to_u8s(immutable u16 value, out u8 left, out u8 right) {
 	left = value >> 8;
 	right = value & 0x00FF;
 }

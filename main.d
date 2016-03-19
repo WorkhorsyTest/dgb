@@ -32,7 +32,6 @@ class CPU {
 
 	bool _is_running = false;
 	u8[0xFFFF] _memory;
-	u16 _memory16(u16 i) { return u8s_to_u16(_memory[i], _memory[i+1]); }
 
 	u8 _a;
 	u8 _b;
@@ -65,6 +64,30 @@ class CPU {
 	void is_flag_subtract(bool is_set) { set_bit(_f, (1 << 6), is_set); }
 	void is_flag_half_carry(bool is_set) { set_bit(_f, (1 << 5), is_set); }
 	void is_flag_carry(bool is_set) { set_bit(_f, (1 << 4), is_set); }
+
+	u8 read_u8() {
+		u8 data = _memory[_pc];
+		_pc += 1;
+		return data;
+	}
+
+	u16 read_u16() {
+		u16 data = u8s_to_u16(_memory[_pc], _memory[_pc+1]);
+		_pc += 2;
+		return data;
+	}
+
+	void write_u8(u16 i, u8 value) {
+		_memory[i] = value;
+	}
+
+	void write_u16(u16 i, u16 value) {
+		u8 left;
+		u8 right;
+		u16_to_u8s(value, left, right);
+		_memory[i] = left;
+		_memory[i + 1] = right;
+	}
 
 	void delegate()[] ops;
 	void delegate()[] opcbs;
@@ -249,7 +272,7 @@ class CPU {
 	}
 
 	void run_next_operation() {
-		u8 opcode = _memory[_pc++];
+		u8 opcode = read_u8();
 	}
 
 	// http://marc.rawer.de/Gameboy/Docs/GBCPUman.pdf # 3.3. Commands
@@ -321,25 +344,25 @@ class CPU {
 	void op_ld_a_addr_de() { _a = _memory[_de]; _ticks += 8; }
 
 	// LD n, (##)
-	void op_ld_a_addr_nn() { _a = _memory[_memory16(_pc)]; _ticks += 16; }
+	void op_ld_a_addr_nn() { _a = _memory[read_u16()]; _ticks += 16; }
 
 	// LD nn, nn
 	void op_ld_sp_hl() { _hl = _sp; _ticks += 8; }
 
 	// LD nn, #
-	void op_ld_a_n() { _a = _memory[_pc]; _ticks += 8; }
-	void op_ld_b_n() { _b = _memory[_pc]; _ticks += 8; }
-	void op_ld_c_n() { _c = _memory[_pc]; _ticks += 8; }
-	void op_ld_d_n() { _d = _memory[_pc]; _ticks += 8; }
-	void op_ld_e_n() { _e = _memory[_pc]; _ticks += 8; }
-	void op_ld_h_n() { _h = _memory[_pc]; _ticks += 8; }
-	void op_ld_l_n() { _l = _memory[_pc]; _ticks += 8; }
+	void op_ld_a_n() { _a = read_u8(); _ticks += 8; }
+	void op_ld_b_n() { _b = read_u8(); _ticks += 8; }
+	void op_ld_c_n() { _c = read_u8(); _ticks += 8; }
+	void op_ld_d_n() { _d = read_u8(); _ticks += 8; }
+	void op_ld_e_n() { _e = read_u8(); _ticks += 8; }
+	void op_ld_h_n() { _h = read_u8(); _ticks += 8; }
+	void op_ld_l_n() { _l = read_u8(); _ticks += 8; }
 
 	// LD nn, ##
-	void op_ld_bc_nn() { _bc = _memory16(_pc); _ticks += 12; }
-	void op_ld_de_nn() { _de = _memory16(_pc); _ticks += 12; }
-	void op_ld_hl_nn() { _hl = _memory16(_pc); _ticks += 12; }
-	void op_ld_sp_nn() { _sp = _memory16(_pc); _ticks += 12; }
+	void op_ld_bc_nn() { _bc = read_u16(); _ticks += 12; }
+	void op_ld_de_nn() { _de = read_u16(); _ticks += 12; }
+	void op_ld_hl_nn() { _hl = read_u16(); _ticks += 12; }
+	void op_ld_sp_nn() { _sp = read_u16(); _ticks += 12; }
 
 	// LD (nn), n
 	void op_ld_addr_hl_a() { _memory[_hl] = _a; _ticks += 8; }
@@ -353,15 +376,15 @@ class CPU {
 	void op_ld_addr_de_a() { _memory[_de] = _a; _ticks += 8; }
 
 	// LD (nn), #
-	void op_ld_addr_hl_n() { _memory[_hl] = _memory[_pc]; _ticks += 8; }
+	void op_ld_addr_hl_n() { _memory[_hl] = read_u8(); _ticks += 8; }
 
 	// LD (##), n
-	void op_ld_addr_nn_a() { _memory[_memory[_pc]] = _a; _ticks += 16; }
+	void op_ld_addr_nn_a() { _memory[read_u16()] = _a; _ticks += 16; }
 
 	// LD (##), nn
 	void op_ld_addr_nn_sp() {
-		_memory[_memory[_pc]] = _sp >> 8;
-		_memory[_memory[_pc + 1]] = _sp & 0x00FF;
+		u16 nn = read_u16();
+		write_u16(nn, _sp);
 		_ticks += 20;
 	}
 
