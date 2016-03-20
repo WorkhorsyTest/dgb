@@ -433,6 +433,16 @@ class CPU {
 	}
 
 	// ADD
+	void op_add_a_n() {
+		u8 n = read_u8();
+		u8 old_value = _a;
+		_a += n;
+		is_flag_zero(_a == 0);
+		is_flag_subtract(false);
+		is_flag_half_carry(old_value <= 15 && _a > 15);
+		is_flag_carry(old_value + old_value > 255);
+		_ticks += 4;
+	}
 	void op_add_a_a() {
 		u8 old_value = _a;
 		_a += _a;
@@ -552,6 +562,16 @@ class CPU {
 	}
 
 	// ADC
+	void op_adc_a_n() {
+		u8 n = read_u8();
+		u8 old_value = _a;
+		_a += n + is_flag_zero;
+		is_flag_zero(_a == 0);
+		is_flag_subtract(false);
+		is_flag_half_carry(old_value <= 15 && _a > 15);
+		is_flag_carry(old_value + old_value > 255);
+		_ticks += 4;
+	}
 	void op_adc_a_a() {
 		u8 old_value = _a;
 		_a += _a + is_flag_zero;
@@ -626,6 +646,15 @@ class CPU {
 	}
 
 	// SUB
+	void op_sub_a_n() {
+		u8 old_value = _a;
+		_a -= read_u8();
+		is_flag_zero(_a == 0);
+		is_flag_subtract(true);
+		is_flag_half_carry(old_value > 15 && _a <= 15);
+		is_flag_carry(old_value + old_value > 255);
+		_ticks += 4;
+	}
 	void op_sub_a_a() {
 		u8 old_value = _a;
 		_a -= _a;
@@ -700,6 +729,16 @@ class CPU {
 	}
 
 	// SBC
+	void op_sbc_a_n() {
+		u8 n = read_u8();
+		u8 old_value = _a;
+		_a -= n + is_flag_zero;
+		is_flag_zero(_a == 0);
+		is_flag_subtract(true);
+		is_flag_half_carry(old_value > 15 && _a <= 15);
+		is_flag_carry(old_value + old_value > 255);
+		_ticks += 4;
+	}
 	void op_sbc_a_a() {
 		u8 old_value = _a;
 		_a -= _a + is_flag_zero;
@@ -774,6 +813,14 @@ class CPU {
 	}
 
 	// AND
+	void op_and_n() {
+		_a &= read_u8();
+		is_flag_zero(_a == 0);
+		is_flag_subtract(false);
+		is_flag_half_carry(true);
+		is_flag_carry(false);
+		_ticks += 4;
+	}
 	void op_and_a() {
 		_a &= _a;
 		is_flag_zero(_a == 0);
@@ -840,6 +887,14 @@ class CPU {
 	}
 
 	// OR
+	void op_or_n() {
+		_a |= read_u8();
+		is_flag_zero(_a == 0);
+		is_flag_subtract(false);
+		is_flag_half_carry(false);
+		is_flag_carry(false);
+		_ticks += 4;
+	}
 	void op_or_a() {
 		_a |= _a;
 		is_flag_zero(_a == 0);
@@ -906,6 +961,14 @@ class CPU {
 	}
 
 	// XOR
+	void op_xor_n() {
+		_a ^= read_u8();
+		is_flag_zero(_a == 0);
+		is_flag_subtract(false);
+		is_flag_half_carry(false);
+		is_flag_carry(false);
+		_ticks += 4;
+	}
 	void op_xor_a() {
 		_a ^= _a;
 		is_flag_zero(_a == 0);
@@ -1189,6 +1252,16 @@ class CPU {
 	}
 
 	// CP n
+	void op_cp_n() {
+		u8 n = read_u8();
+		u8 result = cast(u8) (_a - n);
+
+		is_flag_zero(result == 0);
+		is_flag_subtract(true);
+		is_flag_half_carry(_a > 15 && result <= 15);
+		is_flag_carry(_a < n);
+		_ticks += 4;
+	}
 	void op_cp_a() {
 		u8 result = cast(u8) (_a - _a);
 
@@ -1424,13 +1497,7 @@ class CPU {
 		_ticks += 32;
 	}
 
-
-
-	void op_and_n() {}
-	void op_add_a_n() {}
-	void op_adc_a_n() {}
 	void op_ccf() {}
-	void op_cp_n() {}
 	void op_cpl() {}
 	void op_daa() {}
 	void op_di() {}
@@ -1444,16 +1511,12 @@ class CPU {
 	void op_ldhl_sp_d() {}
 	void op_ldi_a_addr_hl() {}
 	void op_ldi_addr_hl_a() {}
-	void op_or_n() {}
 	void op_rl_a() {}
 	void op_rr_a() {}
 	void op_rlc_a() {}
 	void op_rrc_a() {}
 	void op_reti() {}
-	void op_sbc_a_n() {}
 	void op_scf() {}
-	void op_sub_a_n() {}
-	void op_xor_n() {}
 
 
 
