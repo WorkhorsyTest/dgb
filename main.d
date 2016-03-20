@@ -1188,15 +1188,80 @@ class CPU {
 		_ticks += 8;
 	}
 
-	// CP
-	void op_cp_a() {}
-	void op_cp_b() {}
-	void op_cp_c() {}
-	void op_cp_d() {}
-	void op_cp_e() {}
-	void op_cp_h() {}
-	void op_cp_l() {}
-	void op_cp_addr_hl() {}
+	// CP n
+	void op_cp_a() {
+		u8 result = cast(u8) (_a - _a);
+
+		is_flag_zero(result == 0);
+		is_flag_subtract(true);
+		is_flag_half_carry(_a > 15 && result <= 15);
+		is_flag_carry(_a < _a);
+		_ticks += 4;
+	}
+	void op_cp_b() {
+		u8 result = cast(u8) (_a - _b);
+
+		is_flag_zero(result == 0);
+		is_flag_subtract(true);
+		is_flag_half_carry(_a > 15 && result <= 15);
+		is_flag_carry(_a < _b);
+		_ticks += 4;
+	}
+	void op_cp_c() {
+		u8 result = cast(u8) (_a - _c);
+
+		is_flag_zero(result == 0);
+		is_flag_subtract(true);
+		is_flag_half_carry(_a > 15 && result <= 15);
+		is_flag_carry(_a < _c);
+		_ticks += 4;
+	}
+	void op_cp_d() {
+		u8 result = cast(u8) (_a - _d);
+
+		is_flag_zero(result == 0);
+		is_flag_subtract(true);
+		is_flag_half_carry(_a > 15 && result <= 15);
+		is_flag_carry(_a < _d);
+		_ticks += 4;
+	}
+	void op_cp_e() {
+		u8 result = cast(u8) (_a - _e);
+
+		is_flag_zero(result == 0);
+		is_flag_subtract(true);
+		is_flag_half_carry(_a > 15 && result <= 15);
+		is_flag_carry(_a < _e);
+		_ticks += 4;
+	}
+	void op_cp_h() {
+		u8 result = cast(u8) (_a - _h);
+
+		is_flag_zero(result == 0);
+		is_flag_subtract(true);
+		is_flag_half_carry(_a > 15 && result <= 15);
+		is_flag_carry(_a < _h);
+		_ticks += 4;
+	}
+	void op_cp_l() {
+		u8 result = cast(u8) (_a - _l);
+
+		is_flag_zero(result == 0);
+		is_flag_subtract(true);
+		is_flag_half_carry(_a > 15 && result <= 15);
+		is_flag_carry(_a < _l);
+		_ticks += 4;
+	}
+	void op_cp_addr_hl() {
+		u8 n = _memory[_hl];
+		u8 result = cast(u8) (_a - n);
+
+		is_flag_zero(result == 0);
+		is_flag_subtract(true);
+		is_flag_half_carry(_a > 15 && result <= 15);
+		is_flag_carry(_a < n);
+		_ticks += 8;
+	}
 
 	// CALL
 	void op_call_nz_nn() {}
