@@ -1319,21 +1319,110 @@ class CPU {
 	}
 
 	// RET
-	void op_ret() {}
-	void op_ret_c() {}
-	void op_ret_z() {}
-	void op_ret_nc() {}
-	void op_ret_nz() {}
+	void op_ret() {
+		u8 a = _memory[_sp++];
+		u8 b = _memory[_sp++];
+		_pc = u8s_to_u16(a, b);
+		_ticks += 8;
+	}
+	void op_ret_nc() {
+		if (! is_flag_carry()) {
+			u8 a = _memory[_sp++];
+			u8 b = _memory[_sp++];
+			_pc = u8s_to_u16(a, b);
+		}
+		_ticks += 8;
+	}
+	void op_ret_c() {
+		if (is_flag_carry()) {
+			u8 a = _memory[_sp++];
+			u8 b = _memory[_sp++];
+			_pc = u8s_to_u16(a, b);
+		}
+		_ticks += 8;
+	}
+	void op_ret_nz() {
+		if (! is_flag_zero()) {
+			u8 a = _memory[_sp++];
+			u8 b = _memory[_sp++];
+			_pc = u8s_to_u16(a, b);
+		}
+		_ticks += 8;
+	}
+	void op_ret_z() {
+		if (is_flag_zero()) {
+			u8 a = _memory[_sp++];
+			u8 b = _memory[_sp++];
+			_pc = u8s_to_u16(a, b);
+		}
+		_ticks += 8;
+	}
 
 	// RST
-	void op_rst_0() {}
-	void op_rst_8() {}
-	void op_rst_10() {}
-	void op_rst_18() {}
-	void op_rst_20() {}
-	void op_rst_28() {}
-	void op_rst_30() {}
-	void op_rst_38() {}
+	void op_rst_0() {
+		u8 npc1, npc2;
+		u16_to_u8s(_pc, npc1, npc2);
+		_memory[--_sp] = npc1;
+		_memory[--_sp] = npc2;
+		_pc = 0X0000;
+		_ticks += 32;
+	}
+	void op_rst_8() {
+		u8 npc1, npc2;
+		u16_to_u8s(_pc, npc1, npc2);
+		_memory[--_sp] = npc1;
+		_memory[--_sp] = npc2;
+		_pc = 0X0008;
+		_ticks += 32;
+	}
+	void op_rst_10() {
+		u8 npc1, npc2;
+		u16_to_u8s(_pc, npc1, npc2);
+		_memory[--_sp] = npc1;
+		_memory[--_sp] = npc2;
+		_pc = 0X0010;
+		_ticks += 32;
+	}
+	void op_rst_18() {
+		u8 npc1, npc2;
+		u16_to_u8s(_pc, npc1, npc2);
+		_memory[--_sp] = npc1;
+		_memory[--_sp] = npc2;
+		_pc = 0X0018;
+		_ticks += 32;
+	}
+	void op_rst_20() {
+		u8 npc1, npc2;
+		u16_to_u8s(_pc, npc1, npc2);
+		_memory[--_sp] = npc1;
+		_memory[--_sp] = npc2;
+		_pc = 0X0020;
+		_ticks += 32;
+	}
+	void op_rst_28() {
+		u8 npc1, npc2;
+		u16_to_u8s(_pc, npc1, npc2);
+		_memory[--_sp] = npc1;
+		_memory[--_sp] = npc2;
+		_pc = 0X0028;
+		_ticks += 32;
+	}
+	void op_rst_30() {
+		u8 npc1, npc2;
+		u16_to_u8s(_pc, npc1, npc2);
+		_memory[--_sp] = npc1;
+		_memory[--_sp] = npc2;
+		_pc = 0X0030;
+		_ticks += 32;
+	}
+	void op_rst_38() {
+		u8 npc1, npc2;
+		u16_to_u8s(_pc, npc1, npc2);
+		_memory[--_sp] = npc1;
+		_memory[--_sp] = npc2;
+		_pc = 0X0038;
+		_ticks += 32;
+	}
 
 
 
