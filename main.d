@@ -1263,12 +1263,60 @@ class CPU {
 		_ticks += 8;
 	}
 
-	// CALL
-	void op_call_nz_nn() {}
-	void op_call_z_nn() {}
-	void op_call_nn() {}
-	void op_call_nc_nn() {}
-	void op_call_c_nn() {}
+	// CALL ##
+	void op_call_nn() {
+		u16 nn = read_u16();
+		u8 npc1, npc2;
+		u16_to_u8s(_pc, npc1, npc2);
+		_memory[--_sp] = npc1;
+		_memory[--_sp] = npc2;
+		_pc = nn;
+		_ticks += 12;
+	}
+	void op_call_nz_nn() {
+		if (! is_flag_zero()) {
+			u16 nn = read_u16();
+			u8 npc1, npc2;
+			u16_to_u8s(_pc, npc1, npc2);
+			_memory[--_sp] = npc1;
+			_memory[--_sp] = npc2;
+			_pc = nn;
+			_ticks += 12;
+		}
+	}
+	void op_call_z_nn() {
+		if (is_flag_zero()) {
+			u16 nn = read_u16();
+			u8 npc1, npc2;
+			u16_to_u8s(_pc, npc1, npc2);
+			_memory[--_sp] = npc1;
+			_memory[--_sp] = npc2;
+			_pc = nn;
+			_ticks += 12;
+		}
+	}
+	void op_call_nc_nn() {
+		if (! is_flag_carry()) {
+			u16 nn = read_u16();
+			u8 npc1, npc2;
+			u16_to_u8s(_pc, npc1, npc2);
+			_memory[--_sp] = npc1;
+			_memory[--_sp] = npc2;
+			_pc = nn;
+			_ticks += 12;
+		}
+	}
+	void op_call_c_nn() {
+		if (is_flag_carry()) {
+			u16 nn = read_u16();
+			u8 npc1, npc2;
+			u16_to_u8s(_pc, npc1, npc2);
+			_memory[--_sp] = npc1;
+			_memory[--_sp] = npc2;
+			_pc = nn;
+			_ticks += 12;
+		}
+	}
 
 	// RET
 	void op_ret() {}
