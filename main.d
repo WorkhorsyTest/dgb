@@ -103,24 +103,24 @@ class CPU {
 		opcbs = [
 			// 0
 			&opcb_rlc_b, &opcb_rlc_c, &opcb_rlc_d, &opcb_rlc_e,
-			&opcb_rlc_h, &opcb_rlc_l, &opcb_rlc_hl, &opcb_rlc_a,
+			&opcb_rlc_h, &opcb_rlc_l, &opcb_rlc_addr_hl, &opcb_rlc_a,
 			&opcb_rrc_b, &opcb_rrc_c, &opcb_rrc_d, &opcb_rrc_e,
-			&opcb_rrc_h, &opcb_rrc_l, &opcb_rrc_hl, &opcb_rrc_a,
+			&opcb_rrc_h, &opcb_rrc_l, &opcb_rrc_addr_hl, &opcb_rrc_a,
 				// 1
 			&opcb_rl_b, &opcb_rl_c, &opcb_rl_d, &opcb_rl_e,
-			&opcb_rl_h, &opcb_rl_l, &opcb_rl_hl, &opcb_rl_a,
+			&opcb_rl_h, &opcb_rl_l, &opcb_rl_addr_hl, &opcb_rl_a,
 			&opcb_rr_b, &opcb_rr_c, &opcb_rr_d, &opcb_rr_e,
-			&opcb_rr_h, &opcb_rr_l, &opcb_rr_hl, &opcb_rr_a,
+			&opcb_rr_h, &opcb_rr_l, &opcb_rr_addr_hl, &opcb_rr_a,
 				// 2
 			&opcb_sla_b, &opcb_sla_c, &opcb_sla_d, &opcb_sla_e,
-			&opcb_sla_h, &opcb_sla_l, &opcb_sla_hl, &opcb_sla_a,
+			&opcb_sla_h, &opcb_sla_l, &opcb_sla_addr_hl, &opcb_sla_a,
 			&opcb_sra_b, &opcb_sra_c, &opcb_sra_d, &opcb_sra_e,
-			&opcb_sra_h, &opcb_sra_l, &opcb_sra_hl, &opcb_sra_a,
+			&opcb_sra_h, &opcb_sra_l, &opcb_sra_addr_hl, &opcb_sra_a,
 				// 3
 			&opcb_swap_b, &opcb_swap_c, &opcb_swap_d, &opcb_swap_e,
-			&opcb_swap_h, &opcb_swap_l, &opcb_swap_hl, &opcb_swap_a,
+			&opcb_swap_h, &opcb_swap_l, &opcb_swap_addr_hl, &opcb_swap_a,
 			&opcb_srl_b, &opcb_srl_c, &opcb_srl_d, &opcb_srl_e,
-			&opcb_srl_h, &opcb_srl_l, &opcb_srl_hl, &opcb_srl_a,
+			&opcb_srl_h, &opcb_srl_l, &opcb_srl_addr_hl, &opcb_srl_a,
 				// 4
 			&opcb_bit_0_b, &opcb_bit_0_c, &opcb_bit_0_d, &opcb_bit_0_e,
 			&opcb_bit_0_h, &opcb_bit_0_l, &opcb_bit_0_addr_hl, &opcb_bit_0_a,
@@ -143,44 +143,44 @@ class CPU {
 			&opcb_bit_7_h, &opcb_bit_7_l, &opcb_bit_7_addr_hl, &opcb_bit_7_a,
 				// 8
 			&opcb_res_0_b, &opcb_res_0_c, &opcb_res_0_d, &opcb_res_0_e,
-			&opcb_res_0_h, &opcb_res_0_l, &opcb_res_0_hl, &opcb_res_0_a,
+			&opcb_res_0_h, &opcb_res_0_l, &opcb_res_0_addr_hl, &opcb_res_0_a,
 			&opcb_res_1_b, &opcb_res_1_c, &opcb_res_1_d, &opcb_res_1_e,
-			&opcb_res_1_h, &opcb_res_1_l, &opcb_res_1_hl, &opcb_res_1_a,
+			&opcb_res_1_h, &opcb_res_1_l, &opcb_res_1_addr_hl, &opcb_res_1_a,
 				// 9
 			&opcb_res_2_b, &opcb_res_2_c, &opcb_res_2_d, &opcb_res_2_e,
-			&opcb_res_2_h, &opcb_res_2_l, &opcb_res_2_hl, &opcb_res_2_a,
+			&opcb_res_2_h, &opcb_res_2_l, &opcb_res_2_addr_hl, &opcb_res_2_a,
 			&opcb_res_3_b, &opcb_res_3_c, &opcb_res_3_d, &opcb_res_3_e,
-			&opcb_res_3_h, &opcb_res_3_l, &opcb_res_3_hl, &opcb_res_3_a,
+			&opcb_res_3_h, &opcb_res_3_l, &opcb_res_3_addr_hl, &opcb_res_3_a,
 				// a
 			&opcb_res_4_b, &opcb_res_4_c, &opcb_res_4_d, &opcb_res_4_e,
-			&opcb_res_4_h, &opcb_res_4_l, &opcb_res_4_hl, &opcb_res_4_a,
+			&opcb_res_4_h, &opcb_res_4_l, &opcb_res_4_addr_hl, &opcb_res_4_a,
 			&opcb_res_5_b, &opcb_res_5_c, &opcb_res_5_d, &opcb_res_5_e,
-			&opcb_res_5_h, &opcb_res_5_l, &opcb_res_5_hl, &opcb_res_5_a,
+			&opcb_res_5_h, &opcb_res_5_l, &opcb_res_5_addr_hl, &opcb_res_5_a,
 				// b
 			&opcb_res_6_b, &opcb_res_6_c, &opcb_res_6_d, &opcb_res_6_e,
-			&opcb_res_6_h, &opcb_res_6_l, &opcb_res_6_hl, &opcb_res_6_a,
+			&opcb_res_6_h, &opcb_res_6_l, &opcb_res_6_addr_hl, &opcb_res_6_a,
 			&opcb_res_7_b, &opcb_res_7_c, &opcb_res_7_d, &opcb_res_7_e,
-			&opcb_res_7_h, &opcb_res_7_l, &opcb_res_7_hl, &opcb_res_7_a,
+			&opcb_res_7_h, &opcb_res_7_l, &opcb_res_7_addr_hl, &opcb_res_7_a,
 				// c
 			&opcb_set_0_b, &opcb_set_0_c, &opcb_set_0_d, &opcb_set_0_e,
-			&opcb_set_0_h, &opcb_set_0_l, &opcb_set_0_hl, &opcb_set_0_a,
+			&opcb_set_0_h, &opcb_set_0_l, &opcb_set_0_addr_hl, &opcb_set_0_a,
 			&opcb_set_1_b, &opcb_set_1_c, &opcb_set_1_d, &opcb_set_1_e,
-			&opcb_set_1_h, &opcb_set_1_l, &opcb_set_1_hl, &opcb_set_1_a,
+			&opcb_set_1_h, &opcb_set_1_l, &opcb_set_1_addr_hl, &opcb_set_1_a,
 			// d
 			&opcb_set_2_b, &opcb_set_2_c, &opcb_set_2_d, &opcb_set_2_e,
-			&opcb_set_2_h, &opcb_set_2_l, &opcb_set_2_hl, &opcb_set_2_a,
+			&opcb_set_2_h, &opcb_set_2_l, &opcb_set_2_addr_hl, &opcb_set_2_a,
 			&opcb_set_3_b, &opcb_set_3_c, &opcb_set_3_d, &opcb_set_3_e,
-			&opcb_set_3_h, &opcb_set_3_l, &opcb_set_3_hl, &opcb_set_3_a,
+			&opcb_set_3_h, &opcb_set_3_l, &opcb_set_3_addr_hl, &opcb_set_3_a,
 				// e
 			&opcb_set_4_b, &opcb_set_4_c, &opcb_set_4_d, &opcb_set_4_e,
-			&opcb_set_4_h, &opcb_set_4_l, &opcb_set_4_hl, &opcb_set_4_a,
+			&opcb_set_4_h, &opcb_set_4_l, &opcb_set_4_addr_hl, &opcb_set_4_a,
 			&opcb_set_5_b, &opcb_set_5_c, &opcb_set_5_d, &opcb_set_5_e,
-			&opcb_set_5_h, &opcb_set_5_l, &opcb_set_5_hl, &opcb_set_5_a,
+			&opcb_set_5_h, &opcb_set_5_l, &opcb_set_5_addr_hl, &opcb_set_5_a,
 			// F
 			&opcb_set_6_b, &opcb_set_6_c, &opcb_set_6_d, &opcb_set_6_e,
-			&opcb_set_6_h, &opcb_set_6_l, &opcb_set_6_hl, &opcb_set_6_a,
+			&opcb_set_6_h, &opcb_set_6_l, &opcb_set_6_addr_hl, &opcb_set_6_a,
 			&opcb_set_7_b, &opcb_set_7_c, &opcb_set_7_d, &opcb_set_7_e,
-			&opcb_set_7_h, &opcb_set_7_l, &opcb_set_7_hl, &opcb_set_7_a
+			&opcb_set_7_h, &opcb_set_7_l, &opcb_set_7_addr_hl, &opcb_set_7_a
 		];
 
 		// http://imrannazar.com/Gameboy-Z80-Opcode-Map
@@ -2121,7 +2121,7 @@ class CPU {
 	void opcb_rlc_e() {}
 	void opcb_rlc_h() {}
 	void opcb_rlc_l() {}
-	void opcb_rlc_hl() {}
+	void opcb_rlc_addr_hl() {}
 
 
 		// 0
@@ -2132,7 +2132,7 @@ class CPU {
 	void opcb_rrc_e() {}
 	void opcb_rrc_h() {}
 	void opcb_rrc_l() {}
-	void opcb_rrc_hl() {}
+	void opcb_rrc_addr_hl() {}
 		// 1
 	void opcb_rl_b() {}
 	void opcb_rl_c() {}
@@ -2140,7 +2140,7 @@ class CPU {
 	void opcb_rl_e() {}
 	void opcb_rl_h() {}
 	void opcb_rl_l() {}
-	void opcb_rl_hl() {}
+	void opcb_rl_addr_hl() {}
 	void opcb_rl_a() {}
 	void opcb_rr_b() {}
 	void opcb_rr_c() {}
@@ -2148,7 +2148,7 @@ class CPU {
 	void opcb_rr_e() {}
 	void opcb_rr_h() {}
 	void opcb_rr_l() {}
-	void opcb_rr_hl() {}
+	void opcb_rr_addr_hl() {}
 	void opcb_rr_a() {}
 		// 2
 	void opcb_sla_b() {}
@@ -2157,7 +2157,7 @@ class CPU {
 	void opcb_sla_e() {}
 	void opcb_sla_h() {}
 	void opcb_sla_l() {}
-	void opcb_sla_hl() {}
+	void opcb_sla_addr_hl() {}
 	void opcb_sla_a() {}
 	void opcb_sra_b() {}
 	void opcb_sra_c() {}
@@ -2165,7 +2165,7 @@ class CPU {
 	void opcb_sra_e() {}
 	void opcb_sra_h() {}
 	void opcb_sra_l() {}
-	void opcb_sra_hl() {}
+	void opcb_sra_addr_hl() {}
 	void opcb_sra_a() {}
 		// 3
 	void opcb_swap_b() {}
@@ -2174,7 +2174,7 @@ class CPU {
 	void opcb_swap_e() {}
 	void opcb_swap_h() {}
 	void opcb_swap_l() {}
-	void opcb_swap_hl() {}
+	void opcb_swap_addr_hl() {}
 	void opcb_swap_a() {}
 	void opcb_srl_b() {}
 	void opcb_srl_c() {}
@@ -2182,7 +2182,7 @@ class CPU {
 	void opcb_srl_e() {}
 	void opcb_srl_h() {}
 	void opcb_srl_l() {}
-	void opcb_srl_hl() {}
+	void opcb_srl_addr_hl() {}
 	void opcb_srl_a() {}
 		// 8
 	void opcb_res_0_b() {}
@@ -2191,7 +2191,7 @@ class CPU {
 	void opcb_res_0_e() {}
 	void opcb_res_0_h() {}
 	void opcb_res_0_l() {}
-	void opcb_res_0_hl() {}
+	void opcb_res_0_addr_hl() {}
 	void opcb_res_0_a() {}
 	void opcb_res_1_b() {}
 	void opcb_res_1_c() {}
@@ -2199,7 +2199,7 @@ class CPU {
 	void opcb_res_1_e() {}
 	void opcb_res_1_h() {}
 	void opcb_res_1_l() {}
-	void opcb_res_1_hl() {}
+	void opcb_res_1_addr_hl() {}
 	void opcb_res_1_a() {}
 		// 9
 	void opcb_res_2_b() {}
@@ -2208,7 +2208,7 @@ class CPU {
 	void opcb_res_2_e() {}
 	void opcb_res_2_h() {}
 	void opcb_res_2_l() {}
-	void opcb_res_2_hl() {}
+	void opcb_res_2_addr_hl() {}
 	void opcb_res_2_a() {}
 	void opcb_res_3_b() {}
 	void opcb_res_3_c() {}
@@ -2216,7 +2216,7 @@ class CPU {
 	void opcb_res_3_e() {}
 	void opcb_res_3_h() {}
 	void opcb_res_3_l() {}
-	void opcb_res_3_hl() {}
+	void opcb_res_3_addr_hl() {}
 	void opcb_res_3_a() {}
 		// a
 	void opcb_res_4_b() {}
@@ -2225,7 +2225,7 @@ class CPU {
 	void opcb_res_4_e() {}
 	void opcb_res_4_h() {}
 	void opcb_res_4_l() {}
-	void opcb_res_4_hl() {}
+	void opcb_res_4_addr_hl() {}
 	void opcb_res_4_a() {}
 	void opcb_res_5_b() {}
 	void opcb_res_5_c() {}
@@ -2233,7 +2233,7 @@ class CPU {
 	void opcb_res_5_e() {}
 	void opcb_res_5_h() {}
 	void opcb_res_5_l() {}
-	void opcb_res_5_hl() {}
+	void opcb_res_5_addr_hl() {}
 	void opcb_res_5_a() {}
 		// b
 	void opcb_res_6_b() {}
@@ -2242,7 +2242,7 @@ class CPU {
 	void opcb_res_6_e() {}
 	void opcb_res_6_h() {}
 	void opcb_res_6_l() {}
-	void opcb_res_6_hl() {}
+	void opcb_res_6_addr_hl() {}
 	void opcb_res_6_a() {}
 	void opcb_res_7_b() {}
 	void opcb_res_7_c() {}
@@ -2250,7 +2250,7 @@ class CPU {
 	void opcb_res_7_e() {}
 	void opcb_res_7_h() {}
 	void opcb_res_7_l() {}
-	void opcb_res_7_hl() {}
+	void opcb_res_7_addr_hl() {}
 	void opcb_res_7_a() {}
 		// c
 	void opcb_set_0_b() {}
@@ -2259,7 +2259,7 @@ class CPU {
 	void opcb_set_0_e() {}
 	void opcb_set_0_h() {}
 	void opcb_set_0_l() {}
-	void opcb_set_0_hl() {}
+	void opcb_set_0_addr_hl() {}
 	void opcb_set_0_a() {}
 	void opcb_set_1_b() {}
 	void opcb_set_1_c() {}
@@ -2267,7 +2267,7 @@ class CPU {
 	void opcb_set_1_e() {}
 	void opcb_set_1_h() {}
 	void opcb_set_1_l() {}
-	void opcb_set_1_hl() {}
+	void opcb_set_1_addr_hl() {}
 	void opcb_set_1_a() {}
 // d
 	void opcb_set_2_b() {}
@@ -2276,7 +2276,7 @@ class CPU {
 	void opcb_set_2_e() {}
 	void opcb_set_2_h() {}
 	void opcb_set_2_l() {}
-	void opcb_set_2_hl() {}
+	void opcb_set_2_addr_hl() {}
 	void opcb_set_2_a() {}
 	void opcb_set_3_b() {}
 	void opcb_set_3_c() {}
@@ -2284,7 +2284,7 @@ class CPU {
 	void opcb_set_3_e() {}
 	void opcb_set_3_h() {}
 	void opcb_set_3_l() {}
-	void opcb_set_3_hl() {}
+	void opcb_set_3_addr_hl() {}
 	void opcb_set_3_a() {}
 		// e
 	void opcb_set_4_b() {}
@@ -2293,7 +2293,7 @@ class CPU {
 	void opcb_set_4_e() {}
 	void opcb_set_4_h() {}
 	void opcb_set_4_l() {}
-	void opcb_set_4_hl() {}
+	void opcb_set_4_addr_hl() {}
 	void opcb_set_4_a() {}
 	void opcb_set_5_b() {}
 	void opcb_set_5_c() {}
@@ -2301,7 +2301,7 @@ class CPU {
 	void opcb_set_5_e() {}
 	void opcb_set_5_h() {}
 	void opcb_set_5_l() {}
-	void opcb_set_5_hl() {}
+	void opcb_set_5_addr_hl() {}
 	void opcb_set_5_a() {}
 	// F
 	void opcb_set_6_b() {}
@@ -2310,7 +2310,7 @@ class CPU {
 	void opcb_set_6_e() {}
 	void opcb_set_6_h() {}
 	void opcb_set_6_l() {}
-	void opcb_set_6_hl() {}
+	void opcb_set_6_addr_hl() {}
 	void opcb_set_6_a() {}
 	void opcb_set_7_b() {}
 	void opcb_set_7_c() {}
@@ -2318,7 +2318,7 @@ class CPU {
 	void opcb_set_7_e() {}
 	void opcb_set_7_h() {}
 	void opcb_set_7_l() {}
-	void opcb_set_7_hl() {}
+	void opcb_set_7_addr_hl() {}
 	void opcb_set_7_a() {}
 }
 
