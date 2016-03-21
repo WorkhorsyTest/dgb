@@ -24,6 +24,7 @@ public class Screen {
 
 // https://en.wikipedia.org/wiki/Game_Boy
 // http://marc.rawer.de/Gameboy/Docs/GBCPUman.pdf # 2.3. Game Boy Specs
+// http://www.zilog.com/docs/z80/um0080.pdf
 class CPU {
 	static immutable string make = "Sharp";
 	static immutable string model = "LR35902";
@@ -100,7 +101,7 @@ class CPU {
 		_is_running = true;
 
 		opcbs = [
-			// 1
+			// 0
 			&opcb_rlc_b, &opcb_rlc_c, &opcb_rlc_d, &opcb_rlc_e,
 			&opcb_rlc_h, &opcb_rlc_l, &opcb_rlc_hl, &opcb_rlc_a,
 			&opcb_rrc_b, &opcb_rrc_c, &opcb_rrc_d, &opcb_rrc_e,
@@ -122,24 +123,24 @@ class CPU {
 			&opcb_srl_h, &opcb_srl_l, &opcb_srl_hl, &opcb_srl_a,
 				// 4
 			&opcb_bit_0_b, &opcb_bit_0_c, &opcb_bit_0_d, &opcb_bit_0_e,
-			&opcb_bit_0_h, &opcb_bit_0_l, &opcb_bit_0_hl, &opcb_bit_0_a,
+			&opcb_bit_0_h, &opcb_bit_0_l, &opcb_bit_0_addr_hl, &opcb_bit_0_a,
 			&opcb_bit_1_b, &opcb_bit_1_c, &opcb_bit_1_d, &opcb_bit_1_e,
-			&opcb_bit_1_h, &opcb_bit_1_l, &opcb_bit_1_hl, &opcb_bit_1_a,
+			&opcb_bit_1_h, &opcb_bit_1_l, &opcb_bit_1_addr_hl, &opcb_bit_1_a,
 				// 5
 			&opcb_bit_2_b, &opcb_bit_2_c, &opcb_bit_2_d, &opcb_bit_2_e,
-			&opcb_bit_2_h, &opcb_bit_2_l, &opcb_bit_2_hl, &opcb_bit_2_a,
+			&opcb_bit_2_h, &opcb_bit_2_l, &opcb_bit_2_addr_hl, &opcb_bit_2_a,
 			&opcb_bit_3_b, &opcb_bit_3_c, &opcb_bit_3_d, &opcb_bit_3_e,
-			&opcb_bit_3_h, &opcb_bit_3_l, &opcb_bit_3_hl, &opcb_bit_3_a,
+			&opcb_bit_3_h, &opcb_bit_3_l, &opcb_bit_3_addr_hl, &opcb_bit_3_a,
 				// 6
 			&opcb_bit_4_b, &opcb_bit_4_c, &opcb_bit_4_d, &opcb_bit_4_e,
-			&opcb_bit_4_h, &opcb_bit_4_l, &opcb_bit_4_hl, &opcb_bit_4_a,
+			&opcb_bit_4_h, &opcb_bit_4_l, &opcb_bit_4_addr_hl, &opcb_bit_4_a,
 			&opcb_bit_5_b, &opcb_bit_5_c, &opcb_bit_5_d, &opcb_bit_5_e,
-			&opcb_bit_5_h, &opcb_bit_5_l, &opcb_bit_5_hl, &opcb_bit_5_a,
+			&opcb_bit_5_h, &opcb_bit_5_l, &opcb_bit_5_addr_hl, &opcb_bit_5_a,
 				// 7
 			&opcb_bit_6_b, &opcb_bit_6_c, &opcb_bit_6_d, &opcb_bit_6_e,
-			&opcb_bit_6_h, &opcb_bit_6_l, &opcb_bit_6_hl, &opcb_bit_6_a,
+			&opcb_bit_6_h, &opcb_bit_6_l, &opcb_bit_6_addr_hl, &opcb_bit_6_a,
 			&opcb_bit_7_b, &opcb_bit_7_c, &opcb_bit_7_d, &opcb_bit_7_e,
-			&opcb_bit_7_h, &opcb_bit_7_l, &opcb_bit_7_hl, &opcb_bit_7_a,
+			&opcb_bit_7_h, &opcb_bit_7_l, &opcb_bit_7_addr_hl, &opcb_bit_7_a,
 				// 8
 			&opcb_res_0_b, &opcb_res_0_c, &opcb_res_0_d, &opcb_res_0_e,
 			&opcb_res_0_h, &opcb_res_0_l, &opcb_res_0_hl, &opcb_res_0_a,
@@ -1641,10 +1642,479 @@ class CPU {
 		opcbs[i]();
 	}
 
+	// BIT
+	void opcb_bit_0_a() {
+		bool is_set = is_bit_set(_a, (1 << 0));
+		is_flag_zero(is_set == false);
+		is_flag_subtract(false);
+		is_flag_half_carry(true);
+		_ticks += 8;
+	}
+	void opcb_bit_0_b() {
+		bool is_set = is_bit_set(_b, (1 << 0));
+		is_flag_zero(is_set == false);
+		is_flag_subtract(false);
+		is_flag_half_carry(true);
+		_ticks += 8;
+	}
+	void opcb_bit_0_c() {
+		bool is_set = is_bit_set(_c, (1 << 0));
+		is_flag_zero(is_set == false);
+		is_flag_subtract(false);
+		is_flag_half_carry(true);
+		_ticks += 8;
+	}
+	void opcb_bit_0_d() {
+		bool is_set = is_bit_set(_d, (1 << 0));
+		is_flag_zero(is_set == false);
+		is_flag_subtract(false);
+		is_flag_half_carry(true);
+		_ticks += 8;
+	}
+	void opcb_bit_0_e() {
+		bool is_set = is_bit_set(_e, (1 << 0));
+		is_flag_zero(is_set == false);
+		is_flag_subtract(false);
+		is_flag_half_carry(true);
+		_ticks += 8;
+	}
+	void opcb_bit_0_h() {
+		bool is_set = is_bit_set(_h, (1 << 0));
+		is_flag_zero(is_set == false);
+		is_flag_subtract(false);
+		is_flag_half_carry(true);
+		_ticks += 8;
+	}
+	void opcb_bit_0_l() {
+		bool is_set = is_bit_set(_l, (1 << 0));
+		is_flag_zero(is_set == false);
+		is_flag_subtract(false);
+		is_flag_half_carry(true);
+		_ticks += 8;
+	}
+	void opcb_bit_0_addr_hl() {
+		u8 n = read_u8();
+		bool is_set = is_bit_set(n, (1 << 0));
+		is_flag_zero(is_set == false);
+		is_flag_subtract(false);
+		is_flag_half_carry(true);
+		_ticks += 16;
+	}
+	void opcb_bit_1_a() {
+		bool is_set = is_bit_set(_a, (1 << 1));
+		is_flag_zero(is_set == false);
+		is_flag_subtract(false);
+		is_flag_half_carry(true);
+		_ticks += 8;
+	}
+	void opcb_bit_1_b() {
+		bool is_set = is_bit_set(_b, (1 << 1));
+		is_flag_zero(is_set == false);
+		is_flag_subtract(false);
+		is_flag_half_carry(true);
+		_ticks += 8;
+	}
+	void opcb_bit_1_c() {
+		bool is_set = is_bit_set(_c, (1 << 1));
+		is_flag_zero(is_set == false);
+		is_flag_subtract(false);
+		is_flag_half_carry(true);
+		_ticks += 8;
+	}
+	void opcb_bit_1_d() {
+		bool is_set = is_bit_set(_d, (1 << 1));
+		is_flag_zero(is_set == false);
+		is_flag_subtract(false);
+		is_flag_half_carry(true);
+		_ticks += 8;
+	}
+	void opcb_bit_1_e() {
+		bool is_set = is_bit_set(_e, (1 << 1));
+		is_flag_zero(is_set == false);
+		is_flag_subtract(false);
+		is_flag_half_carry(true);
+		_ticks += 8;
+	}
+	void opcb_bit_1_h() {
+		bool is_set = is_bit_set(_h, (1 << 1));
+		is_flag_zero(is_set == false);
+		is_flag_subtract(false);
+		is_flag_half_carry(true);
+		_ticks += 8;
+	}
+	void opcb_bit_1_l() {
+		bool is_set = is_bit_set(_l, (1 << 1));
+		is_flag_zero(is_set == false);
+		is_flag_subtract(false);
+		is_flag_half_carry(true);
+		_ticks += 8;
+	}
+	void opcb_bit_1_addr_hl() {
+		u8 n = read_u8();
+		bool is_set = is_bit_set(n, (1 << 1));
+		is_flag_zero(is_set == false);
+		is_flag_subtract(false);
+		is_flag_half_carry(true);
+		_ticks += 16;
+	}
+	void opcb_bit_2_a() {
+		bool is_set = is_bit_set(_a, (1 << 2));
+		is_flag_zero(is_set == false);
+		is_flag_subtract(false);
+		is_flag_half_carry(true);
+		_ticks += 8;
+	}
+	void opcb_bit_2_b() {
+		bool is_set = is_bit_set(_b, (1 << 2));
+		is_flag_zero(is_set == false);
+		is_flag_subtract(false);
+		is_flag_half_carry(true);
+		_ticks += 8;
+	}
+	void opcb_bit_2_c() {
+		bool is_set = is_bit_set(_c, (1 << 2));
+		is_flag_zero(is_set == false);
+		is_flag_subtract(false);
+		is_flag_half_carry(true);
+		_ticks += 8;
+	}
+	void opcb_bit_2_d() {
+		bool is_set = is_bit_set(_d, (1 << 2));
+		is_flag_zero(is_set == false);
+		is_flag_subtract(false);
+		is_flag_half_carry(true);
+		_ticks += 8;
+	}
+	void opcb_bit_2_e() {
+		bool is_set = is_bit_set(_e, (1 << 2));
+		is_flag_zero(is_set == false);
+		is_flag_subtract(false);
+		is_flag_half_carry(true);
+		_ticks += 8;
+	}
+	void opcb_bit_2_h() {
+		bool is_set = is_bit_set(_h, (1 << 2));
+		is_flag_zero(is_set == false);
+		is_flag_subtract(false);
+		is_flag_half_carry(true);
+		_ticks += 8;
+	}
+	void opcb_bit_2_l() {
+		bool is_set = is_bit_set(_l, (1 << 2));
+		is_flag_zero(is_set == false);
+		is_flag_subtract(false);
+		is_flag_half_carry(true);
+		_ticks += 8;
+	}
+	void opcb_bit_2_addr_hl() {
+		u8 n = read_u8();
+		bool is_set = is_bit_set(n, (1 << 2));
+		is_flag_zero(is_set == false);
+		is_flag_subtract(false);
+		is_flag_half_carry(true);
+		_ticks += 16;
+	}
+
+	void opcb_bit_3_a() {
+		bool is_set = is_bit_set(_a, (1 << 3));
+		is_flag_zero(is_set == false);
+		is_flag_subtract(false);
+		is_flag_half_carry(true);
+		_ticks += 8;
+	}
+	void opcb_bit_3_b() {
+		bool is_set = is_bit_set(_b, (1 << 3));
+		is_flag_zero(is_set == false);
+		is_flag_subtract(false);
+		is_flag_half_carry(true);
+		_ticks += 8;
+	}
+	void opcb_bit_3_c() {
+		bool is_set = is_bit_set(_c, (1 << 3));
+		is_flag_zero(is_set == false);
+		is_flag_subtract(false);
+		is_flag_half_carry(true);
+		_ticks += 8;
+	}
+	void opcb_bit_3_d() {
+		bool is_set = is_bit_set(_d, (1 << 3));
+		is_flag_zero(is_set == false);
+		is_flag_subtract(false);
+		is_flag_half_carry(true);
+		_ticks += 8;
+	}
+	void opcb_bit_3_e() {
+		bool is_set = is_bit_set(_e, (1 << 3));
+		is_flag_zero(is_set == false);
+		is_flag_subtract(false);
+		is_flag_half_carry(true);
+		_ticks += 8;
+	}
+	void opcb_bit_3_h() {
+		bool is_set = is_bit_set(_h, (1 << 3));
+		is_flag_zero(is_set == false);
+		is_flag_subtract(false);
+		is_flag_half_carry(true);
+		_ticks += 8;
+	}
+	void opcb_bit_3_l() {
+		bool is_set = is_bit_set(_l, (1 << 3));
+		is_flag_zero(is_set == false);
+		is_flag_subtract(false);
+		is_flag_half_carry(true);
+		_ticks += 8;
+	}
+	void opcb_bit_3_addr_hl() {
+		u8 n = read_u8();
+		bool is_set = is_bit_set(n, (1 << 3));
+		is_flag_zero(is_set == false);
+		is_flag_subtract(false);
+		is_flag_half_carry(true);
+		_ticks += 16;
+	}
+
+	void opcb_bit_4_a() {
+		bool is_set = is_bit_set(_a, (1 << 4));
+		is_flag_zero(is_set == false);
+		is_flag_subtract(false);
+		is_flag_half_carry(true);
+		_ticks += 8;
+	}
+	void opcb_bit_4_b() {
+		bool is_set = is_bit_set(_b, (1 << 4));
+		is_flag_zero(is_set == false);
+		is_flag_subtract(false);
+		is_flag_half_carry(true);
+		_ticks += 8;
+	}
+	void opcb_bit_4_c() {
+		bool is_set = is_bit_set(_c, (1 << 4));
+		is_flag_zero(is_set == false);
+		is_flag_subtract(false);
+		is_flag_half_carry(true);
+		_ticks += 8;
+	}
+	void opcb_bit_4_d() {
+		bool is_set = is_bit_set(_d, (1 << 4));
+		is_flag_zero(is_set == false);
+		is_flag_subtract(false);
+		is_flag_half_carry(true);
+		_ticks += 8;
+	}
+	void opcb_bit_4_e() {
+		bool is_set = is_bit_set(_e, (1 << 4));
+		is_flag_zero(is_set == false);
+		is_flag_subtract(false);
+		is_flag_half_carry(true);
+		_ticks += 8;
+	}
+	void opcb_bit_4_h() {
+		bool is_set = is_bit_set(_h, (1 << 4));
+		is_flag_zero(is_set == false);
+		is_flag_subtract(false);
+		is_flag_half_carry(true);
+		_ticks += 8;
+	}
+	void opcb_bit_4_l() {
+		bool is_set = is_bit_set(_l, (1 << 4));
+		is_flag_zero(is_set == false);
+		is_flag_subtract(false);
+		is_flag_half_carry(true);
+		_ticks += 8;
+	}
+	void opcb_bit_4_addr_hl() {
+		u8 n = read_u8();
+		bool is_set = is_bit_set(n, (1 << 4));
+		is_flag_zero(is_set == false);
+		is_flag_subtract(false);
+		is_flag_half_carry(true);
+		_ticks += 16;
+	}
+
+	void opcb_bit_5_a() {
+		bool is_set = is_bit_set(_a, (1 << 5));
+		is_flag_zero(is_set == false);
+		is_flag_subtract(false);
+		is_flag_half_carry(true);
+		_ticks += 8;
+	}
+	void opcb_bit_5_b() {
+		bool is_set = is_bit_set(_b, (1 << 5));
+		is_flag_zero(is_set == false);
+		is_flag_subtract(false);
+		is_flag_half_carry(true);
+		_ticks += 8;
+	}
+	void opcb_bit_5_c() {
+		bool is_set = is_bit_set(_c, (1 << 5));
+		is_flag_zero(is_set == false);
+		is_flag_subtract(false);
+		is_flag_half_carry(true);
+		_ticks += 8;
+	}
+	void opcb_bit_5_d() {
+		bool is_set = is_bit_set(_d, (1 << 5));
+		is_flag_zero(is_set == false);
+		is_flag_subtract(false);
+		is_flag_half_carry(true);
+		_ticks += 8;
+	}
+	void opcb_bit_5_e() {
+		bool is_set = is_bit_set(_e, (1 << 5));
+		is_flag_zero(is_set == false);
+		is_flag_subtract(false);
+		is_flag_half_carry(true);
+		_ticks += 8;
+	}
+	void opcb_bit_5_h() {
+		bool is_set = is_bit_set(_h, (1 << 5));
+		is_flag_zero(is_set == false);
+		is_flag_subtract(false);
+		is_flag_half_carry(true);
+		_ticks += 8;
+	}
+	void opcb_bit_5_l() {
+		bool is_set = is_bit_set(_l, (1 << 5));
+		is_flag_zero(is_set == false);
+		is_flag_subtract(false);
+		is_flag_half_carry(true);
+		_ticks += 8;
+	}
+	void opcb_bit_5_addr_hl() {
+		u8 n = read_u8();
+		bool is_set = is_bit_set(n, (1 << 5));
+		is_flag_zero(is_set == false);
+		is_flag_subtract(false);
+		is_flag_half_carry(true);
+		_ticks += 16;
+	}
+
+	void opcb_bit_6_a() {
+		bool is_set = is_bit_set(_a, (1 << 6));
+		is_flag_zero(is_set == false);
+		is_flag_subtract(false);
+		is_flag_half_carry(true);
+		_ticks += 8;
+	}
+	void opcb_bit_6_b() {
+		bool is_set = is_bit_set(_b, (1 << 6));
+		is_flag_zero(is_set == false);
+		is_flag_subtract(false);
+		is_flag_half_carry(true);
+		_ticks += 8;
+	}
+	void opcb_bit_6_c() {
+		bool is_set = is_bit_set(_c, (1 << 6));
+		is_flag_zero(is_set == false);
+		is_flag_subtract(false);
+		is_flag_half_carry(true);
+		_ticks += 8;
+	}
+	void opcb_bit_6_d() {
+		bool is_set = is_bit_set(_d, (1 << 6));
+		is_flag_zero(is_set == false);
+		is_flag_subtract(false);
+		is_flag_half_carry(true);
+		_ticks += 8;
+	}
+	void opcb_bit_6_e() {
+		bool is_set = is_bit_set(_e, (1 << 6));
+		is_flag_zero(is_set == false);
+		is_flag_subtract(false);
+		is_flag_half_carry(true);
+		_ticks += 8;
+	}
+	void opcb_bit_6_h() {
+		bool is_set = is_bit_set(_h, (1 << 6));
+		is_flag_zero(is_set == false);
+		is_flag_subtract(false);
+		is_flag_half_carry(true);
+		_ticks += 8;
+	}
+	void opcb_bit_6_l() {
+		bool is_set = is_bit_set(_l, (1 << 6));
+		is_flag_zero(is_set == false);
+		is_flag_subtract(false);
+		is_flag_half_carry(true);
+		_ticks += 8;
+	}
+	void opcb_bit_6_addr_hl() {
+		u8 n = read_u8();
+		bool is_set = is_bit_set(n, (1 << 6));
+		is_flag_zero(is_set == false);
+		is_flag_subtract(false);
+		is_flag_half_carry(true);
+		_ticks += 16;
+	}
+
+	void opcb_bit_7_a() {
+		bool is_set = is_bit_set(_a, (1 << 7));
+		is_flag_zero(is_set == false);
+		is_flag_subtract(false);
+		is_flag_half_carry(true);
+		_ticks += 8;
+	}
+	void opcb_bit_7_b() {
+		bool is_set = is_bit_set(_b, (1 << 7));
+		is_flag_zero(is_set == false);
+		is_flag_subtract(false);
+		is_flag_half_carry(true);
+		_ticks += 8;
+	}
+	void opcb_bit_7_c() {
+		bool is_set = is_bit_set(_c, (1 << 7));
+		is_flag_zero(is_set == false);
+		is_flag_subtract(false);
+		is_flag_half_carry(true);
+		_ticks += 8;
+	}
+	void opcb_bit_7_d() {
+		bool is_set = is_bit_set(_d, (1 << 7));
+		is_flag_zero(is_set == false);
+		is_flag_subtract(false);
+		is_flag_half_carry(true);
+		_ticks += 8;
+	}
+	void opcb_bit_7_e() {
+		bool is_set = is_bit_set(_e, (1 << 7));
+		is_flag_zero(is_set == false);
+		is_flag_subtract(false);
+		is_flag_half_carry(true);
+		_ticks += 8;
+	}
+	void opcb_bit_7_h() {
+		bool is_set = is_bit_set(_h, (1 << 7));
+		is_flag_zero(is_set == false);
+		is_flag_subtract(false);
+		is_flag_half_carry(true);
+		_ticks += 8;
+	}
+	void opcb_bit_7_l() {
+		bool is_set = is_bit_set(_l, (1 << 7));
+		is_flag_zero(is_set == false);
+		is_flag_subtract(false);
+		is_flag_half_carry(true);
+		_ticks += 8;
+	}
+	void opcb_bit_7_addr_hl() {
+		u8 n = read_u8();
+		bool is_set = is_bit_set(n, (1 << 7));
+		is_flag_zero(is_set == false);
+		is_flag_subtract(false);
+		is_flag_half_carry(true);
+		_ticks += 16;
+	}
 
 
 
-		// 0
+
+
+
+
+
+
+
+	void opcb_rlc_a() {}
 	void opcb_rlc_b() {}
 	void opcb_rlc_c() {}
 	void opcb_rlc_d() {}
@@ -1652,7 +2122,10 @@ class CPU {
 	void opcb_rlc_h() {}
 	void opcb_rlc_l() {}
 	void opcb_rlc_hl() {}
-	void opcb_rlc_a() {}
+
+
+		// 0
+	void opcb_rrc_a() {}
 	void opcb_rrc_b() {}
 	void opcb_rrc_c() {}
 	void opcb_rrc_d() {}
@@ -1660,7 +2133,6 @@ class CPU {
 	void opcb_rrc_h() {}
 	void opcb_rrc_l() {}
 	void opcb_rrc_hl() {}
-	void opcb_rrc_a() {}
 		// 1
 	void opcb_rl_b() {}
 	void opcb_rl_c() {}
@@ -1712,74 +2184,6 @@ class CPU {
 	void opcb_srl_l() {}
 	void opcb_srl_hl() {}
 	void opcb_srl_a() {}
-		// 4
-	void opcb_bit_0_b() {}
-	void opcb_bit_0_c() {}
-	void opcb_bit_0_d() {}
-	void opcb_bit_0_e() {}
-	void opcb_bit_0_h() {}
-	void opcb_bit_0_l() {}
-	void opcb_bit_0_hl() {}
-	void opcb_bit_0_a() {}
-	void opcb_bit_1_b() {}
-	void opcb_bit_1_c() {}
-	void opcb_bit_1_d() {}
-	void opcb_bit_1_e() {}
-	void opcb_bit_1_h() {}
-	void opcb_bit_1_l() {}
-	void opcb_bit_1_hl() {}
-	void opcb_bit_1_a() {}
-		// 5
-	void opcb_bit_2_b() {}
-	void opcb_bit_2_c() {}
-	void opcb_bit_2_d() {}
-	void opcb_bit_2_e() {}
-	void opcb_bit_2_h() {}
-	void opcb_bit_2_l() {}
-	void opcb_bit_2_hl() {}
-	void opcb_bit_2_a() {}
-	void opcb_bit_3_b() {}
-	void opcb_bit_3_c() {}
-	void opcb_bit_3_d() {}
-	void opcb_bit_3_e() {}
-	void opcb_bit_3_h() {}
-	void opcb_bit_3_l() {}
-	void opcb_bit_3_hl() {}
-	void opcb_bit_3_a() {}
-		// 6
-	void opcb_bit_4_b() {}
-	void opcb_bit_4_c() {}
-	void opcb_bit_4_d() {}
-	void opcb_bit_4_e() {}
-	void opcb_bit_4_h() {}
-	void opcb_bit_4_l() {}
-	void opcb_bit_4_hl() {}
-	void opcb_bit_4_a() {}
-	void opcb_bit_5_b() {}
-	void opcb_bit_5_c() {}
-	void opcb_bit_5_d() {}
-	void opcb_bit_5_e() {}
-	void opcb_bit_5_h() {}
-	void opcb_bit_5_l() {}
-	void opcb_bit_5_hl() {}
-	void opcb_bit_5_a() {}
-		// 7
-	void opcb_bit_6_b() {}
-	void opcb_bit_6_c() {}
-	void opcb_bit_6_d() {}
-	void opcb_bit_6_e() {}
-	void opcb_bit_6_h() {}
-	void opcb_bit_6_l() {}
-	void opcb_bit_6_hl() {}
-	void opcb_bit_6_a() {}
-	void opcb_bit_7_b() {}
-	void opcb_bit_7_c() {}
-	void opcb_bit_7_d() {}
-	void opcb_bit_7_e() {}
-	void opcb_bit_7_h() {}
-	void opcb_bit_7_l() {}
-	void opcb_bit_7_hl() {}
-	void opcb_bit_7_a() {}
 		// 8
 	void opcb_res_0_b() {}
 	void opcb_res_0_c() {}
