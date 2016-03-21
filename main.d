@@ -2105,8 +2105,71 @@ class CPU {
 		_ticks += 16;
 	}
 
-
-
+	// SET
+	void opcb_set_0_a() { set_bit(_a, 0, true); _ticks += 8; }
+	void opcb_set_0_b() { set_bit(_b, 0, true); _ticks += 8; }
+	void opcb_set_0_c() { set_bit(_c, 0, true); _ticks += 8; }
+	void opcb_set_0_d() { set_bit(_d, 0, true); _ticks += 8; }
+	void opcb_set_0_e() { set_bit(_e, 0, true); _ticks += 8; }
+	void opcb_set_0_h() { set_bit(_h, 0, true); _ticks += 8; }
+	void opcb_set_0_l() { set_bit(_l, 0, true); _ticks += 8; }
+	void opcb_set_0_addr_hl() { u8 n = _memory[_hl]; set_bit(n, 0, true); _memory[_hl] = n; _ticks += 16; }
+	void opcb_set_1_a() { set_bit(_a, 1, true); _ticks += 8; }
+	void opcb_set_1_b() { set_bit(_b, 1, true); _ticks += 8; }
+	void opcb_set_1_c() { set_bit(_c, 1, true); _ticks += 8; }
+	void opcb_set_1_d() { set_bit(_d, 1, true); _ticks += 8; }
+	void opcb_set_1_e() { set_bit(_e, 1, true); _ticks += 8; }
+	void opcb_set_1_h() { set_bit(_h, 1, true); _ticks += 8; }
+	void opcb_set_1_l() { set_bit(_l, 1, true); _ticks += 8; }
+	void opcb_set_1_addr_hl() { u8 n = _memory[_hl]; set_bit(n, 1, true); _memory[_hl] = n; _ticks += 16; }
+	void opcb_set_2_a() { set_bit(_a, 2, true); _ticks += 8; }
+	void opcb_set_2_b() { set_bit(_b, 2, true); _ticks += 8; }
+	void opcb_set_2_c() { set_bit(_c, 2, true); _ticks += 8; }
+	void opcb_set_2_d() { set_bit(_d, 2, true); _ticks += 8; }
+	void opcb_set_2_e() { set_bit(_e, 2, true); _ticks += 8; }
+	void opcb_set_2_h() { set_bit(_h, 2, true); _ticks += 8; }
+	void opcb_set_2_l() { set_bit(_l, 2, true); _ticks += 8; }
+	void opcb_set_2_addr_hl() { u8 n = _memory[_hl]; set_bit(n, 2, true); _memory[_hl] = n; _ticks += 16; }
+	void opcb_set_3_a() { set_bit(_a, 3, true); _ticks += 8; }
+	void opcb_set_3_b() { set_bit(_b, 3, true); _ticks += 8; }
+	void opcb_set_3_c() { set_bit(_c, 3, true); _ticks += 8; }
+	void opcb_set_3_d() { set_bit(_d, 3, true); _ticks += 8; }
+	void opcb_set_3_e() { set_bit(_e, 3, true); _ticks += 8; }
+	void opcb_set_3_h() { set_bit(_h, 3, true); _ticks += 8; }
+	void opcb_set_3_l() { set_bit(_l, 3, true); _ticks += 8; }
+	void opcb_set_3_addr_hl() { u8 n = _memory[_hl]; set_bit(n, 3, true); _memory[_hl] = n; _ticks += 16; }
+	void opcb_set_4_a() { set_bit(_a, 4, true); _ticks += 8; }
+	void opcb_set_4_b() { set_bit(_b, 4, true); _ticks += 8; }
+	void opcb_set_4_c() { set_bit(_c, 4, true); _ticks += 8; }
+	void opcb_set_4_d() { set_bit(_d, 4, true); _ticks += 8; }
+	void opcb_set_4_e() { set_bit(_e, 4, true); _ticks += 8; }
+	void opcb_set_4_h() { set_bit(_h, 4, true); _ticks += 8; }
+	void opcb_set_4_l() { set_bit(_l, 4, true); _ticks += 8; }
+	void opcb_set_4_addr_hl() { u8 n = _memory[_hl]; set_bit(n, 4, true); _memory[_hl] = n; _ticks += 16; }
+	void opcb_set_5_a() { set_bit(_a, 5, true); _ticks += 8; }
+	void opcb_set_5_b() { set_bit(_b, 5, true); _ticks += 8; }
+	void opcb_set_5_c() { set_bit(_c, 5, true); _ticks += 8; }
+	void opcb_set_5_d() { set_bit(_d, 5, true); _ticks += 8; }
+	void opcb_set_5_e() { set_bit(_e, 5, true); _ticks += 8; }
+	void opcb_set_5_h() { set_bit(_h, 5, true); _ticks += 8; }
+	void opcb_set_5_l() { set_bit(_l, 5, true); _ticks += 8; }
+	void opcb_set_5_addr_hl() { u8 n = _memory[_hl]; set_bit(n, 5, true); _memory[_hl] = n; _ticks += 16; }
+	void opcb_set_6_a() { set_bit(_a, 6, true); _ticks += 8; }
+	void opcb_set_6_b() { set_bit(_b, 6, true); _ticks += 8; }
+	void opcb_set_6_c() { set_bit(_c, 6, true); _ticks += 8; }
+	void opcb_set_6_d() { set_bit(_d, 6, true); _ticks += 8; }
+	void opcb_set_6_e() { set_bit(_e, 6, true); _ticks += 8; }
+	void opcb_set_6_h() { set_bit(_h, 6, true); _ticks += 8; }
+	void opcb_set_6_l() { set_bit(_l, 6, true); _ticks += 8; }
+	void opcb_set_6_addr_hl() { u8 n = _memory[_hl]; set_bit(n, 6, true); _memory[_hl] = n; _ticks += 16; }
+	void opcb_set_7_a() { set_bit(_a, 7, true); _ticks += 8; }
+	void opcb_set_7_b() { set_bit(_b, 7, true); _ticks += 8; }
+	void opcb_set_7_c() { set_bit(_c, 7, true); _ticks += 8; }
+	void opcb_set_7_d() { set_bit(_d, 7, true); _ticks += 8; }
+	void opcb_set_7_e() { set_bit(_e, 7, true); _ticks += 8; }
+	void opcb_set_7_h() { set_bit(_h, 7, true); _ticks += 8; }
+	void opcb_set_7_l() { set_bit(_l, 7, true); _ticks += 8; }
+	void opcb_set_7_addr_hl() { u8 n = _memory[_hl]; set_bit(n, 7, true); _memory[_hl] = n; _ticks += 16; }
 
 
 
@@ -2252,74 +2315,6 @@ class CPU {
 	void opcb_res_7_l() {}
 	void opcb_res_7_addr_hl() {}
 	void opcb_res_7_a() {}
-		// c
-	void opcb_set_0_b() {}
-	void opcb_set_0_c() {}
-	void opcb_set_0_d() {}
-	void opcb_set_0_e() {}
-	void opcb_set_0_h() {}
-	void opcb_set_0_l() {}
-	void opcb_set_0_addr_hl() {}
-	void opcb_set_0_a() {}
-	void opcb_set_1_b() {}
-	void opcb_set_1_c() {}
-	void opcb_set_1_d() {}
-	void opcb_set_1_e() {}
-	void opcb_set_1_h() {}
-	void opcb_set_1_l() {}
-	void opcb_set_1_addr_hl() {}
-	void opcb_set_1_a() {}
-// d
-	void opcb_set_2_b() {}
-	void opcb_set_2_c() {}
-	void opcb_set_2_d() {}
-	void opcb_set_2_e() {}
-	void opcb_set_2_h() {}
-	void opcb_set_2_l() {}
-	void opcb_set_2_addr_hl() {}
-	void opcb_set_2_a() {}
-	void opcb_set_3_b() {}
-	void opcb_set_3_c() {}
-	void opcb_set_3_d() {}
-	void opcb_set_3_e() {}
-	void opcb_set_3_h() {}
-	void opcb_set_3_l() {}
-	void opcb_set_3_addr_hl() {}
-	void opcb_set_3_a() {}
-		// e
-	void opcb_set_4_b() {}
-	void opcb_set_4_c() {}
-	void opcb_set_4_d() {}
-	void opcb_set_4_e() {}
-	void opcb_set_4_h() {}
-	void opcb_set_4_l() {}
-	void opcb_set_4_addr_hl() {}
-	void opcb_set_4_a() {}
-	void opcb_set_5_b() {}
-	void opcb_set_5_c() {}
-	void opcb_set_5_d() {}
-	void opcb_set_5_e() {}
-	void opcb_set_5_h() {}
-	void opcb_set_5_l() {}
-	void opcb_set_5_addr_hl() {}
-	void opcb_set_5_a() {}
-	// F
-	void opcb_set_6_b() {}
-	void opcb_set_6_c() {}
-	void opcb_set_6_d() {}
-	void opcb_set_6_e() {}
-	void opcb_set_6_h() {}
-	void opcb_set_6_l() {}
-	void opcb_set_6_addr_hl() {}
-	void opcb_set_6_a() {}
-	void opcb_set_7_b() {}
-	void opcb_set_7_c() {}
-	void opcb_set_7_d() {}
-	void opcb_set_7_e() {}
-	void opcb_set_7_h() {}
-	void opcb_set_7_l() {}
-	void opcb_set_7_addr_hl() {}
-	void opcb_set_7_a() {}
 }
 
 immutable u32 HEADER_SIZE = 16;
