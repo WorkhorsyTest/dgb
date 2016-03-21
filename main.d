@@ -2237,7 +2237,88 @@ class CPU {
 	void opcb_res_7_l() { set_bit(_l, 7, false); _ticks += 8; }
 	void opcb_res_7_addr_hl() { u8 n = _memory[_hl]; set_bit(n, 7, false); _memory[_hl] = n; _ticks += 16; }
 
-
+	// SWAP
+	void opcb_swap_a() {
+		u8 right = cast(u8) (_a << 8);
+		u8 left = cast(u8) (_a >> 8);
+		_a = right | left;
+		is_flag_zero(_a == 0);
+		is_flag_subtract(false);
+		is_flag_half_carry(false);
+		is_flag_carry(false);
+		_ticks += 8;
+	}
+	void opcb_swap_b() {
+		u8 right = cast(u8) (_b << 8);
+		u8 left = cast(u8) (_b >> 8);
+		_b = right | left;
+		is_flag_zero(_a == 0);
+		is_flag_subtract(false);
+		is_flag_half_carry(false);
+		is_flag_carry(false);
+		_ticks += 8;
+	}
+	void opcb_swap_c() {
+		u8 right = cast(u8) (_c << 8);
+		u8 left = cast(u8) (_c >> 8);
+		_c = right | left;
+		is_flag_zero(_a == 0);
+		is_flag_subtract(false);
+		is_flag_half_carry(false);
+		is_flag_carry(false);
+		_ticks += 8;
+	}
+	void opcb_swap_d() {
+		u8 right = cast(u8) (_d << 8);
+		u8 left = cast(u8) (_d >> 8);
+		_d = right | left;
+		is_flag_zero(_a == 0);
+		is_flag_subtract(false);
+		is_flag_half_carry(false);
+		is_flag_carry(false);
+		_ticks += 8;
+	}
+	void opcb_swap_e() {
+		u8 right = cast(u8) (_e << 8);
+		u8 left = cast(u8) (_e >> 8);
+		_e = right | left;
+		is_flag_zero(_a == 0);
+		is_flag_subtract(false);
+		is_flag_half_carry(false);
+		is_flag_carry(false);
+		_ticks += 8;
+	}
+	void opcb_swap_h() {
+		u8 right = cast(u8) (_h << 8);
+		u8 left = cast(u8) (_h >> 8);
+		_h = right | left;
+		is_flag_zero(_a == 0);
+		is_flag_subtract(false);
+		is_flag_half_carry(false);
+		is_flag_carry(false);
+		_ticks += 8;
+	}
+	void opcb_swap_l() {
+		u8 right = cast(u8) (_l << 8);
+		u8 left = cast(u8) (_l >> 8);
+		_l = right | left;
+		is_flag_zero(_a == 0);
+		is_flag_subtract(false);
+		is_flag_half_carry(false);
+		is_flag_carry(false);
+		_ticks += 8;
+	}
+	void opcb_swap_addr_hl() {
+		u8 n = _memory[_hl];
+		u8 right = cast(u8) (n << 8);
+		u8 left = cast(u8) (n >> 8);
+		_memory[_hl] = right | left;
+		is_flag_zero(_a == 0);
+		is_flag_subtract(false);
+		is_flag_half_carry(false);
+		is_flag_carry(false);
+		_ticks += 16;
+	}
 
 
 
@@ -2296,14 +2377,6 @@ class CPU {
 	void opcb_sra_addr_hl() {}
 	void opcb_sra_a() {}
 		// 3
-	void opcb_swap_b() {}
-	void opcb_swap_c() {}
-	void opcb_swap_d() {}
-	void opcb_swap_e() {}
-	void opcb_swap_h() {}
-	void opcb_swap_l() {}
-	void opcb_swap_addr_hl() {}
-	void opcb_swap_a() {}
 	void opcb_srl_b() {}
 	void opcb_srl_c() {}
 	void opcb_srl_d() {}
