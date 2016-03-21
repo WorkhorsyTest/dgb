@@ -280,6 +280,9 @@ class CPU {
 	void op_stop() {}
 	void op_halt() {}
 	void op_xx() {}
+	void op_di() {}
+	void op_ei() {}
+	void op_reti() {}
 
 	// LD n, n
 	void op_ld_a_a() { _a = _a; _ticks += 4; }
@@ -1591,15 +1594,52 @@ class CPU {
 		_ticks += 12;
 	}
 
-	void op_di() {}
-	void op_ei() {}
+	void op_rr_a() {
+		u8 old_carry = is_flag_carry ? 0x80 : 0x00;
+		is_flag_carry((_a & 0xFFFE) > 0);
+		_a = _a >> 1;
+		_a |= old_carry;
+		is_flag_zero(_a == 0);
+		is_flag_subtract(false);
+		is_flag_half_carry(false);
+		_ticks += 8;
+	}
+	void op_rl_a() {
+		u8 old_carry = is_flag_carry ? 0x01 : 0x00;
+		is_flag_carry((_a & 0xEFFF) > 0);
+		_a = cast(u8) (_a << 1);
+		_a |= old_carry;
+		is_flag_zero(_a == 0);
+		is_flag_subtract(false);
+		is_flag_half_carry(false);
+		_ticks += 4;
+	}
+	// http://www.zilog.com/docs/z80/um0080.pdf
+	void op_rlc_a() {
+		u8 old_bit_7 = _a & 0xEFFF;
+		_a = cast(u8) (_a << 1);
+		_a |= old_bit_7;
+		is_flag_carry(old_bit_7 > 0);
+		is_flag_zero(_a == 0);
+		is_flag_subtract(false);
+		is_flag_half_carry(false);
+		_ticks += 4;
+	}
+	void op_rrc_a() {
+		u8 old_bit_0 = _a & 0xFFFE;
+		_a = cast(u8) (_a >> 1);
+		_a |= old_bit_0;
+		is_flag_carry(old_bit_0 > 0);
+		is_flag_zero(_a == 0);
+		is_flag_subtract(false);
+		is_flag_half_carry(false);
+		_ticks += 4;
+	}
 
-	void op_ext_ops() {}
-	void op_rl_a() {}
-	void op_rr_a() {}
-	void op_rlc_a() {}
-	void op_rrc_a() {}
-	void op_reti() {}
+	void op_ext_ops() {
+		u16 i = read_u16();
+		opcbs[i]();
+	}
 
 
 
