@@ -61,10 +61,10 @@ class CPU {
 	bool is_flag_half_carry() { return is_bit_set(_f, 5); }
 	bool is_flag_carry() { return is_bit_set(_f, 4); }
 
-	void is_flag_zero(bool is_set) { set_bit(_f, (1 << 7), is_set); }
-	void is_flag_subtract(bool is_set) { set_bit(_f, (1 << 6), is_set); }
-	void is_flag_half_carry(bool is_set) { set_bit(_f, (1 << 5), is_set); }
-	void is_flag_carry(bool is_set) { set_bit(_f, (1 << 4), is_set); }
+	void is_flag_zero(bool is_set) { set_bit(_f, 7, is_set); }
+	void is_flag_subtract(bool is_set) { set_bit(_f, 6, is_set); }
+	void is_flag_half_carry(bool is_set) { set_bit(_f, 5, is_set); }
+	void is_flag_carry(bool is_set) { set_bit(_f, 4, is_set); }
 
 	u8 read_u8() {
 		u8 data = _memory[_pc];
