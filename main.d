@@ -56,10 +56,10 @@ class CPU {
 	void _de(u16 value) { u16_to_u8s(value, _d, _e); }
 	void _hl(u16 value) { u16_to_u8s(value, _h, _l); }
 
-	bool is_flag_zero() { return is_bit_set(_f, (1 << 7)); }
-	bool is_flag_subtract() { return is_bit_set(_f, (1 << 6)); }
-	bool is_flag_half_carry() { return is_bit_set(_f, (1 << 5)); }
-	bool is_flag_carry() { return is_bit_set(_f, (1 << 4)); }
+	bool is_flag_zero() { return is_bit_set(_f, 7); }
+	bool is_flag_subtract() { return is_bit_set(_f, 6); }
+	bool is_flag_half_carry() { return is_bit_set(_f, 5); }
+	bool is_flag_carry() { return is_bit_set(_f, 4); }
 
 	void is_flag_zero(bool is_set) { set_bit(_f, (1 << 7), is_set); }
 	void is_flag_subtract(bool is_set) { set_bit(_f, (1 << 6), is_set); }
@@ -1644,49 +1644,49 @@ class CPU {
 
 	// BIT
 	void opcb_bit_0_a() {
-		bool is_set = is_bit_set(_a, (1 << 0));
+		bool is_set = is_bit_set(_a, 0);
 		is_flag_zero(is_set == false);
 		is_flag_subtract(false);
 		is_flag_half_carry(true);
 		_ticks += 8;
 	}
 	void opcb_bit_0_b() {
-		bool is_set = is_bit_set(_b, (1 << 0));
+		bool is_set = is_bit_set(_b, 0);
 		is_flag_zero(is_set == false);
 		is_flag_subtract(false);
 		is_flag_half_carry(true);
 		_ticks += 8;
 	}
 	void opcb_bit_0_c() {
-		bool is_set = is_bit_set(_c, (1 << 0));
+		bool is_set = is_bit_set(_c, 0);
 		is_flag_zero(is_set == false);
 		is_flag_subtract(false);
 		is_flag_half_carry(true);
 		_ticks += 8;
 	}
 	void opcb_bit_0_d() {
-		bool is_set = is_bit_set(_d, (1 << 0));
+		bool is_set = is_bit_set(_d, 0);
 		is_flag_zero(is_set == false);
 		is_flag_subtract(false);
 		is_flag_half_carry(true);
 		_ticks += 8;
 	}
 	void opcb_bit_0_e() {
-		bool is_set = is_bit_set(_e, (1 << 0));
+		bool is_set = is_bit_set(_e, 0);
 		is_flag_zero(is_set == false);
 		is_flag_subtract(false);
 		is_flag_half_carry(true);
 		_ticks += 8;
 	}
 	void opcb_bit_0_h() {
-		bool is_set = is_bit_set(_h, (1 << 0));
+		bool is_set = is_bit_set(_h, 0);
 		is_flag_zero(is_set == false);
 		is_flag_subtract(false);
 		is_flag_half_carry(true);
 		_ticks += 8;
 	}
 	void opcb_bit_0_l() {
-		bool is_set = is_bit_set(_l, (1 << 0));
+		bool is_set = is_bit_set(_l, 0);
 		is_flag_zero(is_set == false);
 		is_flag_subtract(false);
 		is_flag_half_carry(true);
@@ -1694,56 +1694,56 @@ class CPU {
 	}
 	void opcb_bit_0_addr_hl() {
 		u8 n = _memory[_hl];
-		bool is_set = is_bit_set(n, (1 << 0));
+		bool is_set = is_bit_set(n, 0);
 		is_flag_zero(is_set == false);
 		is_flag_subtract(false);
 		is_flag_half_carry(true);
 		_ticks += 16;
 	}
 	void opcb_bit_1_a() {
-		bool is_set = is_bit_set(_a, (1 << 1));
+		bool is_set = is_bit_set(_a, 1);
 		is_flag_zero(is_set == false);
 		is_flag_subtract(false);
 		is_flag_half_carry(true);
 		_ticks += 8;
 	}
 	void opcb_bit_1_b() {
-		bool is_set = is_bit_set(_b, (1 << 1));
+		bool is_set = is_bit_set(_b, 1);
 		is_flag_zero(is_set == false);
 		is_flag_subtract(false);
 		is_flag_half_carry(true);
 		_ticks += 8;
 	}
 	void opcb_bit_1_c() {
-		bool is_set = is_bit_set(_c, (1 << 1));
+		bool is_set = is_bit_set(_c, 1);
 		is_flag_zero(is_set == false);
 		is_flag_subtract(false);
 		is_flag_half_carry(true);
 		_ticks += 8;
 	}
 	void opcb_bit_1_d() {
-		bool is_set = is_bit_set(_d, (1 << 1));
+		bool is_set = is_bit_set(_d, 1);
 		is_flag_zero(is_set == false);
 		is_flag_subtract(false);
 		is_flag_half_carry(true);
 		_ticks += 8;
 	}
 	void opcb_bit_1_e() {
-		bool is_set = is_bit_set(_e, (1 << 1));
+		bool is_set = is_bit_set(_e, 1);
 		is_flag_zero(is_set == false);
 		is_flag_subtract(false);
 		is_flag_half_carry(true);
 		_ticks += 8;
 	}
 	void opcb_bit_1_h() {
-		bool is_set = is_bit_set(_h, (1 << 1));
+		bool is_set = is_bit_set(_h, 1);
 		is_flag_zero(is_set == false);
 		is_flag_subtract(false);
 		is_flag_half_carry(true);
 		_ticks += 8;
 	}
 	void opcb_bit_1_l() {
-		bool is_set = is_bit_set(_l, (1 << 1));
+		bool is_set = is_bit_set(_l, 1);
 		is_flag_zero(is_set == false);
 		is_flag_subtract(false);
 		is_flag_half_carry(true);
@@ -1751,56 +1751,56 @@ class CPU {
 	}
 	void opcb_bit_1_addr_hl() {
 		u8 n = _memory[_hl];
-		bool is_set = is_bit_set(n, (1 << 1));
+		bool is_set = is_bit_set(n, 1);
 		is_flag_zero(is_set == false);
 		is_flag_subtract(false);
 		is_flag_half_carry(true);
 		_ticks += 16;
 	}
 	void opcb_bit_2_a() {
-		bool is_set = is_bit_set(_a, (1 << 2));
+		bool is_set = is_bit_set(_a, 2);
 		is_flag_zero(is_set == false);
 		is_flag_subtract(false);
 		is_flag_half_carry(true);
 		_ticks += 8;
 	}
 	void opcb_bit_2_b() {
-		bool is_set = is_bit_set(_b, (1 << 2));
+		bool is_set = is_bit_set(_b, 2);
 		is_flag_zero(is_set == false);
 		is_flag_subtract(false);
 		is_flag_half_carry(true);
 		_ticks += 8;
 	}
 	void opcb_bit_2_c() {
-		bool is_set = is_bit_set(_c, (1 << 2));
+		bool is_set = is_bit_set(_c, 2);
 		is_flag_zero(is_set == false);
 		is_flag_subtract(false);
 		is_flag_half_carry(true);
 		_ticks += 8;
 	}
 	void opcb_bit_2_d() {
-		bool is_set = is_bit_set(_d, (1 << 2));
+		bool is_set = is_bit_set(_d, 2);
 		is_flag_zero(is_set == false);
 		is_flag_subtract(false);
 		is_flag_half_carry(true);
 		_ticks += 8;
 	}
 	void opcb_bit_2_e() {
-		bool is_set = is_bit_set(_e, (1 << 2));
+		bool is_set = is_bit_set(_e, 2);
 		is_flag_zero(is_set == false);
 		is_flag_subtract(false);
 		is_flag_half_carry(true);
 		_ticks += 8;
 	}
 	void opcb_bit_2_h() {
-		bool is_set = is_bit_set(_h, (1 << 2));
+		bool is_set = is_bit_set(_h, 2);
 		is_flag_zero(is_set == false);
 		is_flag_subtract(false);
 		is_flag_half_carry(true);
 		_ticks += 8;
 	}
 	void opcb_bit_2_l() {
-		bool is_set = is_bit_set(_l, (1 << 2));
+		bool is_set = is_bit_set(_l, 2);
 		is_flag_zero(is_set == false);
 		is_flag_subtract(false);
 		is_flag_half_carry(true);
@@ -1808,7 +1808,7 @@ class CPU {
 	}
 	void opcb_bit_2_addr_hl() {
 		u8 n = _memory[_hl];
-		bool is_set = is_bit_set(n, (1 << 2));
+		bool is_set = is_bit_set(n, 2);
 		is_flag_zero(is_set == false);
 		is_flag_subtract(false);
 		is_flag_half_carry(true);
@@ -1816,49 +1816,49 @@ class CPU {
 	}
 
 	void opcb_bit_3_a() {
-		bool is_set = is_bit_set(_a, (1 << 3));
+		bool is_set = is_bit_set(_a, 3);
 		is_flag_zero(is_set == false);
 		is_flag_subtract(false);
 		is_flag_half_carry(true);
 		_ticks += 8;
 	}
 	void opcb_bit_3_b() {
-		bool is_set = is_bit_set(_b, (1 << 3));
+		bool is_set = is_bit_set(_b, 3);
 		is_flag_zero(is_set == false);
 		is_flag_subtract(false);
 		is_flag_half_carry(true);
 		_ticks += 8;
 	}
 	void opcb_bit_3_c() {
-		bool is_set = is_bit_set(_c, (1 << 3));
+		bool is_set = is_bit_set(_c, 3);
 		is_flag_zero(is_set == false);
 		is_flag_subtract(false);
 		is_flag_half_carry(true);
 		_ticks += 8;
 	}
 	void opcb_bit_3_d() {
-		bool is_set = is_bit_set(_d, (1 << 3));
+		bool is_set = is_bit_set(_d, 3);
 		is_flag_zero(is_set == false);
 		is_flag_subtract(false);
 		is_flag_half_carry(true);
 		_ticks += 8;
 	}
 	void opcb_bit_3_e() {
-		bool is_set = is_bit_set(_e, (1 << 3));
+		bool is_set = is_bit_set(_e, 3);
 		is_flag_zero(is_set == false);
 		is_flag_subtract(false);
 		is_flag_half_carry(true);
 		_ticks += 8;
 	}
 	void opcb_bit_3_h() {
-		bool is_set = is_bit_set(_h, (1 << 3));
+		bool is_set = is_bit_set(_h, 3);
 		is_flag_zero(is_set == false);
 		is_flag_subtract(false);
 		is_flag_half_carry(true);
 		_ticks += 8;
 	}
 	void opcb_bit_3_l() {
-		bool is_set = is_bit_set(_l, (1 << 3));
+		bool is_set = is_bit_set(_l, 3);
 		is_flag_zero(is_set == false);
 		is_flag_subtract(false);
 		is_flag_half_carry(true);
@@ -1866,7 +1866,7 @@ class CPU {
 	}
 	void opcb_bit_3_addr_hl() {
 		u8 n = _memory[_hl];
-		bool is_set = is_bit_set(n, (1 << 3));
+		bool is_set = is_bit_set(n, 3);
 		is_flag_zero(is_set == false);
 		is_flag_subtract(false);
 		is_flag_half_carry(true);
@@ -1874,49 +1874,49 @@ class CPU {
 	}
 
 	void opcb_bit_4_a() {
-		bool is_set = is_bit_set(_a, (1 << 4));
+		bool is_set = is_bit_set(_a, 4);
 		is_flag_zero(is_set == false);
 		is_flag_subtract(false);
 		is_flag_half_carry(true);
 		_ticks += 8;
 	}
 	void opcb_bit_4_b() {
-		bool is_set = is_bit_set(_b, (1 << 4));
+		bool is_set = is_bit_set(_b, 4);
 		is_flag_zero(is_set == false);
 		is_flag_subtract(false);
 		is_flag_half_carry(true);
 		_ticks += 8;
 	}
 	void opcb_bit_4_c() {
-		bool is_set = is_bit_set(_c, (1 << 4));
+		bool is_set = is_bit_set(_c, 4);
 		is_flag_zero(is_set == false);
 		is_flag_subtract(false);
 		is_flag_half_carry(true);
 		_ticks += 8;
 	}
 	void opcb_bit_4_d() {
-		bool is_set = is_bit_set(_d, (1 << 4));
+		bool is_set = is_bit_set(_d, 4);
 		is_flag_zero(is_set == false);
 		is_flag_subtract(false);
 		is_flag_half_carry(true);
 		_ticks += 8;
 	}
 	void opcb_bit_4_e() {
-		bool is_set = is_bit_set(_e, (1 << 4));
+		bool is_set = is_bit_set(_e, 4);
 		is_flag_zero(is_set == false);
 		is_flag_subtract(false);
 		is_flag_half_carry(true);
 		_ticks += 8;
 	}
 	void opcb_bit_4_h() {
-		bool is_set = is_bit_set(_h, (1 << 4));
+		bool is_set = is_bit_set(_h, 4);
 		is_flag_zero(is_set == false);
 		is_flag_subtract(false);
 		is_flag_half_carry(true);
 		_ticks += 8;
 	}
 	void opcb_bit_4_l() {
-		bool is_set = is_bit_set(_l, (1 << 4));
+		bool is_set = is_bit_set(_l, 4);
 		is_flag_zero(is_set == false);
 		is_flag_subtract(false);
 		is_flag_half_carry(true);
@@ -1924,7 +1924,7 @@ class CPU {
 	}
 	void opcb_bit_4_addr_hl() {
 		u8 n = _memory[_hl];
-		bool is_set = is_bit_set(n, (1 << 4));
+		bool is_set = is_bit_set(n, 4);
 		is_flag_zero(is_set == false);
 		is_flag_subtract(false);
 		is_flag_half_carry(true);
@@ -1932,49 +1932,49 @@ class CPU {
 	}
 
 	void opcb_bit_5_a() {
-		bool is_set = is_bit_set(_a, (1 << 5));
+		bool is_set = is_bit_set(_a, 5);
 		is_flag_zero(is_set == false);
 		is_flag_subtract(false);
 		is_flag_half_carry(true);
 		_ticks += 8;
 	}
 	void opcb_bit_5_b() {
-		bool is_set = is_bit_set(_b, (1 << 5));
+		bool is_set = is_bit_set(_b, 5);
 		is_flag_zero(is_set == false);
 		is_flag_subtract(false);
 		is_flag_half_carry(true);
 		_ticks += 8;
 	}
 	void opcb_bit_5_c() {
-		bool is_set = is_bit_set(_c, (1 << 5));
+		bool is_set = is_bit_set(_c, 5);
 		is_flag_zero(is_set == false);
 		is_flag_subtract(false);
 		is_flag_half_carry(true);
 		_ticks += 8;
 	}
 	void opcb_bit_5_d() {
-		bool is_set = is_bit_set(_d, (1 << 5));
+		bool is_set = is_bit_set(_d, 5);
 		is_flag_zero(is_set == false);
 		is_flag_subtract(false);
 		is_flag_half_carry(true);
 		_ticks += 8;
 	}
 	void opcb_bit_5_e() {
-		bool is_set = is_bit_set(_e, (1 << 5));
+		bool is_set = is_bit_set(_e, 5);
 		is_flag_zero(is_set == false);
 		is_flag_subtract(false);
 		is_flag_half_carry(true);
 		_ticks += 8;
 	}
 	void opcb_bit_5_h() {
-		bool is_set = is_bit_set(_h, (1 << 5));
+		bool is_set = is_bit_set(_h, 5);
 		is_flag_zero(is_set == false);
 		is_flag_subtract(false);
 		is_flag_half_carry(true);
 		_ticks += 8;
 	}
 	void opcb_bit_5_l() {
-		bool is_set = is_bit_set(_l, (1 << 5));
+		bool is_set = is_bit_set(_l, 5);
 		is_flag_zero(is_set == false);
 		is_flag_subtract(false);
 		is_flag_half_carry(true);
@@ -1982,7 +1982,7 @@ class CPU {
 	}
 	void opcb_bit_5_addr_hl() {
 		u8 n = _memory[_hl];
-		bool is_set = is_bit_set(n, (1 << 5));
+		bool is_set = is_bit_set(n, 5);
 		is_flag_zero(is_set == false);
 		is_flag_subtract(false);
 		is_flag_half_carry(true);
@@ -1990,49 +1990,49 @@ class CPU {
 	}
 
 	void opcb_bit_6_a() {
-		bool is_set = is_bit_set(_a, (1 << 6));
+		bool is_set = is_bit_set(_a, 6);
 		is_flag_zero(is_set == false);
 		is_flag_subtract(false);
 		is_flag_half_carry(true);
 		_ticks += 8;
 	}
 	void opcb_bit_6_b() {
-		bool is_set = is_bit_set(_b, (1 << 6));
+		bool is_set = is_bit_set(_b, 6);
 		is_flag_zero(is_set == false);
 		is_flag_subtract(false);
 		is_flag_half_carry(true);
 		_ticks += 8;
 	}
 	void opcb_bit_6_c() {
-		bool is_set = is_bit_set(_c, (1 << 6));
+		bool is_set = is_bit_set(_c, 6);
 		is_flag_zero(is_set == false);
 		is_flag_subtract(false);
 		is_flag_half_carry(true);
 		_ticks += 8;
 	}
 	void opcb_bit_6_d() {
-		bool is_set = is_bit_set(_d, (1 << 6));
+		bool is_set = is_bit_set(_d, 6);
 		is_flag_zero(is_set == false);
 		is_flag_subtract(false);
 		is_flag_half_carry(true);
 		_ticks += 8;
 	}
 	void opcb_bit_6_e() {
-		bool is_set = is_bit_set(_e, (1 << 6));
+		bool is_set = is_bit_set(_e, 6);
 		is_flag_zero(is_set == false);
 		is_flag_subtract(false);
 		is_flag_half_carry(true);
 		_ticks += 8;
 	}
 	void opcb_bit_6_h() {
-		bool is_set = is_bit_set(_h, (1 << 6));
+		bool is_set = is_bit_set(_h, 6);
 		is_flag_zero(is_set == false);
 		is_flag_subtract(false);
 		is_flag_half_carry(true);
 		_ticks += 8;
 	}
 	void opcb_bit_6_l() {
-		bool is_set = is_bit_set(_l, (1 << 6));
+		bool is_set = is_bit_set(_l, 6);
 		is_flag_zero(is_set == false);
 		is_flag_subtract(false);
 		is_flag_half_carry(true);
@@ -2040,7 +2040,7 @@ class CPU {
 	}
 	void opcb_bit_6_addr_hl() {
 		u8 n = _memory[_hl];
-		bool is_set = is_bit_set(n, (1 << 6));
+		bool is_set = is_bit_set(n, 6);
 		is_flag_zero(is_set == false);
 		is_flag_subtract(false);
 		is_flag_half_carry(true);
@@ -2048,49 +2048,49 @@ class CPU {
 	}
 
 	void opcb_bit_7_a() {
-		bool is_set = is_bit_set(_a, (1 << 7));
+		bool is_set = is_bit_set(_a, 7);
 		is_flag_zero(is_set == false);
 		is_flag_subtract(false);
 		is_flag_half_carry(true);
 		_ticks += 8;
 	}
 	void opcb_bit_7_b() {
-		bool is_set = is_bit_set(_b, (1 << 7));
+		bool is_set = is_bit_set(_b, 7);
 		is_flag_zero(is_set == false);
 		is_flag_subtract(false);
 		is_flag_half_carry(true);
 		_ticks += 8;
 	}
 	void opcb_bit_7_c() {
-		bool is_set = is_bit_set(_c, (1 << 7));
+		bool is_set = is_bit_set(_c, 7);
 		is_flag_zero(is_set == false);
 		is_flag_subtract(false);
 		is_flag_half_carry(true);
 		_ticks += 8;
 	}
 	void opcb_bit_7_d() {
-		bool is_set = is_bit_set(_d, (1 << 7));
+		bool is_set = is_bit_set(_d, 7);
 		is_flag_zero(is_set == false);
 		is_flag_subtract(false);
 		is_flag_half_carry(true);
 		_ticks += 8;
 	}
 	void opcb_bit_7_e() {
-		bool is_set = is_bit_set(_e, (1 << 7));
+		bool is_set = is_bit_set(_e, 7);
 		is_flag_zero(is_set == false);
 		is_flag_subtract(false);
 		is_flag_half_carry(true);
 		_ticks += 8;
 	}
 	void opcb_bit_7_h() {
-		bool is_set = is_bit_set(_h, (1 << 7));
+		bool is_set = is_bit_set(_h, 7);
 		is_flag_zero(is_set == false);
 		is_flag_subtract(false);
 		is_flag_half_carry(true);
 		_ticks += 8;
 	}
 	void opcb_bit_7_l() {
-		bool is_set = is_bit_set(_l, (1 << 7));
+		bool is_set = is_bit_set(_l, 7);
 		is_flag_zero(is_set == false);
 		is_flag_subtract(false);
 		is_flag_half_carry(true);
@@ -2098,7 +2098,7 @@ class CPU {
 	}
 	void opcb_bit_7_addr_hl() {
 		u8 n = _memory[_hl];
-		bool is_set = is_bit_set(n, (1 << 7));
+		bool is_set = is_bit_set(n, 7);
 		is_flag_zero(is_set == false);
 		is_flag_subtract(false);
 		is_flag_half_carry(true);

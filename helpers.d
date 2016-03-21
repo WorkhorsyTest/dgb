@@ -12,7 +12,8 @@ pure void u16_to_u8s(immutable u16 value, out u8 left, out u8 right) {
 	right = value & 0x00FF;
 }
 
-pure bool is_bit_set(immutable u8 value, immutable u8 mask) {
+pure bool is_bit_set(immutable u8 value, immutable u8 position) {
+	u8 mask = cast(u8) (1 << position);
 	return (value & mask) == mask;
 }
 
