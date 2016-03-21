@@ -1693,7 +1693,7 @@ class CPU {
 		_ticks += 8;
 	}
 	void opcb_bit_0_addr_hl() {
-		u8 n = read_u8();
+		u8 n = _memory[_hl];
 		bool is_set = is_bit_set(n, (1 << 0));
 		is_flag_zero(is_set == false);
 		is_flag_subtract(false);
@@ -1750,7 +1750,7 @@ class CPU {
 		_ticks += 8;
 	}
 	void opcb_bit_1_addr_hl() {
-		u8 n = read_u8();
+		u8 n = _memory[_hl];
 		bool is_set = is_bit_set(n, (1 << 1));
 		is_flag_zero(is_set == false);
 		is_flag_subtract(false);
@@ -1807,7 +1807,7 @@ class CPU {
 		_ticks += 8;
 	}
 	void opcb_bit_2_addr_hl() {
-		u8 n = read_u8();
+		u8 n = _memory[_hl];
 		bool is_set = is_bit_set(n, (1 << 2));
 		is_flag_zero(is_set == false);
 		is_flag_subtract(false);
@@ -1865,7 +1865,7 @@ class CPU {
 		_ticks += 8;
 	}
 	void opcb_bit_3_addr_hl() {
-		u8 n = read_u8();
+		u8 n = _memory[_hl];
 		bool is_set = is_bit_set(n, (1 << 3));
 		is_flag_zero(is_set == false);
 		is_flag_subtract(false);
@@ -1923,7 +1923,7 @@ class CPU {
 		_ticks += 8;
 	}
 	void opcb_bit_4_addr_hl() {
-		u8 n = read_u8();
+		u8 n = _memory[_hl];
 		bool is_set = is_bit_set(n, (1 << 4));
 		is_flag_zero(is_set == false);
 		is_flag_subtract(false);
@@ -1981,7 +1981,7 @@ class CPU {
 		_ticks += 8;
 	}
 	void opcb_bit_5_addr_hl() {
-		u8 n = read_u8();
+		u8 n = _memory[_hl];
 		bool is_set = is_bit_set(n, (1 << 5));
 		is_flag_zero(is_set == false);
 		is_flag_subtract(false);
@@ -2039,7 +2039,7 @@ class CPU {
 		_ticks += 8;
 	}
 	void opcb_bit_6_addr_hl() {
-		u8 n = read_u8();
+		u8 n = _memory[_hl];
 		bool is_set = is_bit_set(n, (1 << 6));
 		is_flag_zero(is_set == false);
 		is_flag_subtract(false);
@@ -2097,7 +2097,7 @@ class CPU {
 		_ticks += 8;
 	}
 	void opcb_bit_7_addr_hl() {
-		u8 n = read_u8();
+		u8 n = _memory[_hl];
 		bool is_set = is_bit_set(n, (1 << 7));
 		is_flag_zero(is_set == false);
 		is_flag_subtract(false);
