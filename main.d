@@ -1497,26 +1497,109 @@ class CPU {
 		_ticks += 32;
 	}
 
-	void op_ccf() {}
-	void op_cpl() {}
-	void op_daa() {}
+	// CCF
+	void op_ccf() {
+		is_flag_subtract(false);
+		is_flag_half_carry(false);
+		is_flag_carry(! is_flag_carry);
+		_ticks += 4;
+	}
+
+	// SCF
+	void op_scf() {
+		is_flag_subtract(false);
+		is_flag_half_carry(false);
+		is_flag_carry(true);
+		_ticks += 4;
+	}
+
+	// DAA
+	void op_daa() {
+		// Convert A to BCD
+		// https://en.wikipedia.org/wiki/Binary-coded_decimal#Basics
+		u8 old_value = _a;
+		if (_a > 99) _a = 99;
+		u8 first = _a / 10;
+		u8 second = cast(u8) (_a - (first * 10));
+		_a = cast(u8) (first << 8 | second);
+
+		is_flag_zero(_a == 0);
+		is_flag_half_carry(false);
+		// FIXME: "Set or reset according to operation." pg 95
+		// What operation?
+		//is_flag_carry(old_value + _bc > 0xFFFF);
+		_ticks += 4;
+	}
+
+	// CPL
+	void op_cpl() {
+		_a = ~_a;
+		is_flag_subtract(true);
+		is_flag_half_carry(true);
+		_ticks += 4;
+	}
+
+	// LDD
+	void op_ldd_a_addr_hl() {
+		_a = _memory[_hl];
+		_hl = cast(u16) (_hl - 1);
+		_ticks += 8;
+	}
+	void op_ldd_addr_hl_a() {
+		_memory[_hl] = _a;
+		_hl = cast(u16) (_hl - 1);
+		_ticks += 8;
+	}
+
+	// LDI
+	void op_ldi_a_addr_hl() {
+		_a = _memory[_hl];
+		_hl = cast(u16) (_hl + 1);
+		_ticks += 8;
+	}
+	void op_ldi_addr_hl_a() {
+		_memory[_hl] = _a;
+		_hl = cast(u16) (_hl + 1);
+		_ticks += 8;
+	}
+
+	// LDH
+	void op_ldh_a_addr_n() {
+		u8 n = read_u8();
+		_a = _memory[0xFF00 + n];
+		_ticks += 12;
+	}
+	void op_ldh_addr_c_a() {
+		_memory[0xFF00 + _c] = _a;
+		_ticks += 8;
+	}
+	void op_ldh_addr_n_a() {
+		u8 n = read_u8();
+		_memory[0xFF00 + n] = _a;
+		_ticks += 12;
+	}
+	void op_ldhl_sp_d() {
+		s8 n = read_u8();
+		_hl = cast(u16) (_sp + n);
+
+		is_flag_zero(false);
+		is_flag_subtract(false);
+		// FIXME: "Set or reset according to operation"
+		// What?
+		// is_flag_half_carry(false);
+		// is_flag_carry(! is_flag_carry);
+		_ticks += 12;
+	}
+
 	void op_di() {}
 	void op_ei() {}
+
 	void op_ext_ops() {}
-	void op_ldd_a_addr_hl() {}
-	void op_ldd_addr_hl_a() {}
-	void op_ldh_a_addr_n() {}
-	void op_ldh_addr_c_a() {}
-	void op_ldh_addr_n_a() {}
-	void op_ldhl_sp_d() {}
-	void op_ldi_a_addr_hl() {}
-	void op_ldi_addr_hl_a() {}
 	void op_rl_a() {}
 	void op_rr_a() {}
 	void op_rlc_a() {}
 	void op_rrc_a() {}
 	void op_reti() {}
-	void op_scf() {}
 
 
 
