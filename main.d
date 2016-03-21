@@ -2171,6 +2171,71 @@ class CPU {
 	void opcb_set_7_l() { set_bit(_l, 7, true); _ticks += 8; }
 	void opcb_set_7_addr_hl() { u8 n = _memory[_hl]; set_bit(n, 7, true); _memory[_hl] = n; _ticks += 16; }
 
+	// RES
+	void opcb_res_0_a() { set_bit(_a, 0, false); _ticks += 8; }
+	void opcb_res_0_b() { set_bit(_b, 0, false); _ticks += 8; }
+	void opcb_res_0_c() { set_bit(_c, 0, false); _ticks += 8; }
+	void opcb_res_0_d() { set_bit(_d, 0, false); _ticks += 8; }
+	void opcb_res_0_e() { set_bit(_e, 0, false); _ticks += 8; }
+	void opcb_res_0_h() { set_bit(_h, 0, false); _ticks += 8; }
+	void opcb_res_0_l() { set_bit(_l, 0, false); _ticks += 8; }
+	void opcb_res_0_addr_hl() { u8 n = _memory[_hl]; set_bit(n, 0, false); _memory[_hl] = n; _ticks += 16; }
+	void opcb_res_1_a() { set_bit(_a, 1, false); _ticks += 8; }
+	void opcb_res_1_b() { set_bit(_b, 1, false); _ticks += 8; }
+	void opcb_res_1_c() { set_bit(_c, 1, false); _ticks += 8; }
+	void opcb_res_1_d() { set_bit(_d, 1, false); _ticks += 8; }
+	void opcb_res_1_e() { set_bit(_e, 1, false); _ticks += 8; }
+	void opcb_res_1_h() { set_bit(_h, 1, false); _ticks += 8; }
+	void opcb_res_1_l() { set_bit(_l, 1, false); _ticks += 8; }
+	void opcb_res_1_addr_hl() { u8 n = _memory[_hl]; set_bit(n, 1, false); _memory[_hl] = n; _ticks += 16; }
+	void opcb_res_2_a() { set_bit(_a, 2, false); _ticks += 8; }
+	void opcb_res_2_b() { set_bit(_b, 2, false); _ticks += 8; }
+	void opcb_res_2_c() { set_bit(_c, 2, false); _ticks += 8; }
+	void opcb_res_2_d() { set_bit(_d, 2, false); _ticks += 8; }
+	void opcb_res_2_e() { set_bit(_e, 2, false); _ticks += 8; }
+	void opcb_res_2_h() { set_bit(_h, 2, false); _ticks += 8; }
+	void opcb_res_2_l() { set_bit(_l, 2, false); _ticks += 8; }
+	void opcb_res_2_addr_hl() { u8 n = _memory[_hl]; set_bit(n, 2, false); _memory[_hl] = n; _ticks += 16; }
+	void opcb_res_3_a() { set_bit(_a, 3, false); _ticks += 8; }
+	void opcb_res_3_b() { set_bit(_b, 3, false); _ticks += 8; }
+	void opcb_res_3_c() { set_bit(_c, 3, false); _ticks += 8; }
+	void opcb_res_3_d() { set_bit(_d, 3, false); _ticks += 8; }
+	void opcb_res_3_e() { set_bit(_e, 3, false); _ticks += 8; }
+	void opcb_res_3_h() { set_bit(_h, 3, false); _ticks += 8; }
+	void opcb_res_3_l() { set_bit(_l, 3, false); _ticks += 8; }
+	void opcb_res_3_addr_hl() { u8 n = _memory[_hl]; set_bit(n, 3, false); _memory[_hl] = n; _ticks += 16; }
+	void opcb_res_4_a() { set_bit(_a, 4, false); _ticks += 8; }
+	void opcb_res_4_b() { set_bit(_b, 4, false); _ticks += 8; }
+	void opcb_res_4_c() { set_bit(_c, 4, false); _ticks += 8; }
+	void opcb_res_4_d() { set_bit(_d, 4, false); _ticks += 8; }
+	void opcb_res_4_e() { set_bit(_e, 4, false); _ticks += 8; }
+	void opcb_res_4_h() { set_bit(_h, 4, false); _ticks += 8; }
+	void opcb_res_4_l() { set_bit(_l, 4, false); _ticks += 8; }
+	void opcb_res_4_addr_hl() { u8 n = _memory[_hl]; set_bit(n, 4, false); _memory[_hl] = n; _ticks += 16; }
+	void opcb_res_5_a() { set_bit(_a, 5, false); _ticks += 8; }
+	void opcb_res_5_b() { set_bit(_b, 5, false); _ticks += 8; }
+	void opcb_res_5_c() { set_bit(_c, 5, false); _ticks += 8; }
+	void opcb_res_5_d() { set_bit(_d, 5, false); _ticks += 8; }
+	void opcb_res_5_e() { set_bit(_e, 5, false); _ticks += 8; }
+	void opcb_res_5_h() { set_bit(_h, 5, false); _ticks += 8; }
+	void opcb_res_5_l() { set_bit(_l, 5, false); _ticks += 8; }
+	void opcb_res_5_addr_hl() { u8 n = _memory[_hl]; set_bit(n, 5, false); _memory[_hl] = n; _ticks += 16; }
+	void opcb_res_6_a() { set_bit(_a, 6, false); _ticks += 8; }
+	void opcb_res_6_b() { set_bit(_b, 6, false); _ticks += 8; }
+	void opcb_res_6_c() { set_bit(_c, 6, false); _ticks += 8; }
+	void opcb_res_6_d() { set_bit(_d, 6, false); _ticks += 8; }
+	void opcb_res_6_e() { set_bit(_e, 6, false); _ticks += 8; }
+	void opcb_res_6_h() { set_bit(_h, 6, false); _ticks += 8; }
+	void opcb_res_6_l() { set_bit(_l, 6, false); _ticks += 8; }
+	void opcb_res_6_addr_hl() { u8 n = _memory[_hl]; set_bit(n, 6, false); _memory[_hl] = n; _ticks += 16; }
+	void opcb_res_7_a() { set_bit(_a, 7, false); _ticks += 8; }
+	void opcb_res_7_b() { set_bit(_b, 7, false); _ticks += 8; }
+	void opcb_res_7_c() { set_bit(_c, 7, false); _ticks += 8; }
+	void opcb_res_7_d() { set_bit(_d, 7, false); _ticks += 8; }
+	void opcb_res_7_e() { set_bit(_e, 7, false); _ticks += 8; }
+	void opcb_res_7_h() { set_bit(_h, 7, false); _ticks += 8; }
+	void opcb_res_7_l() { set_bit(_l, 7, false); _ticks += 8; }
+	void opcb_res_7_addr_hl() { u8 n = _memory[_hl]; set_bit(n, 7, false); _memory[_hl] = n; _ticks += 16; }
 
 
 
@@ -2247,74 +2312,6 @@ class CPU {
 	void opcb_srl_l() {}
 	void opcb_srl_addr_hl() {}
 	void opcb_srl_a() {}
-		// 8
-	void opcb_res_0_b() {}
-	void opcb_res_0_c() {}
-	void opcb_res_0_d() {}
-	void opcb_res_0_e() {}
-	void opcb_res_0_h() {}
-	void opcb_res_0_l() {}
-	void opcb_res_0_addr_hl() {}
-	void opcb_res_0_a() {}
-	void opcb_res_1_b() {}
-	void opcb_res_1_c() {}
-	void opcb_res_1_d() {}
-	void opcb_res_1_e() {}
-	void opcb_res_1_h() {}
-	void opcb_res_1_l() {}
-	void opcb_res_1_addr_hl() {}
-	void opcb_res_1_a() {}
-		// 9
-	void opcb_res_2_b() {}
-	void opcb_res_2_c() {}
-	void opcb_res_2_d() {}
-	void opcb_res_2_e() {}
-	void opcb_res_2_h() {}
-	void opcb_res_2_l() {}
-	void opcb_res_2_addr_hl() {}
-	void opcb_res_2_a() {}
-	void opcb_res_3_b() {}
-	void opcb_res_3_c() {}
-	void opcb_res_3_d() {}
-	void opcb_res_3_e() {}
-	void opcb_res_3_h() {}
-	void opcb_res_3_l() {}
-	void opcb_res_3_addr_hl() {}
-	void opcb_res_3_a() {}
-		// a
-	void opcb_res_4_b() {}
-	void opcb_res_4_c() {}
-	void opcb_res_4_d() {}
-	void opcb_res_4_e() {}
-	void opcb_res_4_h() {}
-	void opcb_res_4_l() {}
-	void opcb_res_4_addr_hl() {}
-	void opcb_res_4_a() {}
-	void opcb_res_5_b() {}
-	void opcb_res_5_c() {}
-	void opcb_res_5_d() {}
-	void opcb_res_5_e() {}
-	void opcb_res_5_h() {}
-	void opcb_res_5_l() {}
-	void opcb_res_5_addr_hl() {}
-	void opcb_res_5_a() {}
-		// b
-	void opcb_res_6_b() {}
-	void opcb_res_6_c() {}
-	void opcb_res_6_d() {}
-	void opcb_res_6_e() {}
-	void opcb_res_6_h() {}
-	void opcb_res_6_l() {}
-	void opcb_res_6_addr_hl() {}
-	void opcb_res_6_a() {}
-	void opcb_res_7_b() {}
-	void opcb_res_7_c() {}
-	void opcb_res_7_d() {}
-	void opcb_res_7_e() {}
-	void opcb_res_7_h() {}
-	void opcb_res_7_l() {}
-	void opcb_res_7_addr_hl() {}
-	void opcb_res_7_a() {}
 }
 
 immutable u32 HEADER_SIZE = 16;
