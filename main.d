@@ -2401,7 +2401,7 @@ class CPU {
 		is_flag_zero(n == 0);
 		is_flag_subtract(false);
 		is_flag_half_carry(false);
-		_ticks += 8;
+		_ticks += 16;
 	}
 
 	// RRC
@@ -2485,30 +2485,178 @@ class CPU {
 		is_flag_zero(n == 0);
 		is_flag_subtract(false);
 		is_flag_half_carry(false);
+		_ticks += 16;
+	}
+
+	// RL
+	void opcb_rl_a() {
+		u8 old_carry = is_flag_carry ? 0x01 : 0x00;
+		is_flag_carry((_a & 0xEFFF) > 0);
+		_a = cast(u8) (_a << 1);
+		_a |= old_carry;
+		is_flag_zero(_a == 0);
+		is_flag_subtract(false);
+		is_flag_half_carry(false);
 		_ticks += 8;
+	}
+	void opcb_rl_b() {
+		u8 old_carry = is_flag_carry ? 0x01 : 0x00;
+		is_flag_carry((_b & 0xEFFF) > 0);
+		_b = cast(u8) (_b << 1);
+		_b |= old_carry;
+		is_flag_zero(_b == 0);
+		is_flag_subtract(false);
+		is_flag_half_carry(false);
+		_ticks += 8;
+	}
+	void opcb_rl_c() {
+		u8 old_carry = is_flag_carry ? 0x01 : 0x00;
+		is_flag_carry((_c & 0xEFFF) > 0);
+		_c = cast(u8) (_c << 1);
+		_c |= old_carry;
+		is_flag_zero(_c == 0);
+		is_flag_subtract(false);
+		is_flag_half_carry(false);
+		_ticks += 8;
+	}
+	void opcb_rl_d() {
+		u8 old_carry = is_flag_carry ? 0x01 : 0x00;
+		is_flag_carry((_d & 0xEFFF) > 0);
+		_d = cast(u8) (_d << 1);
+		_d |= old_carry;
+		is_flag_zero(_d == 0);
+		is_flag_subtract(false);
+		is_flag_half_carry(false);
+		_ticks += 8;
+	}
+	void opcb_rl_e() {
+		u8 old_carry = is_flag_carry ? 0x01 : 0x00;
+		is_flag_carry((_e & 0xEFFF) > 0);
+		_e = cast(u8) (_e << 1);
+		_e |= old_carry;
+		is_flag_zero(_e == 0);
+		is_flag_subtract(false);
+		is_flag_half_carry(false);
+		_ticks += 8;
+	}
+	void opcb_rl_h() {
+		u8 old_carry = is_flag_carry ? 0x01 : 0x00;
+		is_flag_carry((_h & 0xEFFF) > 0);
+		_h = cast(u8) (_h << 1);
+		_h |= old_carry;
+		is_flag_zero(_h == 0);
+		is_flag_subtract(false);
+		is_flag_half_carry(false);
+		_ticks += 8;
+	}
+	void opcb_rl_l() {
+		u8 old_carry = is_flag_carry ? 0x01 : 0x00;
+		is_flag_carry((_l & 0xEFFF) > 0);
+		_l = cast(u8) (_l << 1);
+		_l |= old_carry;
+		is_flag_zero(_l == 0);
+		is_flag_subtract(false);
+		is_flag_half_carry(false);
+		_ticks += 8;
+	}
+	void opcb_rl_addr_hl() {
+		u8 n = _memory[_hl];
+		u8 old_carry = is_flag_carry ? 0x01 : 0x00;
+		is_flag_carry((n & 0xEFFF) > 0);
+		n = cast(u8) (n << 1);
+		n |= old_carry;
+		_memory[_hl] = n;
+		is_flag_zero(n == 0);
+		is_flag_subtract(false);
+		is_flag_half_carry(false);
+		_ticks += 16;
+	}
+
+	// RR
+	void opcb_rr_a() {
+		u8 old_carry = is_flag_carry ? 0x80 : 0x00;
+		is_flag_carry((_a & 0xFFFE) > 0);
+		_a = _a >> 1;
+		_a |= old_carry;
+		is_flag_zero(_a == 0);
+		is_flag_subtract(false);
+		is_flag_half_carry(false);
+		_ticks += 8;
+	}
+	void opcb_rr_b() {
+		u8 old_carry = is_flag_carry ? 0x80 : 0x00;
+		is_flag_carry((_b & 0xFFFE) > 0);
+		_b = _b >> 1;
+		_b |= old_carry;
+		is_flag_zero(_b == 0);
+		is_flag_subtract(false);
+		is_flag_half_carry(false);
+		_ticks += 8;
+	}
+	void opcb_rr_c() {
+		u8 old_carry = is_flag_carry ? 0x80 : 0x00;
+		is_flag_carry((_c & 0xFFFE) > 0);
+		_c = _c >> 1;
+		_c |= old_carry;
+		is_flag_zero(_c == 0);
+		is_flag_subtract(false);
+		is_flag_half_carry(false);
+		_ticks += 8;
+	}
+	void opcb_rr_d() {
+		u8 old_carry = is_flag_carry ? 0x80 : 0x00;
+		is_flag_carry((_d & 0xFFFE) > 0);
+		_d = _d >> 1;
+		_d |= old_carry;
+		is_flag_zero(_d == 0);
+		is_flag_subtract(false);
+		is_flag_half_carry(false);
+		_ticks += 8;
+	}
+	void opcb_rr_e() {
+		u8 old_carry = is_flag_carry ? 0x80 : 0x00;
+		is_flag_carry((_e & 0xFFFE) > 0);
+		_e = _e >> 1;
+		_e |= old_carry;
+		is_flag_zero(_e == 0);
+		is_flag_subtract(false);
+		is_flag_half_carry(false);
+		_ticks += 8;
+	}
+	void opcb_rr_h() {
+		u8 old_carry = is_flag_carry ? 0x80 : 0x00;
+		is_flag_carry((_h & 0xFFFE) > 0);
+		_h = _h >> 1;
+		_h |= old_carry;
+		is_flag_zero(_h == 0);
+		is_flag_subtract(false);
+		is_flag_half_carry(false);
+		_ticks += 8;
+	}
+	void opcb_rr_l() {
+		u8 old_carry = is_flag_carry ? 0x80 : 0x00;
+		is_flag_carry((_l & 0xFFFE) > 0);
+		_l = _l >> 1;
+		_l |= old_carry;
+		is_flag_zero(_l == 0);
+		is_flag_subtract(false);
+		is_flag_half_carry(false);
+		_ticks += 8;
+	}
+	void opcb_rr_addr_hl() {
+		u8 n = _memory[_hl];
+		u8 old_carry = is_flag_carry ? 0x80 : 0x00;
+		is_flag_carry((n & 0xFFFE) > 0);
+		n = n >> 1;
+		n |= old_carry;
+		_memory[_hl] = n;
+		is_flag_zero(n == 0);
+		is_flag_subtract(false);
+		is_flag_half_carry(false);
+		_ticks += 16;
 	}
 
 
-
-
-
-		// 1
-	void opcb_rl_b() {}
-	void opcb_rl_c() {}
-	void opcb_rl_d() {}
-	void opcb_rl_e() {}
-	void opcb_rl_h() {}
-	void opcb_rl_l() {}
-	void opcb_rl_addr_hl() {}
-	void opcb_rl_a() {}
-	void opcb_rr_b() {}
-	void opcb_rr_c() {}
-	void opcb_rr_d() {}
-	void opcb_rr_e() {}
-	void opcb_rr_h() {}
-	void opcb_rr_l() {}
-	void opcb_rr_addr_hl() {}
-	void opcb_rr_a() {}
 		// 2
 	void opcb_sla_b() {}
 	void opcb_sla_c() {}
