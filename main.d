@@ -278,12 +278,12 @@ class CPU {
 
 	// http://marc.rawer.de/Gameboy/Docs/GBCPUman.pdf # 3.3. Commands
 	void op_nop() { _ticks += 4; }
-	void op_stop() {}
-	void op_halt() {}
-	void op_xx() {}
-	void op_di() {}
-	void op_ei() {}
-	void op_reti() {}
+	void op_stop() {  throw new Exception("Not implemented"); }
+	void op_halt() {  throw new Exception("Not implemented"); }
+	void op_xx() {  throw new Exception("Not implemented"); }
+	void op_di() {  throw new Exception("Not implemented"); }
+	void op_ei() {  throw new Exception("Not implemented"); }
+	void op_reti() {  throw new Exception("Not implemented"); }
 
 	// LD n, n
 	void op_ld_a_a() { _a = _a; _ticks += 4; }
