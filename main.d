@@ -22,6 +22,35 @@ public class Screen {
 	static immutable int height = 144;
 }
 
+// http://marc.rawer.de/Gameboy/Docs/GBCPUman.pdf # 2.5.1. General memory map
+struct Memory {
+	u8[0xFFFF] __memory;
+
+	u8 opIndex(size_t i) {
+		return __memory[i];
+	}
+
+	u8 opIndexAssign(u8 value, size_t i) {
+		// 8KB Internal RAM
+		if (i >= 0xC000 && i < 0xDE00) {
+			// Copy to Echo of internal RAM
+			__memory[i - 0x2000] = value;
+			return __memory[i] = value;
+		// Echo of 8KB Internal RAM
+		} else if (i >= 0xE000 && i < 0xFE00) {
+			// Copy to internal RAM
+			__memory[i + 0x2000] = value;
+			return __memory[i] = value;
+		} else {
+			return __memory[i] = value;
+		}
+	}
+
+	void inc(size_t i) {
+		__memory[i]++;
+	}
+}
+
 // https://en.wikipedia.org/wiki/Game_Boy
 // http://marc.rawer.de/Gameboy/Docs/GBCPUman.pdf # 2.3. Game Boy Specs
 // http://www.zilog.com/docs/z80/um0080.pdf
@@ -32,7 +61,7 @@ class CPU {
 	static immutable u32 clock_speed = 4_194_304;
 
 	bool _is_running = false;
-	u8[0xFFFF] _memory;
+	Memory _memory;
 
 	u8 _a;
 	u8 _b;
@@ -1089,7 +1118,7 @@ class CPU {
 		_ticks += 4;
 	}
 	void op_inc_addr_hl() {
-		_memory[_hl]++;
+		_memory.inc(_hl);
 		is_flag_zero(_memory[_hl] == 0);
 		is_flag_subtract(false);
 		is_flag_half_carry(_memory[_hl] == 16);
@@ -1163,7 +1192,7 @@ class CPU {
 		_ticks += 4;
 	}
 	void op_dec_addr_hl() {
-		_memory[_hl]++;
+		_memory.inc(_hl);
 		is_flag_zero(_memory[_hl] == 0);
 		is_flag_subtract(true);
 		is_flag_half_carry(_memory[_hl] == 15);
