@@ -2268,8 +2268,8 @@ class CPU {
 
 	// SWAP
 	void opcb_swap_a() {
-		u8 right = cast(u8) (_a << 8);
-		u8 left = cast(u8) (_a >> 8);
+		u8 right = cast(u8) (_a << 4);
+		u8 left = cast(u8) (_a >> 4);
 		_a = right | left;
 		is_flag_zero(_a == 0);
 		is_flag_subtract(false);
@@ -2278,8 +2278,8 @@ class CPU {
 		_ticks += 8;
 	}
 	void opcb_swap_b() {
-		u8 right = cast(u8) (_b << 8);
-		u8 left = cast(u8) (_b >> 8);
+		u8 right = cast(u8) (_b << 4);
+		u8 left = cast(u8) (_b >> 4);
 		_b = right | left;
 		is_flag_zero(_a == 0);
 		is_flag_subtract(false);
@@ -2288,8 +2288,8 @@ class CPU {
 		_ticks += 8;
 	}
 	void opcb_swap_c() {
-		u8 right = cast(u8) (_c << 8);
-		u8 left = cast(u8) (_c >> 8);
+		u8 right = cast(u8) (_c << 4);
+		u8 left = cast(u8) (_c >> 4);
 		_c = right | left;
 		is_flag_zero(_a == 0);
 		is_flag_subtract(false);
@@ -2298,8 +2298,8 @@ class CPU {
 		_ticks += 8;
 	}
 	void opcb_swap_d() {
-		u8 right = cast(u8) (_d << 8);
-		u8 left = cast(u8) (_d >> 8);
+		u8 right = cast(u8) (_d << 4);
+		u8 left = cast(u8) (_d >> 4);
 		_d = right | left;
 		is_flag_zero(_a == 0);
 		is_flag_subtract(false);
@@ -2308,8 +2308,8 @@ class CPU {
 		_ticks += 8;
 	}
 	void opcb_swap_e() {
-		u8 right = cast(u8) (_e << 8);
-		u8 left = cast(u8) (_e >> 8);
+		u8 right = cast(u8) (_e << 4);
+		u8 left = cast(u8) (_e >> 4);
 		_e = right | left;
 		is_flag_zero(_a == 0);
 		is_flag_subtract(false);
@@ -2318,8 +2318,8 @@ class CPU {
 		_ticks += 8;
 	}
 	void opcb_swap_h() {
-		u8 right = cast(u8) (_h << 8);
-		u8 left = cast(u8) (_h >> 8);
+		u8 right = cast(u8) (_h << 4);
+		u8 left = cast(u8) (_h >> 4);
 		_h = right | left;
 		is_flag_zero(_a == 0);
 		is_flag_subtract(false);
@@ -2328,8 +2328,8 @@ class CPU {
 		_ticks += 8;
 	}
 	void opcb_swap_l() {
-		u8 right = cast(u8) (_l << 8);
-		u8 left = cast(u8) (_l >> 8);
+		u8 right = cast(u8) (_l << 4);
+		u8 left = cast(u8) (_l >> 4);
 		_l = right | left;
 		is_flag_zero(_a == 0);
 		is_flag_subtract(false);
@@ -2339,8 +2339,8 @@ class CPU {
 	}
 	void opcb_swap_addr_hl() {
 		u8 n = _memory[_hl];
-		u8 right = cast(u8) (n << 8);
-		u8 left = cast(u8) (n >> 8);
+		u8 right = cast(u8) (n << 4);
+		u8 left = cast(u8) (n >> 4);
 		_memory[_hl] = right | left;
 		is_flag_zero(_a == 0);
 		is_flag_subtract(false);
