@@ -12,6 +12,11 @@ import sdl;
 import types;
 import helpers;
 
+immutable u8[] NINTENDO_LOGO = [
+	0xCE, 0xED, 0x66, 0x66, 0xCC, 0x0D, 0x00, 0x0B, 0x03, 0x73, 0x00, 0x83, 0x00, 0x0C, 0x00, 0x0D,
+	0x00, 0x08, 0x11, 0x1F, 0x88, 0x89, 0x00, 0x0E, 0xDC, 0xCC, 0x6E, 0xE6, 0xDD, 0xDD, 0xD9, 0x99,
+	0xBB, 0xBB, 0x67, 0x63, 0x6E, 0x0E, 0xEC, 0xCC, 0xDD, 0xDC, 0x99, 0x9F, 0xBB, 0xB9, 0x33, 0x3E,
+];
 
 string g_file_name = null;
 
@@ -97,6 +102,7 @@ class CPU {
 
 	u8 read_u8() {
 		u8 data = _memory[_pc];
+		writefln("Read: %x from %x", data, _pc);
 		_pc += 1;
 		return data;
 	}
@@ -123,12 +129,6 @@ class CPU {
 	void delegate()[] opcbs;
 
 	public this() {
-		// http://marc.rawer.de/Gameboy/Docs/GBCPUman.pdf # 3.2.3. Program Counter
-		_pc = 0x100;
-		// http://marc.rawer.de/Gameboy/Docs/GBCPUman.pdf # 3.2.4. Stack Pointer
-		_sp = 0xFFFE;
-		_is_running = true;
-
 		opcbs = [
 			// 0
 			&opcb_rlc_b, &opcb_rlc_c, &opcb_rlc_d, &opcb_rlc_e,
@@ -299,6 +299,14 @@ class CPU {
 	}
 
 	void reset() {
+		// Load the cart
+
+
+		// http://marc.rawer.de/Gameboy/Docs/GBCPUman.pdf # 3.2.3. Program Counter
+		_pc = 0x100;
+		// http://marc.rawer.de/Gameboy/Docs/GBCPUman.pdf # 3.2.4. Stack Pointer
+		_sp = 0xFFFE;
+		_is_running = true;
 	}
 
 	void run_next_operation() {
@@ -2915,16 +2923,25 @@ class CPU {
 	}
 }
 
-immutable u32 HEADER_SIZE = 16;
+
 
 public void load_cart() {
-	// Read the file into an array
+	// Make sure the Nintendo logo in the cart is valid
 	auto f = std.stdio.File(g_file_name, "r");
-	char[HEADER_SIZE] header;
-	f.rawRead(header);
-	writefln("header size: %dB", header.length);
-
+	u8[47] logo;
+	f.seek(0x104);
+	f.rawRead(logo);
 	f.close();
+	bool is_valid = true;
+	for (size_t i=0; i<logo.length; ++i) {
+		if (NINTENDO_LOGO[i] != logo[i]) {
+			is_valid = false;
+		}
+	}
+	writefln("logo is valid: %s", is_valid);
+	if (! is_valid) {
+		throw new Exception("Game ROM file has invalid Nintendo logo.");
+	}
 }
 
 int main(string[] args) {
@@ -2961,10 +2978,14 @@ int main(string[] args) {
 	}
 
 	auto cpu = new CPU();
+
+	load_cart();
+
 	cpu.reset();
 
 	bool is_draw_time = false;
 	while (cpu._is_running) {
+		writefln("Main loop ...");
 		// Run the next operation
 		try {
 			cpu.run_next_operation();
@@ -2974,6 +2995,13 @@ int main(string[] args) {
 			return -1;
 		}
 
+		SDL_Event sdl_event;
+		while(SDL_PollEvent(&sdl_event) == 1) {
+			if(sdl_event.type == SDL_QUIT)
+				cpu._is_running = false;
+		}
+
+/*
 		// Each scanline
 		if(is_draw_time) {
 			// Check for quit events
@@ -3001,8 +3029,8 @@ int main(string[] args) {
 			SDL_Flip(sdl_screen);
 			is_draw_time = false;
 		}
-
-		Thread.sleep(dur!("msecs")(100));
+*/
+		Thread.sleep(dur!("msecs")(1000));
 	}
 
 	SDL_Quit();
