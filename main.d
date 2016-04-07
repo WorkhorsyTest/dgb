@@ -2924,9 +2924,8 @@ class CPU {
 }
 
 
-
-public void load_cart() {
-	// Make sure the Nintendo logo in the cart is valid
+void bios(SDL_Surface* sdl_screen, immutable u32[] COLORS) {
+	// Make sure the Nintendo logo is valid
 	auto f = std.stdio.File(g_file_name, "r");
 	u8[47] logo;
 	f.seek(0x104);
@@ -2938,10 +2937,64 @@ public void load_cart() {
 			is_valid = false;
 		}
 	}
-	writefln("logo is valid: %s", is_valid);
 	if (! is_valid) {
-		throw new Exception("Game ROM file has invalid Nintendo logo.");
+		stderr.writefln("!!! Game ROM file has invalid Nintendo logo.");
 	}
+
+	// Make sure the checksum is valid
+	f = std.stdio.File(g_file_name, "r");
+	u8[25] checksum_data;
+	f.seek(0x134);
+	f.rawRead(checksum_data);
+	f.close();
+	u32 checksum = 0;
+	for (size_t i=0; i<checksum_data.length; ++i) {
+		checksum += checksum_data[i];
+	}
+	checksum += 25;
+	is_valid = ((checksum / 10) * 10 == checksum);
+	if (! is_valid) {
+		stderr.writefln("!!! Game ROM file has invalid checksum: %s", checksum);
+	}
+
+	// Lock the screen if needed
+	if(SDL_MUSTLOCK(sdl_screen)) {
+		if(SDL_LockSurface(sdl_screen) < 0)
+			return;
+	}
+
+	// Draw the Nintendo Logo on screen
+	// FIXME: This is not showing the logo correctly
+	u32* pixels = cast(u32*) sdl_screen.pixels;
+	size_t x, y;
+	for (size_t i=0; i<NINTENDO_LOGO.length; ++i) {
+		u8 four_pixels = NINTENDO_LOGO[i];
+		u8 value_0 = (four_pixels & 0b11000000) >> 6;
+		u8 value_1 = (four_pixels & 0b00110000) >> 4;
+		u8 value_2 = (four_pixels & 0b00001100) >> 2;
+		u8 value_3 = (four_pixels & 0b00000011) >> 0;
+		pixels[x + (y * (Screen.width+Screen.x))] = COLORS[value_0];
+		x++;
+		pixels[x + (y * (Screen.width+Screen.x))] = COLORS[value_1];
+		x++;
+		pixels[x + (y * (Screen.width+Screen.x))] = COLORS[value_2];
+		x++;
+		pixels[x + (y * (Screen.width+Screen.x))] = COLORS[value_3];
+		x++;
+		if (x > 30) {
+			y++;
+			x = 0;
+		}
+	}
+
+	// Unlock the screen if needed
+	if(SDL_MUSTLOCK(sdl_screen)) {
+		SDL_UnlockSurface(sdl_screen);
+	}
+
+	// Show the newly drawn screen for 3 seconds
+	SDL_Flip(sdl_screen);
+	Thread.sleep(dur!("msecs")(3000));
 }
 
 int main(string[] args) {
@@ -2977,9 +3030,17 @@ int main(string[] args) {
 		return -1;
 	}
 
+	// https://en.wikipedia.org/wiki/List_of_video_game_console_palettes#Game_Boy
+	immutable u32[] COLORS = [
+		SDL_MapRGB(sdl_screen.format, 0x0f, 0x38, 0x0f),
+		SDL_MapRGB(sdl_screen.format, 0x30, 0x62, 0x30),
+		SDL_MapRGB(sdl_screen.format, 0x8b, 0xac, 0x0f),
+		SDL_MapRGB(sdl_screen.format, 0x9b, 0xbc, 0x0f),
+	];
+
 	auto cpu = new CPU();
 
-	load_cart();
+	bios(sdl_screen, COLORS);
 
 	cpu.reset();
 
@@ -2995,13 +3056,9 @@ int main(string[] args) {
 			return -1;
 		}
 
-		SDL_Event sdl_event;
-		while(SDL_PollEvent(&sdl_event) == 1) {
-			if(sdl_event.type == SDL_QUIT)
-				cpu._is_running = false;
-		}
+		// FIXME: This is temporary to force draw and check for quits
+		is_draw_time = true;
 
-/*
 		// Each scanline
 		if(is_draw_time) {
 			// Check for quit events
@@ -3017,8 +3074,16 @@ int main(string[] args) {
 					return -1;
 			}
 
-			// Actually draw the screen
-
+			// Draw the screen
+			u8 r = 0, g = 0, b = 255;
+			u32 color;
+			u32* pixels = cast(u32*) sdl_screen.pixels;
+			for(size_t y=Screen.y; y<Screen.height+Screen.y; ++y) {
+				for(size_t x=Screen.x; x<Screen.width+Screen.x; ++x) {
+					color = SDL_MapRGB(sdl_screen.format, r, g, b);
+					pixels[x + (y * (Screen.width+Screen.x))] = color;
+				}
+			}
 
 			// Unlock the screen if needed
 			if(SDL_MUSTLOCK(sdl_screen)) {
@@ -3029,7 +3094,7 @@ int main(string[] args) {
 			SDL_Flip(sdl_screen);
 			is_draw_time = false;
 		}
-*/
+
 		Thread.sleep(dur!("msecs")(1000));
 	}
 
